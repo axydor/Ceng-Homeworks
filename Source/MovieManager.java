@@ -699,10 +699,10 @@ public class MovieManager implements IMovieManager {
     public void ChangeRatingsOfMoviesLike(String pattern, float value) {
         List<Movie> movies = new ArrayList<Movie>();
         try{
-            String query = "UPDATE movie SET rating = ? WHERE title LIKE '%' ? ";
+            String query = "UPDATE movie SET rating = ? WHERE UPPER(title) LIKE '%' ? '%' ";
             stmt = _connection.prepareStatement(query);
             stmt.setDouble(1,(double)value);
-            stmt.setString(2,pattern);
+            stmt.setString(2,pattern.toUpperCase());
             stmt.executeUpdate();
 
         }catch(SQLException e){
@@ -783,15 +783,15 @@ public class MovieManager implements IMovieManager {
     @Override
     public void PrintViewStatsByGenre() {
          try{
-            String query = "SELECT TABLE2.genre,TABLE1.COUNT "
+            String query = "SELECT TABLE2.genre,COUNT(TABLE1.COUNT) "
                            + "FROM (SELECT mid,COUNT(*) AS COUNT FROM watched GROUP BY mid) AS TABLE1 ,"
                            + " movie AS TABLE2"
                            + " WHERE TABLE1.mid = TABLE2.mid "
-                           + " GROUP BY TABLE2.genre,TABLE1.COUNT ORDER BY TABLE1.COUNT DESC, TABLE2.genre ASC";   
+                           + " GROUP BY TABLE2.genre ORDER BY COUNT(TABLE1.COUNT) DESC, TABLE2.genre ASC";   
             stmt = _connection.prepareStatement(query);
             ResultSet rs = stmt.executeQuery();
             while(rs.next()){
-                System.out.println(rs.getString("genre")+ "|"+ rs.getString("COUNT"));
+                System.out.println(rs.getString("genre")+ "|"+ rs.getString("COUNT(TABLE1.COUNT)"));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -809,17 +809,17 @@ public class MovieManager implements IMovieManager {
     @Override
     public void PrintAverageMovieRatingOfDirectors() {
          try{
-            String query = "SELECT TABLE1.name,AVG(TABLE3.AVG),SUM(TABLE2.COUNT)"
+            String query = "SELECT TABLE1.name,ROUND(AVG(TABLE3.AVAG),1) ,SUM(TABLE2.COUNT)"
                            +" FROM director as TABLE1, "
                            +" (SELECT mid,COUNT(*) AS COUNT FROM watched GROUP BY mid) AS TABLE2,"
-                           +" (SELECT mid,did,AVG(rating) AS AVG from movie GROUP BY did,mid) AS TABLE3"
+                           +" (SELECT mid,did,AVG(rating) AS AVAG from movie GROUP BY did,mid) AS TABLE3"
                            +" WHERE TABLE1.did = TABLE3.did AND TABLE3.mid = TABLE2.mid"
-                           +" GROUP BY TABLE1.name";
+                           +" GROUP BY TABLE1.name ORDER BY  AVG(TABLE3.AVAG) DESC, TABLE1.NAME ASC";
 
             stmt = _connection.prepareStatement(query);
             ResultSet rs = stmt.executeQuery();
             while(rs.next()){
-                System.out.println(rs.getString("name")+ "|"+ rs.getString("AVG(TABLE3.AVG)")+"|" + rs.getString("SUM(TABLE2.COUNT)"));
+                System.out.println(rs.getString("name")+ "|"+ rs.getString("ROUND(AVG(TABLE3.AVAG),1)")+"|" + rs.getString("SUM(TABLE2.COUNT)"));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -897,40 +897,30 @@ public class MovieManager implements IMovieManager {
         /* ***** DO NOT CHANGE THIS PART FOR YOUR OWN FAVOUR - END ***** */
 
         // Rest of the functions can be called here for testing
-       // manager.CreateTables();
+     
+        // manager.CreateTables();
 
         //Actor ac1 = new Actor(1,"Jean Reno");
 
         //manager.InsertActor(ac1);
 
-        manager.DropTables();
-        // manager.ParseFilesAndInsertData();                 
-        /*List<Movie> movies = manager.ChangeRatingsOfMoviesLike("redemption");
+        //manager.CreateTables();
+        //manager.ParseFilesAndInsertData();
+        //manager.ChangeRatingsOfMoviesLike("rIngS", 9.9F);
+        //manager.PrintAverageMovieRatingOfDirectors();
+/*
+        List<Movie> movies = manager.GetMoviesAboveRating(9.1F);
         if (movies == null )
             System.out .println("THERE IS NO KIND OF THAT MOVIE");
         for(int i = 0; i< movies.size();i++){
             System.out.println(movies.get(i).getTitle());
         }
-        
-        
-        System.out.println(movies.size());
-        for (int i = 0; i < movies.size(); ++i)
-        {
-            Movie movie = movies.get(i);
-            System.out.println("------");
-            System.out.println("Movie: " + movie.getTitle() + " Id: " + movie.getMid());
-            System.out.println("Year: " + movie.getYear() + " Rating: " + movie.getRating());
-            Director director = movie.getDirector();
-            System.out.println("Director: " + director.getName() + " Id: " + director.getDid());
-        }
-        
-        manager.PrintViewStatsByGenre();
-        manager.PrintViewStatsByMovie();
-        manager.PrintAverageMovieRatingOfDirectors();
-        
-        manager.ChangeRatingsOfMoviesLike("SMaN", 7.9f);
-        manager.DropTables();*/
-        
 
+        //manager.PrintViewStatsByGenre();
+        //System.out .println("---------------");
+       // manager.PrintViewStatsByMovie();
+       // System.out .println("---------------");
+       // manager.PrintAverageMovieRatingOfDirectors();
+*/        
     }
 }
