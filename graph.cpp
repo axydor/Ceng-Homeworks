@@ -75,7 +75,7 @@ void Graph::dijkstra(int S,vector<Node>& p,set<int>& dests){
     }
     //cout << "VERTEX DISTANCE FROM SOURCE " << endl;
     for (int i=0; i < vNo; i++){
-        if(dests.count(i) == 1)
+        if(dests.count(i))
             p.push_back(Node(i,distances[i]));
     }
 }
