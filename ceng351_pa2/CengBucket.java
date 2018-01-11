@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class CengBucket {
 
 	// GUI-Based Methods
@@ -6,7 +8,7 @@ public class CengBucket {
 	public int coinCount()
 	{
 		// TODO: Return the coin count in the bucket.
-		return bucket.size();
+		return this.bucket.size();
 	}
 	
 	public CengCoin coinAtIndex(int index)
@@ -18,22 +20,30 @@ public class CengBucket {
 	public int getHashPrefix()
 	{
 		// TODO: Return hash prefix length.
-		return hashPrefixLength;
+		return this.hashPrefixLength;
 	}
 	
 	public Boolean isVisited()
 	{
 		// TODO: Return whether the bucket is found while searching.
-		return isVisited;		
+		return this.isVisited;		
 	}
 	
 	// Own Methods
-	//public int hashPrefix ; ?
+
 	public int hashPrefixLength;
 	public Boolean isVisited;
+	public ArrayList<CengCoin> coins;
 
-	public CengBucket()
+	public CengBucket(int hashPrefixLength)
 	{
-		ArrayList<CengCoin> bucket = new ArrayList<CengCoin>();
+		this.hashPrefixLength = hashPrefixLength;
+		this.coins = new ArrayList<CengCoin>();
+	}
+
+	public void addCoin(CengCoin coin)
+	{
+		
+		this.coins.add(coin);
 	}
 }

@@ -45,7 +45,7 @@ public class CengCoin {
 	{
 		return hashValue;
 	}
-	public setHashValue(int hashMod)
+	public void setHashValue(int hashMod)
 	{
 		hashValue = this.key % hashMod;
 	}

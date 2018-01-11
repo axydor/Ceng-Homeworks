@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class CengBucketList {
 
 	public void addCoin(CengCoin coin)
@@ -8,6 +10,7 @@ public class CengBucketList {
 	public void searchCoin(Integer key)
 	{
 		// TODO: Empty Implementation
+		
 	}
 	
 	public void print()
@@ -21,19 +24,21 @@ public class CengBucketList {
 	public int bucketCount()
 	{
 		// TODO: Return all bucket count.
-		return bucketList.size();
+		return this.bucketList.size();
 	}
 	
 	public CengBucket bucketAtIndex(int index)
 	{
 		// TODO: Return corresponding bucket at index.
-		return bucketList.get(index);
+		return this.bucketList.get(index);
 	}
 	
 	// Own Methods
+	public ArrayList<CengBucket> bucketList;
 
 	public CengBucketList()
 	{
-		ArrayList<CengBucket> bucketList = new ArrayList<CengBucket>();
+		this.bucketList = new ArrayList<CengBucket>();
 	}
 }
+ 
