@@ -9,7 +9,7 @@ public class CengHashTable {
 	{
 		this.rows = new ArrayList<CengHashRow>();
 		this.hashPrefixLength = 0;
-		CengBucket temp = new CengHashRow("");
+		CengHashRow temp = new CengHashRow("");
 		this.rows.add(temp)
 		// TODO: Create a hash table with only 1 row.
 	}
@@ -21,6 +21,7 @@ public class CengHashTable {
 		CengHashRow which = this.rows.get(Integer.parseInt(insertTo,2));
 		if (which.getBucket().size() == bucketSize )                        // TABLE WILL GROW 
 		{
+			this.hashPrefixLength++;
 
 
 		}
