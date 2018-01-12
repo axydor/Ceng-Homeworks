@@ -45,4 +45,9 @@ public class CengBucket {
 	{
 		this.coins.add(coin);
 	}
+
+	public void removeCoin(Integer index)
+	{
+		this.coins.remove(index);
+	}
 }

@@ -24,8 +24,6 @@ public class CengHashRow {
     public void setBucket(CengHashRow row)
     {
         this.bucket = row.getBucket();
-        this.isVisited = row.isVisited();
-        this.hashPrefix = row.hashPrefix();
     }
 
     public void setHashPrefix(String hashPrefix)
