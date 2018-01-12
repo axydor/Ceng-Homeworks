@@ -6,7 +6,7 @@ public class CengHashRow {
 	public String hashPrefix()
 	{
 		// TODO: Return row's hash prefix (such as 0, 01, 010, ...)
-		return this.hashPrefix;		
+		return this.hashPrefix;	
 	}
 	
 	public CengBucket getBucket()
@@ -20,6 +20,18 @@ public class CengHashRow {
 		// TODO: Return whether the row is used while searching.
 		return this.isVisited;		
 	}
+
+    public void setBucket(CengHashRow row)
+    {
+        this.bucket = row.getBucket();
+        this.isVisited = row.isVisited();
+        this.hashPrefix = row.hashPrefix();
+    }
+
+    public void setHashPrefix(String hashPrefix)
+    {
+        this.hashPrefix = hashPrefix;    
+    }
 	
 	// Own Methods
 
