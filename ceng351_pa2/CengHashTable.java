@@ -10,21 +10,29 @@ public class CengHashTable {
 		this.rows = new ArrayList<CengHashRow>();
 		this.hashPrefixLength = 0;
 		CengHashRow temp = new CengHashRow("");
-		this.rows.add(temp)
+		this.rows.add(temp);
 		// TODO: Create a hash table with only 1 row.
 	}
 
 	public void addCoin(CengCoin coin)
 	{
 		String hashPrefix = Integer.toBinaryString(coin.hashValue()); 			
-		String insertTo   = hashPrefix.substring(0,this.hashPrefixLength);
-		CengHashRow which = this.rows.get(Integer.parseInt(insertTo,2));
-		if (which.getBucket().size() == bucketSize )                        // TABLE WILL GROW 
+		String insertTo   = hashPrefix.substring(0,this.hashPrefixLength);// COIN'S HASHPRE
+		Integer rowIndex  = Integer.parseInt(insertTo,2)
+        CengHashRow which = this.rows.get(rowIndex);
+		if (which.getBucket().coins.size() != CengCoinExchange.getBucketSize() )  // NO SPLIT 
 		{
-			this.hashPrefixLength++;
-
-
+            which.getBucket().addCoin(coin);
 		}
+        else  // TABLE WILL GROW
+        {
+            if( this.hashPrefixLength == which.getBucket().getHashPrefix())   // CASE 1 ONLY HASHROW POİNTİNG TO THIS BUCKET - TABLE WILL GROW 
+            {
+                rehash(this.rows,rowIndex);       
+                       
+            }   
+        }
+
 	}
 	
 	public void searchCoin(Integer key)
@@ -57,6 +65,17 @@ public class CengHashTable {
 		// TODO: Return corresponding hashRow at index.
 		return this.rows.get(index);
 	}
-	
+
+    public void rehash(int splitIndex)
+    {
+        for(int i = 0 ; i < hashPrefixLength; i++ )
+        {
+            if ( i == splitIndex )
+            {
+                this.rows.    
+            }
+        }
+    }
+
 	// Own Methods
 }

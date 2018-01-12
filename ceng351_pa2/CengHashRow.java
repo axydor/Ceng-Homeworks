@@ -23,9 +23,9 @@ public class CengHashRow {
 	
 	// Own Methods
 
-	String hashPrefix;
-	Bool isVisited;
-	CengBucket bucket;
+	private String hashPrefix;
+	private Boolean isVisited;
+	private CengBucket bucket;
 
 	public CengHashRow(String hashPrefix){
 		this.hashPrefix = hashPrefix;

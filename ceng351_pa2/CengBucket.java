@@ -8,13 +8,13 @@ public class CengBucket {
 	public int coinCount()
 	{
 		// TODO: Return the coin count in the bucket.
-		return this.bucket.size();
+		return this.coins.size();
 	}
 	
 	public CengCoin coinAtIndex(int index)
 	{
 		// TODO: Return the corresponding coin at the index.
-		return this.bucket.get(index);
+		return this.coins.get(index);
 	}
 	
 	public int getHashPrefix()
@@ -43,7 +43,6 @@ public class CengBucket {
 
 	public void addCoin(CengCoin coin)
 	{
-		
 		this.coins.add(coin);
 	}
 }
