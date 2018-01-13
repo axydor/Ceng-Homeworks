@@ -13,7 +13,8 @@ public class CengCoin {
 		this.name = name;
 		this.value = value;
 		this.currency = currency;
-	}
+	    setHashValue(CengCoinExchange.getHashMod());
+    }
 	
 	// Getters
 	

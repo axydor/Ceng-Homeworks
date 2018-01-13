@@ -22,8 +22,8 @@ public class CengCoinParser {
 			String name = arr[2];
 			String value = arr[3];
 			String currency = arr[4];
-			CengCoin coin = new CengCoin(key,name,value,currency);
-			coinList.add(coin);
+            CengCoin coin = new CengCoin(key,name,value,currency);
+            coinList.add(coin);
 		}
 
 		}
@@ -62,13 +62,13 @@ public class CengCoinParser {
 		try 
 		{
 			br = new BufferedReader(new InputStreamReader(System.in));
-            StringBuilder sb = new StringBuilder();
 			String line = "";
-			while( (line  = br.readline(9)) != null) {
-                sb.append(line);
-            }
-				String[] arr = line.split("\\|");
-				if(arr[0] == "add")
+			
+            while( (line  = br.readLine()) != null) {
+                
+                String[] arr = line.split("\\|");
+				
+                if(arr[0].equalsIgnoreCase("add"))
 				{
 					int key = Integer.valueOf(arr[1]);
 					String name = arr[2];
@@ -77,22 +77,26 @@ public class CengCoinParser {
 					CengCoin coin = new CengCoin(key,name,value,currency);
 					CengCoinExchange.addCoin(coin);
 				}
-				else if (arr[0] == "search")
+
+				else if (arr[0].equalsIgnoreCase("search"))
 				{
 					int key = Integer.valueOf(arr[1]);
 					CengCoinExchange.searchCoin(key);				
 				}
-				else if (arr[0] == "print")
+
+				else if (arr[0].equalsIgnoreCase("print"))
 				{
 					CengCoinExchange.printEverything();
 				}
-                else if (arr[0] == "quit")
+
+                else if (arr[0].equalsIgnoreCase("quit" ))
                 {
                     break;
                 }
+
                 else
                 {
-                    System.out.println(String.arr[0]);
+                    System.out.println("Error");
                 }
 			}
 

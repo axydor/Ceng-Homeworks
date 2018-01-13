@@ -39,8 +39,9 @@ public class CengHashTable {
 	          			newOne.getBucket().addCoin(currCoin);
 	           		}
 	           	}
-	           	this.rows.add(newOne);				
-			}
+               	this.rows.add(newOne);			
+                addCoin(coin);	
+            }
 			else
 			{
 				which.getBucket().addCoin(coin);
@@ -125,7 +126,7 @@ public class CengHashTable {
 			{
 				CengCoin coin = bucket.coinAtIndex(j);
 				System.out.println("\t\t"+"<coin>");
-				System.out.println("\t\t\t"+"<hash>"+String.format("%"+Integer.toString(hashPrefixLength)+"s",Integer.toBinaryString(coin.hashValue())).replace(' ','0') + "</hash>");
+				System.out.println("\t\t\t"+"<hash>"+String.format("%"+Integer.toString(3)+"s",Integer.toBinaryString(coin.hashValue())).replace(' ','0') + "</hash>");
 				System.out.println("\t\t\t"+"<value>"+Integer.toString(coin.key())+"|" + coin.name()+"|"+ coin.value() + "|" + coin.currency() +"</value>");
 				System.out.println("\t\t"+"</coin>");
 
