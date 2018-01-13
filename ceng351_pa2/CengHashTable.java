@@ -5,6 +5,7 @@ public class CengHashTable {
 
 	public Integer hashPrefixLength;
 	public ArrayList<CengHashRow> rows;
+    public int hashLen = (int)(Math.log(CengCoinExchange.getHashMod()) / Math.log(2));
 
 	public CengHashTable()
 	{
@@ -12,7 +13,6 @@ public class CengHashTable {
 		this.hashPrefixLength = 0;
 		CengHashRow temp = new CengHashRow("");
 		this.rows.add(temp);
-		// TODO: Create a hash table with only 1 row.
 	}
 
 
@@ -27,12 +27,13 @@ public class CengHashTable {
 			{
 				this.hashPrefixLength++;
 				CengHashRow newOne = new CengHashRow("1");
-				which.setHashPrefix("0");
+                which.setHashPrefix("0");
+                which.getBucket().hashPrefixLength++;
 	        	for(int k=0; k < which.getBucket().coinCount(); k++)    // Move Coins
 	          	{
                 	CengCoin currCoin = which.getBucket().coinAtIndex(k);
                     Integer hashOfCoin = currCoin.hashValue();
-                    String hashPreOfCoin = String.format("%"+Integer.toString(hashPrefixLength)+"s",Integer.toBinaryString(hashOfCoin)).replace(' ','0');
+                    String hashPreOfCoin = String.format("%1s",Integer.toBinaryString(hashOfCoin)).replace(' ','0');
 	        		if( hashPreOfCoin == "1")
 	        		{
 	        			which.getBucket().removeCoin(k);
@@ -49,8 +50,8 @@ public class CengHashTable {
 		}
 		else
 		{
-			String hashPrefix = String.format("%"+Integer.toString(hashPrefixLength)+"s",Integer.toBinaryString(coin.hashValue())).replace(' ','0'); 	//    COIN'S HASHPRE //4 = 100
-			String hashPre    = hashPrefix.substring(0,hashPrefixLength); 
+			String hashPrefix = String.format("%"+Integer.toString(hashLen)+"s",Integer.toBinaryString(coin.hashValue())).replace(' ','0'); 	//    COIN'S HASHPRE //4 = 100
+			String hashPre    = hashPrefix.substring(0,hashPrefixLength);
 			Integer rowIndex  = Integer.parseInt(hashPre,2);  								   
 	        CengHashRow which = this.rows.get(rowIndex);
 			if (which.getBucket().coinCount() != CengCoinExchange.getBucketSize() )  // NO SPLIT 
@@ -63,7 +64,11 @@ public class CengHashTable {
 	            {															    // THE TABLE WILL GROW 
 	                this.hashPrefixLength++;  
 	                rehash(rowIndex);       
-	            }   
+	                addCoin(coin);
+                    //System.out.println("CASE1");
+                    //System.out.println("hashPreLen: " +Integer.toString(hashPrefixLength));
+                    //System.out.println("rowwINdex:  "+Integer.toString(rowIndex));
+                }   
 	            else                                                     // CASE 2 - MORE THAN 1 HASHROW POINTS SAME BUCKET J < I
 	            {													    //  TABLE WILL NOT GROW
 	            	Integer preLen = which.getBucket().getHashPrefix();   // OLD HASHTABLE_PREFIX_LENGTH
@@ -108,13 +113,55 @@ public class CengHashTable {
 	
 	public void searchCoin(Integer key)
 	{
-		// TODO: Empty Implementation
-	}
+        Boolean found = false;
+	    System.out.println("BEGIN TABLE");
+        
+        String hashPrefix = String.format("%"+Integer.toString(hashLen)+"s",Integer.toBinaryString(key)).replace(' ','0'); 	//    Key 2 - - -> 010 If hashMod is 8
+        Integer rowIndex;  								   
+        if(hashPrefixLength == 0)
+        {
+            rowIndex = 0;   
+        }
+        else
+        {
+            String hashPre    = hashPrefix.substring(0,hashPrefixLength ) ;
+            rowIndex  = Integer.parseInt(hashPre,2);  								   
+        }
+        CengHashRow which = this.rows.get(rowIndex);
+        CengBucket bucket = which.getBucket();
+        
+    
+        for(int j=0; j < bucket.coinCount(); j++)
+        {
+            CengCoin coin = bucket.coinAtIndex(j);
+            if( coin.key() == key )
+            {
+                found = true;
+                System.out.println("<row>");
+                System.out.println("\t<hashPrefix>" + which.hashPrefix() + "</hashPrefix>");
+                System.out.println("\t<bucket>");
+                System.out.println("\t\t<hashLength>"+ Integer.toString(bucket.getHashPrefix())  + "</hashLength>");
+                System.out.println("\t\t<coin>");
+                System.out.println("\t\t\t"+"<hash>"+String.format("%"+Integer.toString(hashLen)+"s",Integer.toBinaryString(coin.hashValue())).replace(' ','0') + "</hash>");
+                System.out.println("\t\t\t"+"<value>"+Integer.toString(coin.key())+"|" + coin.name()+"|"+ coin.value() + "|" + coin.currency() +"</value>");
+                System.out.println("\t\t</coin>");
+                System.out.println("\t</bucket>");
+                System.out.println("</row>");
+            }
+        }
+
+        if( found == false )
+        {
+            System.out.println("None");
+        }
+	    System.out.println("END TABLE");
+    }
 	
 	public void print()
 	{
-		// TODO: Empty Implementation
-		for(int i=0; i < rowCount(); i++)
+	    System.out.println("BEGIN TABLE");
+    
+    	for(int i=0; i < rowCount(); i++)
 		{
 			System.out.println("<row>");
 			CengHashRow row = this.rows.get(i);
@@ -126,15 +173,15 @@ public class CengHashTable {
 			{
 				CengCoin coin = bucket.coinAtIndex(j);
 				System.out.println("\t\t"+"<coin>");
-				System.out.println("\t\t\t"+"<hash>"+String.format("%"+Integer.toString(3)+"s",Integer.toBinaryString(coin.hashValue())).replace(' ','0') + "</hash>");
+				System.out.println("\t\t\t"+"<hash>"+String.format("%"+Integer.toString(hashLen)+"s",Integer.toBinaryString(coin.hashValue())).replace(' ','0') + "</hash>");
 				System.out.println("\t\t\t"+"<value>"+Integer.toString(coin.key())+"|" + coin.name()+"|"+ coin.value() + "|" + coin.currency() +"</value>");
 				System.out.println("\t\t"+"</coin>");
 
 			}
-			System.out.println("\t\t"+"</coin>");
 			System.out.println("\t</bucket>");
 			System.out.println("</row>");
 		}
+	    System.out.println("END TABLE");
 	}
 
 	// GUI-Based Methods
@@ -163,7 +210,7 @@ public class CengHashTable {
 	// SIZE OF THE TABLE GROWS 
     public void rehash(int splitIndex)
     {                                               
-        for(int i = 0 ; i < Math.pow(2,hashPrefixLength - 1); i++ )   // FOR LOOP UNTIL THE 2^HASH_PREFIX_LENGTH(BEFORE GROWING)
+        for(int i = 0 ; i < Math.pow(2,hashPrefixLength - 1) + 1; i+=2 )   // FOR LOOP UNTIL THE 2^HASH_PREFIX_LENGTH(BEFORE GROWING)
         {
             if ( i == splitIndex )   // SPLIT WILL OCCUR 
             {
@@ -175,8 +222,8 @@ public class CengHashTable {
                 {
                 	CengCoin currCoin = now.getBucket().coinAtIndex(j);
                     Integer hashOfCoin = currCoin.hashValue();
-                    String hashPreOfCoin = String.format("%"+Integer.toString(hashPrefixLength)+"s",Integer.toBinaryString(hashOfCoin)).replace(' ','0');
-                   
+                    String hashPreOf = String.format("%"+Integer.toString(hashLen)+"s",Integer.toBinaryString(hashOfCoin)).replace(' ','0');
+                    String hashPreOfCoin = hashPreOf.substring(0,hashPrefixLength);
 	                if (hashPreOfCoin == (oldPrefix + "1") )    // MOVE COIN TO THE CORRECT POSITION
 	                {
 	                	newOne.getBucket().addCoin(currCoin);

@@ -80,8 +80,8 @@ public class CengCoinParser {
 
 				else if (arr[0].equalsIgnoreCase("search"))
 				{
-					int key = Integer.valueOf(arr[1]);
-					CengCoinExchange.searchCoin(key);				
+					Integer key = Integer.valueOf(arr[1]);
+                    CengCoinExchange.searchCoin(key);				
 				}
 
 				else if (arr[0].equalsIgnoreCase("print"))
