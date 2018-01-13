@@ -25,13 +25,13 @@ public class CengBucketList {
 	public int bucketCount()
 	{
 		// TODO: Return all bucket count.
-		return 0;
+		return bucketList.size();
 	}
 	
 	public CengBucket bucketAtIndex(int index)
 	{
 		// TODO: Return corresponding bucket at index.
-		return null;
+		return bucketList.get(index);
 	}
 	
 	// Own Methods

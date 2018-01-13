@@ -39,6 +39,7 @@ public class CengHashRow {
 
 	public CengHashRow(String hashPrefix){
 		this.hashPrefix = hashPrefix;
+		this.isVisited = false;
         if(hashPrefix == "0")
         {
 		this.bucket = new CengBucket(0);
