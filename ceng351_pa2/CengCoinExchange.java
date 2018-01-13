@@ -46,7 +46,8 @@ public class CengCoinExchange {
 		hashTable = new CengHashTable();
 		
 		CengCoinParser.startParsingCommandLine();
-	}
+	    
+    }
 
 	public static CengHashTable getHashTable()
 	{

@@ -11,7 +11,7 @@ public class CengHashTable {
 	{
 		this.rows = new ArrayList<CengHashRow>();
 		this.hashPrefixLength = 0;
-		CengHashRow temp = new CengHashRow("");
+		CengHashRow temp = new CengHashRow("0");
 		this.rows.add(temp);
 	}
 
