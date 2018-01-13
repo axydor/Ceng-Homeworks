@@ -62,10 +62,12 @@ public class CengCoinParser {
 		try 
 		{
 			br = new BufferedReader(new InputStreamReader(System.in));
+            StringBuilder sb = new StringBuilder();
 			String line = "";
-			while(!(line.equalsIgnoreCase("quit")) ) {
-				line = br.readLine();
-				String[] arr = line.split("|");
+			while( (line  = br.readline(9)) != null) {
+                sb.append(line);
+            }
+				String[] arr = line.split("\\|");
 				if(arr[0] == "add")
 				{
 					int key = Integer.valueOf(arr[1]);
@@ -84,6 +86,14 @@ public class CengCoinParser {
 				{
 					CengCoinExchange.printEverything();
 				}
+                else if (arr[0] == "quit")
+                {
+                    break;
+                }
+                else
+                {
+                    System.out.println(String.arr[0]);
+                }
 			}
 
 		}

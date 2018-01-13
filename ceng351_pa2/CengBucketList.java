@@ -5,6 +5,7 @@ public class CengBucketList {
 	public void addCoin(CengCoin coin)
 	{
 		// TODO: Empty Implementation
+
 	}
 	
 	public void searchCoin(Integer key)
@@ -24,13 +25,13 @@ public class CengBucketList {
 	public int bucketCount()
 	{
 		// TODO: Return all bucket count.
-		return this.bucketList.size();
+		return 0;
 	}
 	
 	public CengBucket bucketAtIndex(int index)
 	{
 		// TODO: Return corresponding bucket at index.
-		return this.bucketList.get(index);
+		return null;
 	}
 	
 	// Own Methods

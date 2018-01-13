@@ -2,7 +2,7 @@ public class CengHashRow {
 
 	// GUI-Based Methods
 	// These methods are required by GUI to work properly.
-	
+
 	public String hashPrefix()
 	{
 		// TODO: Return row's hash prefix (such as 0, 01, 010, ...)
@@ -21,9 +21,9 @@ public class CengHashRow {
 		return this.isVisited;		
 	}
 
-    public void setBucket(CengHashRow row)
+    public void setBucket(CengBucket bucket)
     {
-        this.bucket = row.getBucket();
+        this.bucket = bucket;
     }
 
     public void setHashPrefix(String hashPrefix)
