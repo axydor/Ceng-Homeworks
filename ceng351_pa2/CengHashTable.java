@@ -39,7 +39,6 @@ public class CengHashTable {
 	        		{
 	        			which.getBucket().coins.remove(currCoin);
 	          			newOne.getBucket().addCoin(currCoin);
-                        k--;
 	           		}
 	           	}
                	this.rows.add(newOne);			
@@ -100,11 +99,7 @@ public class CengHashTable {
 	            				this.rows.get(i).setBucket(newOne);
 	            				}
 	            			}
-                            //System.out.println(Integer.toString(rows.get(j).getBucket().coinCount()));
-	            		//	System.out.println(Integer.toString(rows.get(j).getBucket().coinAtIndex(0).key()));
-	            		//	System.out.println(Integer.toString(rows.get(j).getBucket().coinAtIndex(1).key()));
-	            		//	System.out.println(Integer.toString(rows.get(j).getBucket().coinAtIndex(2).key()));
-                            Integer c = rows.get(j).getBucket().coinCount();
+                            int c = rows.get(j).getBucket().coinCount();
                             for(int k=0; k < c; k++)    // Move Coins
 	            			{
 	            				CengCoin move = rows.get(j).getBucket().coinAtIndex(0);
@@ -246,6 +241,7 @@ public class CengHashTable {
 	                {
 	                	newOne.getBucket().addCoin(currCoin);
 	                	now.getBucket().coins.remove(currCoin);  // REMOVING FROM THE PREVIOUS POSITION
+                        j--;
 	                } 
 
 	            }
