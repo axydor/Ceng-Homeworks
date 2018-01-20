@@ -1,0 +1,14 @@
+HashMod:8
+BucketSize:2
+add|0|Status|779|€
+add|1|BitShares|83|€
+add|2|Factom|384|$
+add|3|Metal|241|₺
+add|4|NEO|650|₺
+add|5|DigiByte|16|$
+add|6|TRON|400|$
+add|7|Bitcoin Gold|26|€
+add|8|Stellar|924|$
+add|9|Gas|751|₺
+print
+quit

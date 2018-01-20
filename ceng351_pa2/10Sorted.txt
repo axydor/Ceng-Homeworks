@@ -1,0 +1,19 @@
+HashMod:8
+BucketSize:2
+add|0|Populous|503|₺
+add|1|Ethereum|445|€
+add|2|VeChain|194|$
+print
+add|3|Binance Coin|722|₺
+add|4|VeChain|822|€
+add|5|Substratum|449|$
+add|6|Cardano|918|₺
+print
+add|7|Monaco|966|$
+print
+add|8|Nexus|110|₺
+add|9|Populous|276|₺
+print
+search|9
+search|11
+quit

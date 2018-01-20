@@ -1,0 +1,19 @@
+2a3,20
+> 	<hashPrefix>010</hashPrefix>
+> 	<bucket>
+> 		<hashLength>2</hashLength>
+> 		<coin>
+> 			<hash>0100</hash>
+> 			<value>4|BitcoinDark|143|$</value>
+> 		</coin>
+> 		<coin>
+> 			<hash>0101</hash>
+> 			<value>5|Qtum|356|$</value>
+> 		</coin>
+> 		<coin>
+> 			<hash>0110</hash>
+> 			<value>6|BitBay|556|₺</value>
+> 		</coin>
+> 	</bucket>
+> </row>
+> <row>

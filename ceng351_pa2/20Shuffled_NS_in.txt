@@ -1,0 +1,23 @@
+add|2|PIVX|387|$
+add|18|Groestlcoin|691|$
+add|4|Metal|415|₺
+print
+add|13|Factom|977|$
+add|14|Bytecoin|293|€
+add|17|Verge|210|€
+add|11|Monero|591|₺
+add|12|Power Ledger|970|$
+add|5|QASH|523|€
+add|6|Streamr DATAcoin|453|€
+add|3|Power Ledger|125|₺
+add|15|Power Ledger|637|₺
+add|19|IOTA|578|€
+add|0|Verge|892|€
+add|16|EOS|541|$
+add|9|Populous|159|€
+add|10|Dragonchain|703|€
+add|8|Tether|673|₺
+add|1|OmiseGO|811|₺
+add|7|RaiBlocks|146|₺
+print
+quit

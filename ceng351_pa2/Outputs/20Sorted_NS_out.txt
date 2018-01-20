@@ -1,0 +1,340 @@
+BEGIN TABLE
+<row>
+	<hashPrefix>000</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0000</hash>
+			<value>0|Einsteinium|772|€</value>
+		</coin>
+		<coin>
+			<hash>0001</hash>
+			<value>1|ZCoin|549|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>001</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0010</hash>
+			<value>2|Request Network|360|$</value>
+		</coin>
+		<coin>
+			<hash>0011</hash>
+			<value>3|Iconomi|645|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>010</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0100</hash>
+			<value>4|RChain|360|₺</value>
+		</coin>
+		<coin>
+			<hash>0101</hash>
+			<value>5|Ripple|91|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>011</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0110</hash>
+			<value>6|SALT|675|$</value>
+		</coin>
+		<coin>
+			<hash>0111</hash>
+			<value>7|TRON|34|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>100</hashPrefix>
+	<bucket>
+		<hashLength>1</hashLength>
+		<coin>
+			<hash>1000</hash>
+			<value>8|Ardor|994|€</value>
+		</coin>
+		<coin>
+			<hash>1001</hash>
+			<value>9|BitcoinDark|611|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>101</hashPrefix>
+	<bucket>
+		<hashLength>1</hashLength>
+		<coin>
+			<hash>1000</hash>
+			<value>8|Ardor|994|€</value>
+		</coin>
+		<coin>
+			<hash>1001</hash>
+			<value>9|BitcoinDark|611|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>110</hashPrefix>
+	<bucket>
+		<hashLength>1</hashLength>
+		<coin>
+			<hash>1000</hash>
+			<value>8|Ardor|994|€</value>
+		</coin>
+		<coin>
+			<hash>1001</hash>
+			<value>9|BitcoinDark|611|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>111</hashPrefix>
+	<bucket>
+		<hashLength>1</hashLength>
+		<coin>
+			<hash>1000</hash>
+			<value>8|Ardor|994|€</value>
+		</coin>
+		<coin>
+			<hash>1001</hash>
+			<value>9|BitcoinDark|611|$</value>
+		</coin>
+	</bucket>
+</row>
+END TABLE
+BEGIN TABLE
+<row>
+	<hashPrefix>0000</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0000</hash>
+			<value>0|Einsteinium|772|€</value>
+		</coin>
+		<coin>
+			<hash>0000</hash>
+			<value>16|Monaco|831|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>0001</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0001</hash>
+			<value>1|ZCoin|549|€</value>
+		</coin>
+		<coin>
+			<hash>0001</hash>
+			<value>17|Substratum|269|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>0010</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0010</hash>
+			<value>2|Request Network|360|$</value>
+		</coin>
+		<coin>
+			<hash>0010</hash>
+			<value>18|Bitcoin|877|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>0011</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0011</hash>
+			<value>3|Iconomi|645|$</value>
+		</coin>
+		<coin>
+			<hash>0011</hash>
+			<value>19|Syscoin|431|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>0100</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0100</hash>
+			<value>4|RChain|360|₺</value>
+		</coin>
+		<coin>
+			<hash>0101</hash>
+			<value>5|Ripple|91|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>0101</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0100</hash>
+			<value>4|RChain|360|₺</value>
+		</coin>
+		<coin>
+			<hash>0101</hash>
+			<value>5|Ripple|91|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>0110</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0110</hash>
+			<value>6|SALT|675|$</value>
+		</coin>
+		<coin>
+			<hash>0111</hash>
+			<value>7|TRON|34|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>0111</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0110</hash>
+			<value>6|SALT|675|$</value>
+		</coin>
+		<coin>
+			<hash>0111</hash>
+			<value>7|TRON|34|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>1000</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1000</hash>
+			<value>8|Ardor|994|€</value>
+		</coin>
+		<coin>
+			<hash>1001</hash>
+			<value>9|BitcoinDark|611|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>1001</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1000</hash>
+			<value>8|Ardor|994|€</value>
+		</coin>
+		<coin>
+			<hash>1001</hash>
+			<value>9|BitcoinDark|611|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>1010</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1010</hash>
+			<value>10|MaidSafeCoin|632|$</value>
+		</coin>
+		<coin>
+			<hash>1011</hash>
+			<value>11|Time New Bank|693|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>1011</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1010</hash>
+			<value>10|MaidSafeCoin|632|$</value>
+		</coin>
+		<coin>
+			<hash>1011</hash>
+			<value>11|Time New Bank|693|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>1100</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1100</hash>
+			<value>12|Monaco|763|€</value>
+		</coin>
+		<coin>
+			<hash>1101</hash>
+			<value>13|Ripple|205|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>1101</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1100</hash>
+			<value>12|Monaco|763|€</value>
+		</coin>
+		<coin>
+			<hash>1101</hash>
+			<value>13|Ripple|205|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>1110</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1110</hash>
+			<value>14|Ethos|410|€</value>
+		</coin>
+		<coin>
+			<hash>1111</hash>
+			<value>15|Tether|28|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>1111</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1110</hash>
+			<value>14|Ethos|410|€</value>
+		</coin>
+		<coin>
+			<hash>1111</hash>
+			<value>15|Tether|28|₺</value>
+		</coin>
+	</bucket>
+</row>
+END TABLE

@@ -1,0 +1,246 @@
+BEGIN TABLE
+<row>
+	<hashPrefix>0</hashPrefix>
+	<bucket>
+		<hashLength>0</hashLength>
+		<coin>
+			<hash>0010</hash>
+			<value>2|PIVX|387|$</value>
+		</coin>
+		<coin>
+			<hash>0010</hash>
+			<value>18|Groestlcoin|691|$</value>
+		</coin>
+		<coin>
+			<hash>0100</hash>
+			<value>4|Metal|415|₺</value>
+		</coin>
+	</bucket>
+</row>
+END TABLE
+BEGIN TABLE
+<row>
+	<hashPrefix>0000</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0000</hash>
+			<value>0|Verge|892|€</value>
+		</coin>
+		<coin>
+			<hash>0000</hash>
+			<value>16|EOS|541|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>0001</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0001</hash>
+			<value>17|Verge|210|€</value>
+		</coin>
+		<coin>
+			<hash>0001</hash>
+			<value>1|OmiseGO|811|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>0010</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0010</hash>
+			<value>2|PIVX|387|$</value>
+		</coin>
+		<coin>
+			<hash>0010</hash>
+			<value>18|Groestlcoin|691|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>0011</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0011</hash>
+			<value>3|Power Ledger|125|₺</value>
+		</coin>
+		<coin>
+			<hash>0011</hash>
+			<value>19|IOTA|578|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>0100</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0100</hash>
+			<value>4|Metal|415|₺</value>
+		</coin>
+		<coin>
+			<hash>0101</hash>
+			<value>5|QASH|523|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>0101</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0100</hash>
+			<value>4|Metal|415|₺</value>
+		</coin>
+		<coin>
+			<hash>0101</hash>
+			<value>5|QASH|523|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>0110</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0110</hash>
+			<value>6|Streamr DATAcoin|453|€</value>
+		</coin>
+		<coin>
+			<hash>0111</hash>
+			<value>7|RaiBlocks|146|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>0111</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0110</hash>
+			<value>6|Streamr DATAcoin|453|€</value>
+		</coin>
+		<coin>
+			<hash>0111</hash>
+			<value>7|RaiBlocks|146|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>1000</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1001</hash>
+			<value>9|Populous|159|€</value>
+		</coin>
+		<coin>
+			<hash>1000</hash>
+			<value>8|Tether|673|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>1001</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1001</hash>
+			<value>9|Populous|159|€</value>
+		</coin>
+		<coin>
+			<hash>1000</hash>
+			<value>8|Tether|673|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>1010</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1011</hash>
+			<value>11|Monero|591|₺</value>
+		</coin>
+		<coin>
+			<hash>1010</hash>
+			<value>10|Dragonchain|703|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>1011</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1011</hash>
+			<value>11|Monero|591|₺</value>
+		</coin>
+		<coin>
+			<hash>1010</hash>
+			<value>10|Dragonchain|703|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>1100</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1101</hash>
+			<value>13|Factom|977|$</value>
+		</coin>
+		<coin>
+			<hash>1100</hash>
+			<value>12|Power Ledger|970|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>1101</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1101</hash>
+			<value>13|Factom|977|$</value>
+		</coin>
+		<coin>
+			<hash>1100</hash>
+			<value>12|Power Ledger|970|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>1110</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1110</hash>
+			<value>14|Bytecoin|293|€</value>
+		</coin>
+		<coin>
+			<hash>1111</hash>
+			<value>15|Power Ledger|637|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>1111</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1110</hash>
+			<value>14|Bytecoin|293|€</value>
+		</coin>
+		<coin>
+			<hash>1111</hash>
+			<value>15|Power Ledger|637|₺</value>
+		</coin>
+	</bucket>
+</row>
+END TABLE

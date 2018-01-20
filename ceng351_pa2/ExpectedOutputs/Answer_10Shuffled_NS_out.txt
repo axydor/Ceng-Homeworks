@@ -1,0 +1,220 @@
+BEGIN TABLE
+<row>
+	<hashPrefix>000</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>000</hash>
+			<value>0|Ethereum|543|€</value>
+		</coin>
+		<coin>
+			<hash>000</hash>
+			<value>8|Dragonchain|938|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>001</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>001</hash>
+			<value>1|Asch|236|$</value>
+		</coin>
+		<coin>
+			<hash>001</hash>
+			<value>9|Populous|797|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>010</hashPrefix>
+	<bucket>
+		<hashLength>2</hashLength>
+		<coin>
+			<hash>010</hash>
+			<value>2|Stratis|511|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>011</hashPrefix>
+	<bucket>
+		<hashLength>2</hashLength>
+		<coin>
+			<hash>010</hash>
+			<value>2|Stratis|511|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>100</hashPrefix>
+	<bucket>
+		<hashLength>2</hashLength>
+		<coin>
+			<hash>100</hash>
+			<value>4|IOTA|657|$</value>
+		</coin>
+		<coin>
+			<hash>101</hash>
+			<value>5|Ethereum Classic|987|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>101</hashPrefix>
+	<bucket>
+		<hashLength>2</hashLength>
+		<coin>
+			<hash>100</hash>
+			<value>4|IOTA|657|$</value>
+		</coin>
+		<coin>
+			<hash>101</hash>
+			<value>5|Ethereum Classic|987|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>110</hashPrefix>
+	<bucket>
+		<hashLength>2</hashLength>
+		<coin>
+			<hash>110</hash>
+			<value>6|Tether|104|₺</value>
+		</coin>
+		<coin>
+			<hash>111</hash>
+			<value>7|Einsteinium|242|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>111</hashPrefix>
+	<bucket>
+		<hashLength>2</hashLength>
+		<coin>
+			<hash>110</hash>
+			<value>6|Tether|104|₺</value>
+		</coin>
+		<coin>
+			<hash>111</hash>
+			<value>7|Einsteinium|242|$</value>
+		</coin>
+	</bucket>
+</row>
+END TABLE
+BEGIN TABLE
+<row>
+	<hashPrefix>000</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>000</hash>
+			<value>0|Ethereum|543|€</value>
+		</coin>
+		<coin>
+			<hash>000</hash>
+			<value>8|Dragonchain|938|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>001</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>001</hash>
+			<value>1|Asch|236|$</value>
+		</coin>
+		<coin>
+			<hash>001</hash>
+			<value>9|Populous|797|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>010</hashPrefix>
+	<bucket>
+		<hashLength>2</hashLength>
+		<coin>
+			<hash>010</hash>
+			<value>2|Stratis|511|₺</value>
+		</coin>
+		<coin>
+			<hash>011</hash>
+			<value>3|Dash|823|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>011</hashPrefix>
+	<bucket>
+		<hashLength>2</hashLength>
+		<coin>
+			<hash>010</hash>
+			<value>2|Stratis|511|₺</value>
+		</coin>
+		<coin>
+			<hash>011</hash>
+			<value>3|Dash|823|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>100</hashPrefix>
+	<bucket>
+		<hashLength>2</hashLength>
+		<coin>
+			<hash>100</hash>
+			<value>4|IOTA|657|$</value>
+		</coin>
+		<coin>
+			<hash>101</hash>
+			<value>5|Ethereum Classic|987|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>101</hashPrefix>
+	<bucket>
+		<hashLength>2</hashLength>
+		<coin>
+			<hash>100</hash>
+			<value>4|IOTA|657|$</value>
+		</coin>
+		<coin>
+			<hash>101</hash>
+			<value>5|Ethereum Classic|987|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>110</hashPrefix>
+	<bucket>
+		<hashLength>2</hashLength>
+		<coin>
+			<hash>110</hash>
+			<value>6|Tether|104|₺</value>
+		</coin>
+		<coin>
+			<hash>111</hash>
+			<value>7|Einsteinium|242|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>111</hashPrefix>
+	<bucket>
+		<hashLength>2</hashLength>
+		<coin>
+			<hash>110</hash>
+			<value>6|Tether|104|₺</value>
+		</coin>
+		<coin>
+			<hash>111</hash>
+			<value>7|Einsteinium|242|$</value>
+		</coin>
+	</bucket>
+</row>
+END TABLE

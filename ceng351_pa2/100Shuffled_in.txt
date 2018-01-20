@@ -1,0 +1,120 @@
+add|17|Binance Coin|868|₺
+add|93|Waves|829|₺
+add|69|TRON|856|$
+search|69
+add|82|Bancor|298|$
+add|85|Bytom|721|₺
+add|24|Agoras Token|321|€
+print
+add|14|VeChain|427|$
+add|13|Basic Attention Token|840|€
+add|38|Dash|375|₺
+add|57|Binance Coin|296|$
+add|9|BitConnect|24|₺
+search|9
+add|27|Decentraland|657|$
+search|27
+add|71|Byteball Bytes|638|$
+add|59|Electroneum|364|€
+add|87|Augur|880|€
+add|4|SALT|241|₺
+add|66|Populous|595|€
+add|72|Kyber Network|907|₺
+add|31|NEM|48|$
+add|76|NEM|533|€
+add|83|Civic|922|€
+add|77|Status|425|€
+print
+add|64|BitConnect|642|$
+add|8|BitBay|176|₺
+add|84|QASH|325|$
+add|98|VeChain|919|$
+add|44|Aion|960|$
+add|51|Aion|943|€
+add|92|TRON|198|$
+add|47|Decentraland|964|₺
+print
+add|49|GameCredits|938|€
+add|40|Asch|377|$
+add|63|NEO|297|$
+add|23|EOS|445|€
+add|88|Qtum|758|€
+add|67|IOTA|476|€
+add|86|Decred|942|€
+add|7|Aion|613|€
+add|52|Komodo|341|€
+add|33|PIVX|160|₺
+add|20|Stellar|973|₺
+add|15|DigixDAO|9|₺
+add|3|Bancor|703|₺
+search|3
+add|60|IOTA|811|$
+add|0|DigiByte|979|₺
+add|81|Santiment Network Token|772|€
+add|75|MaidSafeCoin|628|$
+add|68|ChainLink|661|€
+search|68
+add|21|Veritaserum|713|€
+add|97|NAV Coin|795|₺
+add|89|Ox|182|$
+add|34|Litecoin|752|₺
+add|99|Basic Attention Token|129|₺
+add|42|RaiBlocks|319|₺
+add|12|Groestlcoin|665|₺
+add|5|Streamr DATAcoin|392|$
+add|55|Golem|197|$
+search|55
+add|73|Ripple|462|$
+add|1|Ethereum|5|$
+print
+add|65|Dogecoin|92|$
+add|94|PIVX|984|€
+add|29|IOTA|409|€
+add|19|EOS|349|₺
+add|50|Metal|299|$
+add|53|DigiByte|686|€
+add|56|Monaco|530|$
+add|61|Civic|920|€
+add|39|MaidSafeCoin|534|$
+add|90|Binance Coin|384|$
+add|28|Gnosis|156|€
+add|25|Request Network|351|€
+print
+search|25
+add|48|Groestlcoin|195|€
+add|79|Nxt|734|₺
+add|41|Dogecoin|40|₺
+add|18|BitConnect|59|₺
+add|6|Ark|405|$
+add|80|BitShares|67|₺
+add|2|Litecoin|645|$
+add|78|Santiment Network Token|376|₺
+add|11|Civic|905|$
+add|22|Populous|334|$
+add|45|Basic Attention Token|660|$
+add|54|NEM|818|€
+add|91|EOS|665|₺
+add|43|Bytecoin|392|€
+add|70|Walton|860|$
+search|70
+add|95|Ardor|251|€
+add|32|Walton|369|€
+add|16|Dragonchain|949|€
+add|26|Ethereum Classic|946|€
+print
+add|36|Byteball Bytes|280|€
+add|30|Populous|508|₺
+add|46|GXShares|843|€
+add|62|Dash|114|₺
+add|58|Ripple|411|$
+add|74|Hshare|681|€
+print
+add|37|Komodo|212|₺
+add|10|GXShares|25|€
+search|10
+add|96|Veritaserum|358|€
+add|35|ReddCoin|88|₺
+print
+search|45
+search|101
+quit

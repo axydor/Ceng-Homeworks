@@ -1,0 +1,114 @@
+BEGIN TABLE
+<row>
+	<hashPrefix>000</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>000</hash>
+			<value>0|Status|779|€</value>
+		</coin>
+		<coin>
+			<hash>000</hash>
+			<value>8|Stellar|924|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>001</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>001</hash>
+			<value>1|BitShares|83|€</value>
+		</coin>
+		<coin>
+			<hash>001</hash>
+			<value>9|Gas|751|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>010</hashPrefix>
+	<bucket>
+		<hashLength>2</hashLength>
+		<coin>
+			<hash>010</hash>
+			<value>2|Factom|384|$</value>
+		</coin>
+		<coin>
+			<hash>011</hash>
+			<value>3|Metal|241|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>011</hashPrefix>
+	<bucket>
+		<hashLength>2</hashLength>
+		<coin>
+			<hash>010</hash>
+			<value>2|Factom|384|$</value>
+		</coin>
+		<coin>
+			<hash>011</hash>
+			<value>3|Metal|241|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>100</hashPrefix>
+	<bucket>
+		<hashLength>2</hashLength>
+		<coin>
+			<hash>100</hash>
+			<value>4|NEO|650|₺</value>
+		</coin>
+		<coin>
+			<hash>101</hash>
+			<value>5|DigiByte|16|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>101</hashPrefix>
+	<bucket>
+		<hashLength>2</hashLength>
+		<coin>
+			<hash>100</hash>
+			<value>4|NEO|650|₺</value>
+		</coin>
+		<coin>
+			<hash>101</hash>
+			<value>5|DigiByte|16|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>110</hashPrefix>
+	<bucket>
+		<hashLength>2</hashLength>
+		<coin>
+			<hash>110</hash>
+			<value>6|TRON|400|$</value>
+		</coin>
+		<coin>
+			<hash>111</hash>
+			<value>7|Bitcoin Gold|26|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>111</hashPrefix>
+	<bucket>
+		<hashLength>2</hashLength>
+		<coin>
+			<hash>110</hash>
+			<value>6|TRON|400|$</value>
+		</coin>
+		<coin>
+			<hash>111</hash>
+			<value>7|Bitcoin Gold|26|€</value>
+		</coin>
+	</bucket>
+</row>
+END TABLE

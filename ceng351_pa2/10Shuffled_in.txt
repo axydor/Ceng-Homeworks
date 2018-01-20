@@ -1,0 +1,15 @@
+add|5|Vertcoin|562|€
+add|8|Veritaserum|114|$
+add|3|Aeternity|313|$
+add|6|Aeternity|793|€
+add|1|FunFair|610|€
+add|0|Augur|143|€
+print
+add|4|Ark|5|$
+add|2|Ethereum Classic|167|€
+add|9|Ark|34|€
+add|7|Iconomi|542|₺
+print
+search|8
+search|11
+quit

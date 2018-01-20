@@ -1,0 +1,1165 @@
+HashMod:512
+BucketSize:5
+add|350|Waves|289|€
+add|112|Ethereum|924|$
+search|112
+add|331|DigixDAO|132|€
+add|607|Nxt|138|$
+add|435|Stratis|986|€
+add|88|Veritaserum|563|$
+add|794|Gnosis|466|€
+add|796|Bytecoin|274|$
+add|939|Bitcoin Gold|696|₺
+add|452|OmiseGO|787|₺
+add|272|GXShares|82|$
+add|562|ZCoin|753|₺
+add|576|Monero|176|₺
+add|290|Factom|731|€
+add|888|Aeternity|7|$
+add|830|FunFair|94|$
+add|305|Ethereum Classic|409|₺
+add|898|MonaCoin|547|$
+add|165|Kyber Network|378|₺
+add|45|Ethereum|624|€
+add|560|FunFair|359|$
+add|611|Agoras Token|186|€
+add|68|Ripple|252|₺
+add|940|Hshare|926|$
+add|546|Hshare|384|$
+add|230|Ardor|814|₺
+add|142|Lisk|0|₺
+search|142
+add|845|Storj|400|₺
+search|845
+add|476|Ark|207|€
+add|35|Bitcoin|517|$
+add|361|DigiByte|697|$
+search|361
+add|754|Ripple|160|€
+search|754
+add|127|Nexus|579|$
+add|268|BitShares|804|₺
+add|333|FunFair|792|€
+add|784|Aeternity|374|$
+add|140|Storj|15|€
+add|364|Metal|612|₺
+add|640|Lisk|861|$
+add|627|Zcash|720|€
+add|453|BitConnect|90|€
+add|993|NEO|647|₺
+add|247|Factom|487|$
+add|802|GXShares|413|€
+add|766|Blocknet|494|₺
+search|766
+add|844|NEM|77|$
+add|182|Kyber Network|627|₺
+add|409|Metal|593|$
+add|246|BitShares|307|₺
+add|714|RChain|558|€
+add|238|Qtum|349|€
+add|613|Raiden Network Token|458|€
+add|923|Ardor|894|₺
+add|825|Nxt|748|₺
+add|441|SALT|261|$
+search|441
+add|574|Ethereum Classic|493|₺
+add|410|Bancor|645|₺
+add|633|Dragonchain|814|$
+add|202|Waves|608|$
+add|456|Ardor|11|₺
+search|456
+add|771|Zcash|153|$
+add|921|Lisk|241|€
+search|921
+add|39|Storj|477|₺
+add|403|Agoras Token|426|₺
+add|600|BitShares|72|₺
+add|982|Santiment Network Token|749|€
+search|982
+add|405|Metal|675|$
+search|405
+add|649|BitShares|574|₺
+add|573|Ethereum Classic|687|₺
+add|836|Hshare|917|$
+add|743|Dash|207|€
+add|512|Request Network|720|€
+add|547|FunFair|905|$
+add|255|BitcoinDark|997|₺
+add|608|Factom|942|€
+search|608
+add|839|Stellar|33|€
+search|839
+add|610|Zcash|435|$
+add|559|Decentraland|300|₺
+add|188|Populous|84|$
+add|603|ChainLink|135|€
+add|848|Ark|33|$
+add|931|IOTA|44|€
+add|383|Walton|194|$
+add|7|Substratum|362|€
+add|820|Golem|191|₺
+add|104|Ripple|132|$
+add|959|Syscoin|900|€
+add|44|IOTA|647|€
+search|44
+add|806|Bitcoin Cash|587|$
+add|984|MaidSafeCoin|363|₺
+print
+add|281|Hshare|466|€
+add|203|Power Ledger|37|$
+add|775|Metal|368|$
+search|775
+add|391|DigiByte|500|€
+add|995|Bytecoin|736|€
+print
+add|612|QASH|887|₺
+add|397|DigixDAO|617|₺
+search|397
+add|118|Raiden Network Token|441|€
+add|637|Dash|691|₺
+print
+add|70|ZCoin|193|₺
+add|950|RaiBlocks|522|$
+add|69|Santiment Network Token|721|€
+add|912|EOS|776|€
+add|886|Streamr DATAcoin|235|₺
+add|407|Civic|167|$
+add|233|Ripple|987|€
+add|146|Augur|652|₺
+add|500|Walton|131|€
+add|371|Gas|784|€
+add|192|Ethereum|923|$
+add|222|Ark|167|₺
+add|362|Binance Coin|604|$
+add|353|Augur|408|$
+add|774|Factom|867|€
+add|710|Aion|603|$
+add|503|Gas|920|₺
+search|503
+add|458|Aion|231|€
+add|591|Steem|940|₺
+add|472|Ox|80|₺
+add|421|BitConnect|967|€
+add|357|Bitcoin Cash|491|₺
+add|770|Populous|810|€
+search|770
+add|161|QASH|715|₺
+add|786|Dragonchain|488|₺
+print
+add|92|IOTA|279|$
+add|974|Qtum|504|$
+search|974
+add|732|Binance Coin|196|$
+add|795|Walton|174|€
+add|716|Litecoin|721|₺
+search|716
+add|623|Komodo|517|₺
+add|100|Dragonchain|391|₺
+add|346|Gnosis|238|€
+add|545|Aion|594|€
+add|662|MaidSafeCoin|512|$
+add|706|IOTA|786|€
+add|842|Streamr DATAcoin|806|₺
+add|734|Zcash|352|₺
+add|47|ReddCoin|124|$
+add|718|FunFair|643|$
+add|581|Syscoin|375|₺
+add|657|Asch|776|$
+add|731|IOTA|952|$
+add|841|Bitcoin Gold|589|€
+add|66|Litecoin|57|€
+add|318|IOTA|53|€
+add|929|Zcash|106|₺
+add|32|Substratum|417|₺
+add|269|Populous|122|$
+add|376|BitBay|661|₺
+add|431|Power Ledger|418|€
+add|307|Bitcoin Cash|482|€
+add|208|Augur|990|$
+add|801|Gas|141|₺
+add|170|Bancor|808|$
+add|139|Komodo|37|$
+add|58|PIVX|263|₺
+print
+add|556|Blocknet|59|$
+search|556
+add|815|BitcoinDark|380|€
+add|554|IOTA|656|€
+add|367|Ardor|260|₺
+add|135|Steem|901|₺
+add|416|NAV Coin|845|$
+add|447|GameCredits|278|$
+add|293|Einsteinium|901|€
+add|387|Ethereum|345|₺
+add|873|Streamr DATAcoin|431|₺
+add|644|Request Network|259|$
+add|534|Waves|366|€
+add|703|Bytecoin|109|$
+add|321|Status|270|₺
+add|945|Komodo|882|$
+add|314|Lisk|917|€
+add|790|GXShares|160|$
+add|147|Kyber Network|722|₺
+add|943|Agoras Token|995|$
+add|479|Litecoin|844|$
+add|768|OmiseGO|971|$
+add|963|RaiBlocks|895|₺
+add|218|BitcoinDark|165|€
+add|805|Bitcoin Gold|647|₺
+add|653|Tether|552|₺
+add|415|Qtum|722|$
+print
+search|415
+add|543|Bitcoin Cash|953|₺
+add|904|MonaCoin|437|₺
+add|513|Lisk|177|$
+add|411|ReddCoin|45|₺
+add|125|Zcash|958|$
+add|229|Ethos|139|€
+add|661|PayPie|143|€
+add|537|Litecoin|123|₺
+add|666|Stratis|639|$
+add|502|Streamr DATAcoin|601|$
+add|266|Nexus|543|₺
+add|857|ZCoin|872|€
+add|518|BitcoinDark|795|$
+add|295|Bancor|579|€
+add|664|NEO|68|$
+add|572|Aion|126|₺
+search|572
+add|634|Factom|88|₺
+add|315|Request Network|161|$
+search|315
+add|304|Basic Attention Token|380|$
+add|237|Walton|887|₺
+add|366|Civic|849|€
+add|271|NEO|530|₺
+add|719|Binance Coin|282|₺
+add|529|TenX|823|₺
+add|340|Groestlcoin|464|€
+add|952|FunFair|204|€
+add|190|Dragonchain|592|€
+add|248|ZCoin|696|$
+add|582|MaidSafeCoin|72|$
+add|605|Ethereum Classic|551|$
+add|354|Monero|193|€
+print
+add|938|VeChain|173|€
+add|729|PayPie|414|$
+add|593|PayPie|250|€
+print
+add|594|Siacoin|316|€
+search|594
+add|114|Byteball Bytes|81|€
+add|243|Ripple|754|€
+add|322|Bitcoin Cash|537|$
+add|60|MonaCoin|540|$
+add|185|Vertcoin|570|€
+add|193|Ethos|348|€
+search|193
+add|319|ZCoin|663|₺
+add|999|Monaco|995|$
+add|393|Nxt|836|₺
+add|226|PIVX|115|₺
+print
+add|232|Byteball Bytes|151|₺
+search|232
+add|478|DigiByte|757|₺
+add|515|DigixDAO|363|$
+add|313|Ethereum Classic|888|€
+add|760|OmiseGO|983|₺
+add|874|Time New Bank|651|$
+add|49|Zcash|76|₺
+print
+add|826|PIVX|994|$
+add|622|Monaco|586|€
+print
+add|463|Power Ledger|173|$
+add|709|BitConnect|336|€
+add|789|NEM|89|₺
+add|171|Siacoin|687|$
+add|141|Walton|218|$
+add|717|TRON|607|₺
+add|283|Litecoin|672|$
+add|288|Walton|306|₺
+add|454|Power Ledger|987|€
+add|737|Electroneum|22|€
+add|153|SALT|959|₺
+add|204|Bitcoin|99|$
+add|296|Komodo|109|$
+print
+add|670|Aeternity|738|€
+add|727|Bitcoin Gold|772|€
+add|310|Waves|584|$
+add|738|Ox|476|€
+add|656|BitBay|264|$
+add|301|Gnosis|68|€
+add|183|Status|190|$
+add|978|Ethos|698|$
+add|817|RChain|845|$
+add|339|NEM|501|€
+add|698|Dogecoin|888|$
+add|695|ChainLink|332|₺
+add|62|ReddCoin|835|₺
+add|122|TRON|61|€
+add|906|Substratum|762|₺
+add|250|Populous|827|€
+add|209|Litecoin|606|₺
+add|847|Ethereum Classic|743|₺
+search|847
+add|448|Syscoin|854|$
+add|834|Groestlcoin|984|₺
+add|191|Lisk|204|€
+search|191
+add|756|Monero|988|$
+search|756
+add|524|BitShares|456|$
+add|220|Electroneum|853|₺
+search|220
+add|746|Gas|795|€
+add|776|Gnosis|701|₺
+add|389|Ethos|422|$
+add|675|Stratis|926|$
+add|807|Dragonchain|480|$
+add|76|RChain|830|₺
+add|586|Request Network|577|₺
+add|386|ZCoin|51|₺
+add|523|TenX|972|€
+add|33|Populous|453|€
+print
+add|773|Steem|253|₺
+add|487|Asch|85|$
+add|772|ZCoin|326|$
+add|132|Bancor|803|$
+add|129|Monero|523|€
+print
+add|616|Ardor|641|€
+add|455|Monaco|413|$
+add|942|Storj|162|€
+add|207|Bytom|897|€
+add|781|Cardano|8|₺
+print
+add|903|Populous|332|₺
+add|2|Syscoin|298|$
+add|297|OmiseGO|472|€
+add|123|Veritaserum|672|$
+add|897|Decred|409|$
+add|510|Basic Attention Token|300|€
+add|541|GXShares|372|€
+add|742|RaiBlocks|270|$
+add|818|ChainLink|55|€
+add|201|Kyber Network|774|$
+add|326|Bytom|761|€
+search|326
+add|535|Nxt|804|₺
+add|975|Augur|627|€
+add|462|QASH|141|$
+add|199|NAV Coin|435|$
+add|832|Verge|713|€
+add|728|TenX|919|$
+search|728
+add|853|Steem|299|₺
+add|948|Hshare|423|₺
+search|948
+add|917|Tether|263|$
+add|508|Stratis|819|€
+add|412|NEO|413|€
+add|480|Monaco|313|$
+add|712|Aeternity|494|$
+add|477|Ardor|509|€
+add|22|Iconomi|432|₺
+add|427|ChainLink|410|$
+add|446|Monaco|149|€
+search|446
+add|596|Einsteinium|272|₺
+add|324|Zcash|411|$
+add|163|Qtum|297|₺
+print
+search|163
+add|172|Vertcoin|997|₺
+add|977|DigixDAO|482|₺
+add|144|Streamr DATAcoin|378|$
+add|521|Groestlcoin|477|$
+add|267|NEO|221|$
+add|566|Storj|474|€
+add|213|ZCoin|564|€
+add|469|Ethereum|916|€
+add|384|Waves|766|$
+add|569|PIVX|87|€
+add|425|Syscoin|427|₺
+add|822|Asch|266|₺
+add|985|Bytom|678|₺
+add|490|Qtum|706|₺
+add|332|Hshare|923|€
+add|840|BitcoinDark|399|₺
+search|840
+add|680|SALT|901|$
+add|286|VeChain|99|$
+add|378|Siacoin|868|€
+add|253|Veritaserum|81|$
+search|253
+add|540|Metal|992|€
+add|838|DigiByte|313|₺
+add|987|Nxt|247|₺
+print
+search|987
+add|24|Decred|234|$
+add|628|Lisk|60|₺
+add|473|Metal|642|$
+add|713|Aion|535|€
+add|261|Ardor|102|$
+print
+add|471|Decred|720|$
+add|10|BitBay|581|$
+add|699|DigiByte|165|€
+add|683|BitBay|366|€
+add|117|Bitcoin Cash|642|$
+add|133|Bancor|276|₺
+add|216|Status|834|€
+add|821|Einsteinium|889|€
+search|821
+add|495|Verge|619|₺
+add|636|Status|98|€
+add|590|Ardor|350|€
+add|528|PIVX|469|€
+add|745|ReddCoin|23|€
+add|967|Ethereum|631|€
+add|538|GameCredits|877|€
+add|779|IOTA|719|₺
+search|779
+add|244|SALT|338|₺
+add|659|ReddCoin|913|₺
+add|108|Zcash|218|₺
+add|986|Factom|928|$
+add|437|Byteball Bytes|457|₺
+search|437
+add|385|Bancor|326|₺
+add|19|NAV Coin|658|₺
+add|866|IOTA|810|€
+add|941|ReddCoin|321|$
+add|509|Dash|157|$
+add|966|Bitcoin|273|₺
+add|106|Nxt|409|$
+add|583|Ripple|358|$
+search|583
+add|67|Dash|595|₺
+add|113|Zcash|485|€
+add|868|RaiBlocks|107|$
+add|567|Veritaserum|211|₺
+add|990|Tether|389|€
+add|501|Agoras Token|343|₺
+add|642|GameCredits|383|₺
+add|504|MonaCoin|418|€
+add|900|Steem|24|₺
+add|148|Bytecoin|24|₺
+add|532|Groestlcoin|899|₺
+add|720|DigixDAO|479|₺
+add|668|Substratum|959|₺
+add|962|Bancor|992|€
+print
+add|78|Dash|15|₺
+add|61|GameCredits|651|$
+add|300|BitBay|122|₺
+add|372|Streamr DATAcoin|340|€
+search|372
+add|953|Civic|382|₺
+print
+add|722|Groestlcoin|355|₺
+add|947|Binance Coin|896|$
+add|908|IOTA|781|$
+add|235|Blocknet|429|€
+add|871|Tether|66|€
+add|11|Santiment Network Token|56|$
+search|11
+add|753|BitShares|342|$
+add|851|Bytom|207|$
+add|169|Bytom|776|€
+add|86|Agoras Token|47|€
+add|889|Kyber Network|536|€
+add|390|Hshare|706|€
+add|733|ZCoin|334|$
+search|733
+add|428|Raiden Network Token|983|€
+add|883|Gas|808|$
+add|87|Ethereum|737|€
+add|856|DigiByte|916|₺
+add|884|Stratis|648|€
+add|744|IOTA|229|$
+add|327|Basic Attention Token|711|€
+add|279|Basic Attention Token|950|$
+add|877|Lisk|533|₺
+add|635|NEM|597|€
+add|549|ChainLink|77|₺
+add|352|Byteball Bytes|320|₺
+add|797|Populous|623|₺
+add|189|Ethos|453|₺
+add|880|Decred|582|€
+add|381|NEO|61|₺
+add|571|Bitcoin Cash|667|$
+search|571
+add|348|Veritaserum|850|₺
+add|638|Komodo|401|$
+add|228|Walton|733|€
+search|228
+add|388|Bitcoin Gold|439|$
+add|312|BitShares|862|$
+add|345|Bitcoin|734|€
+add|858|Ethereum|730|€
+add|689|DigiByte|520|€
+add|399|Ardor|369|€
+add|150|Kyber Network|164|$
+add|788|OmiseGO|91|$
+add|483|Streamr DATAcoin|39|$
+add|420|Bitcoin Gold|352|€
+add|639|RChain|690|€
+add|516|Vertcoin|267|$
+add|792|NAV Coin|158|₺
+add|81|Gas|355|€
+add|97|DigixDAO|256|₺
+search|97
+add|449|Monaco|804|₺
+add|494|NEM|911|€
+add|245|ReddCoin|887|₺
+add|646|BitShares|78|₺
+add|325|FunFair|487|₺
+add|861|PayPie|635|₺
+add|436|TenX|14|₺
+add|702|Waves|828|€
+search|702
+add|224|Steem|661|€
+add|618|GXShares|62|₺
+add|413|Ripple|46|€
+add|674|Request Network|25|€
+add|565|Byteball Bytes|731|€
+add|577|Ripple|224|€
+add|42|Nxt|326|$
+add|373|Bytom|839|$
+add|957|GameCredits|10|€
+add|414|Status|696|$
+add|195|TRON|71|€
+add|595|FunFair|771|₺
+add|539|Santiment Network Token|75|₺
+add|609|Power Ledger|518|€
+add|485|BitShares|433|€
+add|400|Kyber Network|390|$
+add|369|Dogecoin|122|€
+search|369
+add|843|BitShares|107|₺
+add|257|Metal|386|₺
+add|107|Einsteinium|929|€
+add|475|NAV Coin|107|€
+add|176|Ethereum|455|$
+add|956|GameCredits|780|€
+add|598|Agoras Token|379|€
+add|294|Bitcoin Cash|952|€
+search|294
+add|101|FunFair|479|€
+add|992|Electroneum|96|₺
+add|804|Substratum|893|₺
+add|394|Zcash|216|€
+add|264|Einsteinium|108|$
+add|14|Groestlcoin|106|₺
+add|619|Hshare|83|$
+add|342|ChainLink|989|₺
+add|370|Syscoin|673|$
+add|12|DigixDAO|200|$
+add|973|Gnosis|135|$
+add|998|Aion|302|$
+add|782|TenX|283|₺
+add|20|OmiseGO|182|€
+add|492|Bitcoin|503|₺
+print
+add|417|Cryptonex|383|$
+add|632|Waves|608|₺
+add|98|EOS|428|₺
+add|887|Bytecoin|811|₺
+add|74|Cryptonex|408|$
+add|829|MonaCoin|802|€
+add|299|Aeternity|86|₺
+add|860|Request Network|261|₺
+add|497|Nexus|819|₺
+search|497
+add|875|Dogecoin|937|$
+add|855|Raiden Network Token|733|€
+search|855
+add|275|Cardano|784|$
+add|149|OmiseGO|346|₺
+add|587|PayPie|314|₺
+add|918|Hshare|323|₺
+add|374|Ardor|786|₺
+add|988|Waves|157|€
+add|645|Ardor|252|₺
+print
+add|53|Waves|518|$
+add|969|NEO|756|€
+add|663|TRON|544|₺
+add|909|MonaCoin|325|$
+add|77|Walton|140|₺
+add|6|Bitcoin Gold|998|€
+search|6
+add|241|BitConnect|148|₺
+search|241
+add|75|Ox|268|€
+add|872|IOTA|733|₺
+add|27|Populous|110|€
+search|27
+add|669|Factom|610|$
+add|854|ReddCoin|685|$
+add|614|RaiBlocks|342|₺
+add|242|Verge|171|€
+add|496|SALT|293|$
+search|496
+add|685|Power Ledger|89|€
+add|63|Komodo|542|₺
+add|599|MonaCoin|200|$
+add|819|Tether|792|$
+print
+add|846|Civic|297|$
+add|23|Augur|289|$
+add|751|PIVX|772|€
+add|276|Metal|155|€
+add|130|Vertcoin|128|€
+add|211|Santiment Network Token|520|€
+add|526|Electroneum|999|$
+add|736|ZCoin|942|$
+add|625|Waves|73|$
+add|630|DigixDAO|845|$
+add|755|Blocknet|627|$
+add|29|Gas|326|$
+add|444|NEM|521|€
+search|444
+add|179|Veritaserum|28|€
+add|124|Veritaserum|654|€
+add|377|Ethereum|237|₺
+add|890|Golem|783|$
+add|270|Stratis|534|€
+add|343|NEM|309|$
+add|498|SALT|303|€
+add|379|Nexus|921|₺
+add|905|Gnosis|232|$
+add|484|Komodo|857|₺
+add|459|Metal|488|$
+add|812|Binance Coin|63|₺
+search|812
+add|57|Blocknet|271|₺
+add|16|Cryptonex|712|$
+add|747|Siacoin|522|₺
+add|488|Waves|622|$
+add|442|Augur|150|₺
+add|686|VeChain|45|$
+add|527|Civic|613|₺
+add|481|Status|329|$
+add|548|GXShares|130|₺
+add|673|Ethos|727|$
+add|474|SALT|747|€
+add|217|GameCredits|278|€
+add|707|Aion|777|€
+add|184|QASH|471|$
+add|128|Gas|929|€
+search|128
+add|879|BitcoinDark|134|₺
+add|25|TenX|584|$
+add|329|Power Ledger|451|€
+add|919|TRON|582|€
+add|109|Ardor|815|€
+search|109
+add|392|Power Ledger|252|€
+add|94|Monero|978|$
+add|597|Bitcoin Cash|446|$
+add|341|Metal|876|$
+add|907|PIVX|348|₺
+add|561|Ark|401|$
+add|368|Tether|256|₺
+add|71|Raiden Network Token|602|€
+add|219|PayPie|323|₺
+add|629|ReddCoin|586|$
+add|621|TenX|442|€
+add|160|Ardor|241|$
+add|430|Bitcoin|135|$
+add|748|Siacoin|390|€
+search|748
+add|225|Nxt|836|₺
+add|915|Dash|55|€
+add|690|Dash|609|$
+add|173|Bitcoin Gold|177|₺
+add|137|Gnosis|824|₺
+add|700|OmiseGO|442|$
+add|330|Binance Coin|813|₺
+print
+add|810|Ethos|636|€
+add|914|Groestlcoin|216|$
+add|971|Metal|902|€
+add|358|ZCoin|746|$
+add|227|Ark|263|€
+add|687|FunFair|244|₺
+add|892|QASH|260|€
+add|115|Einsteinium|679|₺
+add|809|Binance Coin|51|€
+add|724|Groestlcoin|106|€
+search|724
+add|937|RChain|299|€
+add|166|BitConnect|711|$
+add|181|Ethos|690|$
+add|652|Substratum|156|$
+add|277|TenX|81|€
+add|51|Cardano|872|€
+print
+add|89|Nexus|644|$
+add|681|Dragonchain|105|$
+add|159|Byteball Bytes|541|₺
+search|159
+add|551|Basic Attention Token|486|$
+add|28|Gas|797|₺
+add|291|TRON|447|₺
+add|997|Zcash|818|$
+search|997
+add|375|Streamr DATAcoin|901|$
+add|251|Ardor|844|₺
+add|259|Gas|161|₺
+search|259
+add|922|Groestlcoin|10|$
+add|335|Blocknet|642|$
+add|814|OmiseGO|364|$
+add|50|Augur|270|€
+add|396|Aeternity|682|₺
+add|553|Kyber Network|199|$
+add|601|BitcoinDark|815|€
+add|72|Ardor|466|$
+add|676|BitConnect|169|€
+add|254|Populous|827|€
+add|3|Kyber Network|397|$
+add|102|Aeternity|983|₺
+add|38|BitcoinDark|706|€
+add|542|Stellar|856|$
+add|82|GameCredits|977|₺
+add|200|Bancor|31|₺
+print
+add|910|GameCredits|767|€
+add|926|Gnosis|970|₺
+add|730|Substratum|102|€
+add|899|Civic|625|$
+print
+add|103|Storj|790|₺
+add|859|Dogecoin|444|€
+add|954|BitShares|416|$
+add|31|NEO|563|₺
+add|73|Qtum|655|₺
+add|151|Aion|974|€
+add|198|Streamr DATAcoin|957|€
+add|1|PIVX|485|€
+search|1
+add|349|QASH|842|€
+add|708|Civic|345|₺
+search|708
+add|85|Ethereum Classic|35|₺
+add|536|Waves|609|€
+add|808|Steem|188|€
+add|519|Nxt|681|$
+add|762|Walton|683|₺
+print
+search|762
+add|891|Ethereum|858|$
+add|95|Decentraland|332|₺
+search|95
+add|426|Cardano|288|$
+add|672|Augur|576|₺
+add|865|Ethereum|780|$
+add|989|Power Ledger|804|€
+add|715|Syscoin|570|₺
+add|624|Civic|984|€
+print
+add|34|Cardano|774|€
+add|93|FunFair|210|$
+add|302|QASH|494|$
+add|694|IOTA|745|₺
+add|934|BitBay|954|₺
+add|578|Litecoin|485|$
+add|143|OmiseGO|743|€
+add|337|Populous|186|€
+add|994|Cryptonex|958|$
+add|615|Einsteinium|998|₺
+add|186|Bytecoin|984|$
+add|177|ZCoin|497|€
+add|705|Monero|126|$
+add|215|NEM|1|€
+add|936|Gas|589|€
+add|552|Bitcoin Cash|979|€
+add|308|Dash|797|€
+add|575|Gas|229|$
+add|439|Stratis|167|€
+search|439
+add|928|Verge|765|$
+add|769|Lisk|525|€
+add|584|RaiBlocks|694|₺
+search|584
+add|105|Binance Coin|331|€
+add|468|GameCredits|719|₺
+add|287|Hshare|714|₺
+add|828|TRON|684|₺
+add|351|Verge|246|₺
+add|881|Cryptonex|47|₺
+search|881
+add|262|Ethereum Classic|663|₺
+add|422|Groestlcoin|186|€
+add|196|Dash|912|€
+add|895|Bytom|201|₺
+search|895
+add|347|Metal|942|$
+add|589|ChainLink|480|€
+add|980|Blocknet|120|€
+add|604|Stellar|804|€
+search|604
+add|355|Groestlcoin|32|$
+add|116|Ardor|337|₺
+add|311|EOS|409|€
+search|311
+add|901|Iconomi|792|$
+print
+add|739|Bitcoin Gold|37|€
+add|778|Ardor|988|$
+add|334|Bitcoin Gold|61|$
+add|470|Binance Coin|644|₺
+search|470
+add|46|MonaCoin|226|€
+add|667|TenX|381|₺
+search|667
+add|231|RaiBlocks|370|€
+add|464|Iconomi|673|₺
+add|206|Electroneum|126|₺
+add|930|ReddCoin|813|$
+add|0|Populous|608|€
+add|162|Syscoin|514|$
+add|138|Ripple|439|₺
+add|651|Walton|939|$
+add|968|Decred|656|$
+add|533|ReddCoin|253|$
+search|533
+add|660|Basic Attention Token|88|$
+add|765|Bytecoin|571|$
+add|514|Siacoin|438|₺
+add|175|BitConnect|644|€
+add|643|GXShares|5|₺
+add|833|Bitcoin Gold|297|₺
+print
+add|803|Syscoin|9|€
+add|964|Time New Bank|137|₺
+print
+add|401|Storj|527|₺
+add|568|EOS|291|€
+print
+add|824|Zcash|772|€
+search|824
+add|4|Verge|255|€
+add|791|Gas|889|₺
+add|602|DigixDAO|981|€
+search|602
+add|558|Status|41|$
+add|451|EOS|689|€
+add|658|MaidSafeCoin|623|$
+add|606|BitShares|962|€
+add|837|Ethereum|585|€
+add|359|Kyber Network|775|€
+add|445|BitConnect|505|€
+add|564|Civic|797|€
+add|588|Request Network|152|€
+add|131|Bitcoin|163|€
+add|692|Vertcoin|802|€
+search|692
+add|187|PIVX|205|₺
+search|187
+add|180|Asch|69|€
+add|18|Electroneum|73|€
+add|236|IOTA|386|$
+add|955|Aeternity|914|₺
+add|711|Gas|286|₺
+print
+add|96|Decentraland|221|₺
+add|696|Kyber Network|760|₺
+add|697|DigiByte|180|₺
+add|752|Iconomi|747|€
+add|48|Blocknet|869|$
+add|461|Basic Attention Token|566|€
+add|626|BitConnect|401|$
+add|911|Storj|50|₺
+add|360|Ethereum|135|€
+add|864|IOTA|936|$
+search|864
+add|13|Waves|276|₺
+add|380|Populous|258|$
+add|167|Status|718|₺
+add|823|Time New Bank|535|₺
+add|852|IOTA|714|$
+add|757|Time New Bank|475|$
+add|972|Asch|881|€
+add|831|Ethereum Classic|274|₺
+add|64|Factom|297|₺
+add|205|ChainLink|964|€
+search|205
+add|925|Syscoin|921|€
+add|704|Bitcoin Gold|573|$
+add|725|Bytecoin|790|₺
+add|309|Electroneum|320|₺
+print
+search|309
+add|935|DigiByte|788|₺
+add|252|Lisk|50|$
+add|460|RChain|48|€
+add|650|Decentraland|352|₺
+add|164|Ox|622|$
+add|749|BitShares|781|₺
+add|682|Litecoin|710|₺
+add|693|Bitcoin Cash|681|€
+add|363|Bancor|165|$
+add|65|Nxt|230|$
+add|785|Verge|644|$
+add|408|Request Network|679|€
+add|648|Nexus|411|$
+add|557|PIVX|590|€
+add|777|Iconomi|655|$
+add|83|Decentraland|638|$
+add|835|Monaco|465|₺
+add|285|FunFair|504|$
+add|212|Monero|258|€
+add|9|NEM|814|₺
+add|869|Komodo|54|€
+add|136|Veritaserum|750|€
+add|292|OmiseGO|334|$
+search|292
+add|120|Power Ledger|634|€
+search|120
+add|896|Bitcoin Gold|999|$
+add|555|Bitcoin|382|€
+add|641|Monero|179|€
+add|440|Ox|588|€
+print
+add|99|Einsteinium|200|€
+add|486|NEM|89|$
+add|592|Lisk|611|€
+add|862|Vertcoin|994|$
+add|382|Streamr DATAcoin|492|€
+add|174|Aeternity|373|$
+search|174
+add|256|Blocknet|112|€
+add|80|GameCredits|194|₺
+add|920|Groestlcoin|293|$
+add|79|Request Network|378|€
+search|79
+add|402|IOTA|397|$
+add|55|Basic Attention Token|465|$
+add|867|VeChain|532|€
+add|423|Streamr DATAcoin|458|€
+search|423
+add|8|Bytom|106|₺
+add|726|Ethereum|741|₺
+add|156|TenX|31|€
+add|197|Binance Coin|222|€
+add|234|RChain|490|₺
+add|303|MaidSafeCoin|977|€
+add|52|Factom|247|€
+add|491|BitConnect|907|€
+add|631|Bitcoin Cash|596|₺
+add|419|Vertcoin|621|€
+search|419
+add|976|Status|781|$
+add|273|BitConnect|246|₺
+search|273
+add|155|Ox|259|₺
+add|37|Golem|653|₺
+add|741|Gnosis|337|₺
+search|741
+add|284|DigixDAO|772|€
+add|506|Ethos|657|$
+add|429|Litecoin|466|$
+add|780|Litecoin|413|₺
+add|338|Time New Bank|57|€
+add|570|SALT|433|₺
+add|26|Litecoin|225|$
+add|958|QASH|866|₺
+add|328|Decred|247|$
+add|41|GXShares|9|$
+add|983|Aeternity|766|₺
+search|983
+add|168|Ethos|102|€
+add|850|Streamr DATAcoin|233|$
+print
+add|647|IOTA|541|₺
+add|263|Waves|761|₺
+add|365|Dogecoin|150|₺
+add|961|Ethos|499|$
+add|395|DigiByte|211|€
+add|916|Nexus|153|€
+add|894|Bytecoin|709|€
+add|434|GXShares|307|₺
+add|54|Agoras Token|757|₺
+add|965|Hshare|530|€
+search|965
+add|763|Steem|125|₺
+add|157|Metal|835|€
+add|811|Time New Bank|849|$
+search|811
+add|145|NEO|801|$
+print
+add|221|Litecoin|130|₺
+add|344|Tether|901|₺
+add|134|NAV Coin|130|€
+add|323|Lisk|427|€
+add|979|Waves|137|€
+add|723|Lisk|246|$
+search|723
+add|882|Santiment Network Token|720|₺
+add|467|Request Network|492|$
+add|951|PIVX|531|₺
+add|316|Binance Coin|306|₺
+add|800|EOS|661|$
+add|249|Kyber Network|618|$
+add|677|Kyber Network|560|₺
+add|317|Gas|534|₺
+search|317
+add|827|BitShares|707|€
+add|787|TenX|371|₺
+print
+add|15|Metal|906|€
+add|798|GXShares|672|$
+search|798
+add|750|NEM|79|$
+add|482|Kyber Network|997|$
+add|531|Ripple|965|€
+add|758|Monero|287|€
+add|932|IOTA|299|€
+add|563|Zcash|561|₺
+add|418|Basic Attention Token|657|€
+print
+add|933|Cardano|636|₺
+add|946|Hshare|553|€
+add|152|Zcash|271|$
+add|701|Asch|25|$
+add|991|Ardor|338|€
+add|981|MonaCoin|509|€
+add|282|Bitcoin Gold|691|€
+search|282
+add|306|Cryptonex|957|€
+print
+search|306
+add|240|Storj|51|€
+add|525|Verge|918|₺
+add|406|Ethos|821|₺
+add|450|Dash|998|€
+search|450
+add|544|GXShares|16|₺
+add|579|Cryptonex|963|€
+add|30|Ark|30|$
+add|336|NAV Coin|131|$
+add|799|Bytom|111|₺
+search|799
+add|5|QASH|562|₺
+add|530|OmiseGO|145|$
+add|764|BitcoinDark|722|₺
+add|960|Ethereum|575|€
+print
+add|154|TenX|652|€
+add|260|Asch|398|$
+add|863|Blocknet|620|$
+add|585|Golem|66|$
+add|465|Verge|650|₺
+add|457|Request Network|365|₺
+add|126|Walton|905|€
+add|298|IOTA|344|₺
+search|298
+add|767|Vertcoin|389|€
+add|433|Nxt|283|₺
+add|759|DigixDAO|76|€
+add|507|RaiBlocks|708|₺
+search|507
+add|671|Groestlcoin|768|₺
+add|84|Komodo|481|€
+add|654|Lisk|23|$
+add|438|Syscoin|407|€
+print
+add|550|RChain|587|₺
+add|970|Einsteinium|389|€
+search|970
+add|91|Hshare|625|€
+add|813|Einsteinium|450|$
+add|996|ReddCoin|463|₺
+search|996
+add|280|GameCredits|606|$
+search|280
+add|520|Monero|640|₺
+add|517|QASH|852|€
+add|679|Decred|864|$
+add|320|Metal|252|₺
+search|320
+add|43|Monero|18|₺
+add|158|Substratum|759|$
+add|289|Streamr DATAcoin|329|₺
+add|489|Aion|179|₺
+add|110|Waves|182|₺
+print
+add|944|Agoras Token|737|€
+add|443|Decentraland|298|$
+add|761|FunFair|663|€
+add|56|Waves|764|€
+add|210|NEM|58|$
+add|17|QASH|764|₺
+add|783|Status|859|$
+add|90|Metal|384|₺
+add|111|Populous|971|$
+print
+add|214|Populous|367|€
+add|499|Basic Attention Token|634|€
+add|21|NAV Coin|371|$
+add|493|Santiment Network Token|581|₺
+add|404|Vertcoin|918|$
+add|620|Byteball Bytes|702|$
+add|119|Vertcoin|239|₺
+add|870|Blocknet|229|$
+search|870
+add|522|VeChain|509|$
+add|893|OmiseGO|538|₺
+add|617|Civic|438|$
+add|849|Steem|237|₺
+add|178|NEM|601|₺
+add|949|Komodo|470|₺
+add|740|Bancor|844|$
+add|278|Decred|811|₺
+add|878|Electroneum|126|€
+add|721|Storj|973|$
+search|721
+add|511|FunFair|566|€
+add|466|Binance Coin|804|$
+add|505|Bitcoin Cash|398|$
+add|239|Santiment Network Token|899|€
+search|239
+add|691|NAV Coin|170|€
+add|678|Vertcoin|3|₺
+add|665|Agoras Token|919|€
+add|816|Gas|811|$
+add|194|Power Ledger|602|₺
+add|927|Hshare|401|$
+add|885|Binance Coin|523|€
+add|924|Ox|352|₺
+add|398|GXShares|626|$
+add|59|Cardano|199|₺
+add|432|EOS|754|€
+add|580|Waves|154|$
+add|876|NEM|569|€
+add|684|PayPie|643|€
+add|655|Ethereum|194|₺
+add|40|Dogecoin|472|₺
+add|793|Qtum|972|$
+add|735|VeChain|354|$
+add|356|Ripple|892|₺
+add|36|Bitcoin Cash|32|₺
+add|274|Ethereum Classic|167|$
+add|258|Bitcoin Gold|626|₺
+add|913|BitcoinDark|887|₺
+add|902|Asch|935|€
+add|121|Power Ledger|88|₺
+add|265|Status|423|₺
+add|688|Time New Bank|467|₺
+add|223|PayPie|930|₺
+add|424|Cryptonex|264|₺
+print
+search|981
+search|1001
+quit

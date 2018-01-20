@@ -1,0 +1,874 @@
+BEGIN SEARCH
+<row>
+	<hashPrefix>0</hashPrefix>
+	<bucket>
+		<hashLength>0</hashLength>
+		<coin>
+			<hash>1001110</hash>
+			<value>78|Litecoin|228|€</value>
+		</coin>
+	</bucket>
+</row>
+END SEARCH
+BEGIN SEARCH
+<row>
+	<hashPrefix>11</hashPrefix>
+	<bucket>
+		<hashLength>2</hashLength>
+		<coin>
+			<hash>1110100</hash>
+			<value>116|Asch|660|$</value>
+		</coin>
+	</bucket>
+</row>
+END SEARCH
+BEGIN SEARCH
+None
+END SEARCH
+BEGIN TABLE
+<row>
+	<hashPrefix>000000</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0000011</hash>
+			<value>131|Aeternity|570|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>000001</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0000011</hash>
+			<value>131|Aeternity|570|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>000010</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0000011</hash>
+			<value>131|Aeternity|570|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>000011</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0000011</hash>
+			<value>131|Aeternity|570|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>000100</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0001101</hash>
+			<value>13|Ethos|342|€</value>
+		</coin>
+		<coin>
+			<hash>0001111</hash>
+			<value>143|Zcash|100|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>000101</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0001101</hash>
+			<value>13|Ethos|342|€</value>
+		</coin>
+		<coin>
+			<hash>0001111</hash>
+			<value>143|Zcash|100|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>000110</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0001101</hash>
+			<value>13|Ethos|342|€</value>
+		</coin>
+		<coin>
+			<hash>0001111</hash>
+			<value>143|Zcash|100|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>000111</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0001101</hash>
+			<value>13|Ethos|342|€</value>
+		</coin>
+		<coin>
+			<hash>0001111</hash>
+			<value>143|Zcash|100|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>001000</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0010100</hash>
+			<value>20|Cryptonex|755|₺</value>
+		</coin>
+		<coin>
+			<hash>0010000</hash>
+			<value>144|Groestlcoin|485|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>001001</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0010100</hash>
+			<value>20|Cryptonex|755|₺</value>
+		</coin>
+		<coin>
+			<hash>0010000</hash>
+			<value>144|Groestlcoin|485|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>001010</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0010100</hash>
+			<value>20|Cryptonex|755|₺</value>
+		</coin>
+		<coin>
+			<hash>0010000</hash>
+			<value>144|Groestlcoin|485|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>001011</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0010100</hash>
+			<value>20|Cryptonex|755|₺</value>
+		</coin>
+		<coin>
+			<hash>0010000</hash>
+			<value>144|Groestlcoin|485|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>001100</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0011110</hash>
+			<value>158|Steem|137|€</value>
+		</coin>
+		<coin>
+			<hash>0011011</hash>
+			<value>27|Cryptonex|598|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>001101</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0011110</hash>
+			<value>158|Steem|137|€</value>
+		</coin>
+		<coin>
+			<hash>0011011</hash>
+			<value>27|Cryptonex|598|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>001110</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0011110</hash>
+			<value>158|Steem|137|€</value>
+		</coin>
+		<coin>
+			<hash>0011011</hash>
+			<value>27|Cryptonex|598|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>001111</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0011110</hash>
+			<value>158|Steem|137|€</value>
+		</coin>
+		<coin>
+			<hash>0011011</hash>
+			<value>27|Cryptonex|598|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>010000</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0101101</hash>
+			<value>45|Bancor|113|€</value>
+		</coin>
+		<coin>
+			<hash>0100100</hash>
+			<value>164|Dogecoin|788|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>010001</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0101101</hash>
+			<value>45|Bancor|113|€</value>
+		</coin>
+		<coin>
+			<hash>0100100</hash>
+			<value>164|Dogecoin|788|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>010010</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0101101</hash>
+			<value>45|Bancor|113|€</value>
+		</coin>
+		<coin>
+			<hash>0100100</hash>
+			<value>164|Dogecoin|788|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>010011</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>0101101</hash>
+			<value>45|Bancor|113|€</value>
+		</coin>
+		<coin>
+			<hash>0100100</hash>
+			<value>164|Dogecoin|788|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>010100</hashPrefix>
+	<bucket>
+		<hashLength>5</hashLength>
+		<coin>
+			<hash>0101010</hash>
+			<value>42|Substratum|171|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>010101</hashPrefix>
+	<bucket>
+		<hashLength>5</hashLength>
+		<coin>
+			<hash>0101010</hash>
+			<value>42|Substratum|171|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>010110</hashPrefix>
+	<bucket>
+		<hashLength>5</hashLength>
+		<coin>
+			<hash>0101110</hash>
+			<value>174|Bitcoin Cash|396|€</value>
+		</coin>
+		<coin>
+			<hash>0101111</hash>
+			<value>47|Ethos|119|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>010111</hashPrefix>
+	<bucket>
+		<hashLength>5</hashLength>
+		<coin>
+			<hash>0101110</hash>
+			<value>174|Bitcoin Cash|396|€</value>
+		</coin>
+		<coin>
+			<hash>0101111</hash>
+			<value>47|Ethos|119|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>011000</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0110111</hash>
+			<value>55|Syscoin|552|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>011001</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0110111</hash>
+			<value>55|Syscoin|552|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>011010</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0110111</hash>
+			<value>55|Syscoin|552|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>011011</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0110111</hash>
+			<value>55|Syscoin|552|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>011100</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0110111</hash>
+			<value>55|Syscoin|552|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>011101</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0110111</hash>
+			<value>55|Syscoin|552|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>011110</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0110111</hash>
+			<value>55|Syscoin|552|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>011111</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>0110111</hash>
+			<value>55|Syscoin|552|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>100000</hashPrefix>
+	<bucket>
+		<hashLength>5</hashLength>
+		<coin>
+			<hash>1000000</hash>
+			<value>192|Bitcoin|125|$</value>
+		</coin>
+		<coin>
+			<hash>1000010</hash>
+			<value>194|Basic Attention Token|474|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>100001</hashPrefix>
+	<bucket>
+		<hashLength>5</hashLength>
+		<coin>
+			<hash>1000000</hash>
+			<value>192|Bitcoin|125|$</value>
+		</coin>
+		<coin>
+			<hash>1000010</hash>
+			<value>194|Basic Attention Token|474|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>100010</hashPrefix>
+	<bucket>
+		<hashLength>5</hashLength>
+		<coin>
+			<hash>1000111</hash>
+			<value>71|Dragonchain|93|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>100011</hashPrefix>
+	<bucket>
+		<hashLength>5</hashLength>
+		<coin>
+			<hash>1000111</hash>
+			<value>71|Dragonchain|93|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>100100</hashPrefix>
+	<bucket>
+		<hashLength>5</hashLength>
+		<coin>
+			<hash>1001000</hash>
+			<value>72|DigiByte|805|₺</value>
+		</coin>
+		<coin>
+			<hash>1001011</hash>
+			<value>75|NEM|90|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>100101</hashPrefix>
+	<bucket>
+		<hashLength>5</hashLength>
+		<coin>
+			<hash>1001000</hash>
+			<value>72|DigiByte|805|₺</value>
+		</coin>
+		<coin>
+			<hash>1001011</hash>
+			<value>75|NEM|90|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>100110</hashPrefix>
+	<bucket>
+		<hashLength>6</hashLength>
+		<coin>
+			<hash>1001100</hash>
+			<value>76|SALT|942|₺</value>
+		</coin>
+		<coin>
+			<hash>1001101</hash>
+			<value>77|Ethereum|559|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>100111</hashPrefix>
+	<bucket>
+		<hashLength>6</hashLength>
+		<coin>
+			<hash>1001110</hash>
+			<value>78|Litecoin|228|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>101000</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1010111</hash>
+			<value>87|BitShares|15|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>101001</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1010111</hash>
+			<value>87|BitShares|15|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>101010</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1010111</hash>
+			<value>87|BitShares|15|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>101011</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1010111</hash>
+			<value>87|BitShares|15|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>101100</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1010111</hash>
+			<value>87|BitShares|15|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>101101</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1010111</hash>
+			<value>87|BitShares|15|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>101110</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1010111</hash>
+			<value>87|BitShares|15|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>101111</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1010111</hash>
+			<value>87|BitShares|15|₺</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>110000</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1101000</hash>
+			<value>104|BitcoinDark|785|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>110001</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1101000</hash>
+			<value>104|BitcoinDark|785|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>110010</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1101000</hash>
+			<value>104|BitcoinDark|785|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>110011</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1101000</hash>
+			<value>104|BitcoinDark|785|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>110100</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1101000</hash>
+			<value>104|BitcoinDark|785|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>110101</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1101000</hash>
+			<value>104|BitcoinDark|785|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>110110</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1101000</hash>
+			<value>104|BitcoinDark|785|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>110111</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1101000</hash>
+			<value>104|BitcoinDark|785|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>111000</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1110100</hash>
+			<value>116|Asch|660|$</value>
+		</coin>
+		<coin>
+			<hash>1110011</hash>
+			<value>115|Walton|665|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>111001</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1110100</hash>
+			<value>116|Asch|660|$</value>
+		</coin>
+		<coin>
+			<hash>1110011</hash>
+			<value>115|Walton|665|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>111010</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1110100</hash>
+			<value>116|Asch|660|$</value>
+		</coin>
+		<coin>
+			<hash>1110011</hash>
+			<value>115|Walton|665|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>111011</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1110100</hash>
+			<value>116|Asch|660|$</value>
+		</coin>
+		<coin>
+			<hash>1110011</hash>
+			<value>115|Walton|665|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>111100</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1110100</hash>
+			<value>116|Asch|660|$</value>
+		</coin>
+		<coin>
+			<hash>1110011</hash>
+			<value>115|Walton|665|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>111101</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1110100</hash>
+			<value>116|Asch|660|$</value>
+		</coin>
+		<coin>
+			<hash>1110011</hash>
+			<value>115|Walton|665|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>111110</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1110100</hash>
+			<value>116|Asch|660|$</value>
+		</coin>
+		<coin>
+			<hash>1110011</hash>
+			<value>115|Walton|665|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>111111</hashPrefix>
+	<bucket>
+		<hashLength>3</hashLength>
+		<coin>
+			<hash>1110100</hash>
+			<value>116|Asch|660|$</value>
+		</coin>
+		<coin>
+			<hash>1110011</hash>
+			<value>115|Walton|665|$</value>
+		</coin>
+	</bucket>
+</row>
+END TABLE
+BEGIN SEARCH
+None
+END SEARCH
+BEGIN SEARCH
+<row>
+	<hashPrefix>001111</hashPrefix>
+	<bucket>
+		<hashLength>5</hashLength>
+		<coin>
+			<hash>0011110</hash>
+			<value>158|Steem|137|€</value>
+		</coin>
+		<coin>
+			<hash>0011111</hash>
+			<value>31|BitcoinDark|553|₺</value>
+		</coin>
+	</bucket>
+</row>
+END SEARCH
+BEGIN SEARCH
+<row>
+	<hashPrefix>0001001</hashPrefix>
+	<bucket>
+		<hashLength>5</hashLength>
+		<coin>
+			<hash>0001001</hash>
+			<value>9|ZCoin|718|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>0001010</hashPrefix>
+	<bucket>
+		<hashLength>5</hashLength>
+		<coin>
+			<hash>0001001</hash>
+			<value>9|ZCoin|718|$</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>0001011</hashPrefix>
+	<bucket>
+		<hashLength>5</hashLength>
+		<coin>
+			<hash>0001001</hash>
+			<value>9|ZCoin|718|$</value>
+		</coin>
+	</bucket>
+</row>
+END SEARCH
+BEGIN SEARCH
+<row>
+	<hashPrefix>1111110</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>1111010</hash>
+			<value>122|Raiden Network Token|701|$</value>
+		</coin>
+		<coin>
+			<hash>1111110</hash>
+			<value>126|QASH|438|€</value>
+		</coin>
+	</bucket>
+</row>
+<row>
+	<hashPrefix>1111111</hashPrefix>
+	<bucket>
+		<hashLength>4</hashLength>
+		<coin>
+			<hash>1111010</hash>
+			<value>122|Raiden Network Token|701|$</value>
+		</coin>
+		<coin>
+			<hash>1111110</hash>
+			<value>126|QASH|438|€</value>
+		</coin>
+	</bucket>
+</row>
+Error while reading databaseConfiguration.txt file: Index: 128, Size: 128
