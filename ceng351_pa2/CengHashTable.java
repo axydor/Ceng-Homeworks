@@ -30,7 +30,7 @@ public class CengHashTable {
                 which.setHashPrefix("0");
                 which.getBucket().hashPrefixLength++;
 	        	for(int k=0; k < which.getBucket().coinCount(); k++)    // Move Coins
-	          	{                                                                         //////////////////////////////      ?????????????????????????
+	          	{
                 	CengCoin currCoin  = which.getBucket().coinAtIndex(k);
                     Integer hashOfCoin = currCoin.hashValue();
                     String hashPrefix  = String.format("%"+Integer.toString(hashLen)+"s",Integer.toBinaryString(hashOfCoin)).replace(' ','0');
@@ -53,13 +53,11 @@ public class CengHashTable {
 		{
 			//System.out.println("HASH_PREFIX_LENGTH : " + Integer.toString(this.hashPrefixLength));
 			//System.out.println("Key Of Coin: " + Integer.toString(coin.key()) );  								   
-			String hashPrefix = String.format("%"+Integer.toString(hashLen)+"s",Integer.toBinaryString(coin.hashValue())).replace(' ','0'); 	//    COIN'S HASHPRE //4 = 100
 			//System.out.println("hashPrefix: " + hashPrefix);  								   
-			String hashPre    = hashPrefix.substring(0,hashPrefixLength);
 			//System.out.println("hashPre: " + hashPre);  								   
+                        String hashPrefix = String.format("%"+Integer.toString(hashLen)+"s",Integer.toBinaryString(coin.hashValue())).replace(' ','0');     //    COIN'S HASHPRE //4 = 100
+                        String hashPre    = hashPrefix.substring(0,hashPrefixLength);
 			Integer rowIndex  = Integer.parseInt(hashPre,2);
-	        //System.out.println("Row index : " + Integer.toString(rowIndex) );
-
             CengHashRow which = this.rows.get(rowIndex);
 			if (which.getBucket().coinCount() != CengCoinExchange.getBucketSize() )  // NO SPLIT 
 			{
