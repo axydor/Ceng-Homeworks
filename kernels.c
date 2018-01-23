@@ -53,8 +53,24 @@ void naive_conv(int dim,int *src, int *ker,int *dst) {
 char convolution_descr[] = "Dot product: Current working version";
 void convolution(int dim,int *src, int *ker,int *dst) 
 {
+    //       naive_conv(dim,src,ker,dst);
+    int i,j,k,l,sum,f,y;
+    int z = dim -7;
 
-        naive_conv(dim,src,ker,dst);
+    for(i = 0; i < z; i++) {
+        for(j = 0; j < z; j++) {
+            dst[j*dim+i] = 0;
+            f = j*dim;
+            for(k = 0; k < 8; k++){
+                sum = 0;
+                y = i + k;
+                for(l = 0; l < 8; l++) {
+                    sum += src[l*dim+f+y]*ker[l*dim+k];
+                }
+                dst[f+i] += sum;
+            }
+        }
+    }
 
 }
 
@@ -106,12 +122,12 @@ void naive_matrix_multiplication(int dim,int *src, int *src2,int *dst) {
 char matrix_multiplication_descr[] = "Matrix multiplications: Current working version";
 void matrix_multiplication(int dim,int *src, int *src2,int *dst) 
 {
-    int i,j,k,z,y,sum,kk;
+    int i,j,k,z,y,sum,sum2;
         //naive_matrix_multiplication(dim,src,src2,dst);
 
     int block_size=32;
     int *temp = malloc(sizeof(int) * dim * dim );
-    if( dim == 32 || dim == 128 || dim == 256)
+    if( dim == 32 || dim == 128)// || dim == 256)
         block_size = 8;
 /*
     for(i=0; i < dim; i+=block_size){
@@ -125,8 +141,8 @@ void matrix_multiplication(int dim,int *src, int *src2,int *dst)
 
         }
     }
-*/
-        for(i=0; i < dim; i+=2){
+*/  // TAKE TRANSPOSE OF SRC2
+        for(i=0; i < dim;){
         z = i * dim;
         for(j=0; j < dim; j+=8){
             y = j*dim;
@@ -140,33 +156,165 @@ void matrix_multiplication(int dim,int *src, int *src2,int *dst)
             temp[z + j+7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
             }
         z += dim;
+        i++;
         for(j=0; j < dim; j+=8){
             y = j*dim;
-            temp[z + j]   = src2[y + i + 1];
-            temp[z + j+1] = src2[y+dim + i + 1];
-            temp[z + j+2] = src2[y+dim+dim + i + 1];
-            temp[z + j+3] = src2[y+dim+dim+dim + i + 1];
-            temp[z + j+4] = src2[y+dim+dim+dim +dim+ i + 1];
-            temp[z + j+5] = src2[y+dim+dim+dim +dim+dim+ i + 1];
-            temp[z + j+6] = src2[y+dim+dim+dim +dim+dim+dim+ i + 1];
-            temp[z + j+7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i + 1];
+            temp[z + j]   = src2[y + i];
+            temp[z + j+1] = src2[y+dim + i];
+            temp[z + j+2] = src2[y+dim+dim + i];
+            temp[z + j+3] = src2[y+dim+dim+dim + i];
+            temp[z + j+4] = src2[y+dim+dim+dim +dim+ i];
+            temp[z + j+5] = src2[y+dim+dim+dim +dim+dim+ i];
+            temp[z + j+6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
+            temp[z + j+7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
             }
+        z += dim;
+        i++;
+        for(j=0; j < dim; j+=8){
+            y = j*dim;
+            temp[z + j]   = src2[y + i];
+            temp[z + j+1] = src2[y+dim + i];
+            temp[z + j+2] = src2[y+dim+dim + i];
+            temp[z + j+3] = src2[y+dim+dim+dim + i];
+            temp[z + j+4] = src2[y+dim+dim+dim +dim+ i];
+            temp[z + j+5] = src2[y+dim+dim+dim +dim+dim+ i];
+            temp[z + j+6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
+            temp[z + j+7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
+            }
+        z += dim;
+        i++;
+        for(j=0; j < dim; j+=8){
+            y = j*dim;
+            temp[z + j]   = src2[y + i];
+            temp[z + j+1] = src2[y+dim + i];
+            temp[z + j+2] = src2[y+dim+dim + i];
+            temp[z + j+3] = src2[y+dim+dim+dim + i];
+            temp[z + j+4] = src2[y+dim+dim+dim +dim+ i];
+            temp[z + j+5] = src2[y+dim+dim+dim +dim+dim+ i];
+            temp[z + j+6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
+            temp[z + j+7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
+            }
+        z += dim;
+        i++;
+
+        for(j=0; j < dim; j+=8){
+            y = j*dim;
+            temp[z + j]   = src2[y + i];
+            temp[z + j+1] = src2[y+dim + i];
+            temp[z + j+2] = src2[y+dim+dim + i];
+            temp[z + j+3] = src2[y+dim+dim+dim + i];
+            temp[z + j+4] = src2[y+dim+dim+dim +dim+ i];
+            temp[z + j+5] = src2[y+dim+dim+dim +dim+dim+ i];
+            temp[z + j+6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
+            temp[z + j+7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
+            }
+        z += dim;
+        i++;
+        for(j=0; j < dim; j+=8){
+            y = j*dim;
+            temp[z + j]   = src2[y + i];
+            temp[z + j+1] = src2[y+dim + i];
+            temp[z + j+2] = src2[y+dim+dim + i];
+            temp[z + j+3] = src2[y+dim+dim+dim + i];
+            temp[z + j+4] = src2[y+dim+dim+dim +dim+ i];
+            temp[z + j+5] = src2[y+dim+dim+dim +dim+dim+ i];
+            temp[z + j+6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
+            temp[z + j+7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
+            }
+        z += dim;
+        i++;
+        for(j=0; j < dim; j+=8){
+            y = j*dim;
+            temp[z + j]   = src2[y + i];
+            temp[z + j+1] = src2[y+dim + i];
+            temp[z + j+2] = src2[y+dim+dim + i];
+            temp[z + j+3] = src2[y+dim+dim+dim + i];
+            temp[z + j+4] = src2[y+dim+dim+dim +dim+ i];
+            temp[z + j+5] = src2[y+dim+dim+dim +dim+dim+ i];
+            temp[z + j+6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
+            temp[z + j+7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
+            }
+        z += dim;
+        i++;
+        for(j=0; j < dim; j+=8){
+            y = j*dim;
+            temp[z + j]   = src2[y + i];
+            temp[z + j+1] = src2[y+dim + i];
+            temp[z + j+2] = src2[y+dim+dim + i];
+            temp[z + j+3] = src2[y+dim+dim+dim + i];
+            temp[z + j+4] = src2[y+dim+dim+dim +dim+ i];
+            temp[z + j+5] = src2[y+dim+dim+dim +dim+dim+ i];
+            temp[z + j+6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
+            temp[z + j+7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
+            }
+        i++;
+ 
+
     }
-    
+
+    //       MULTIPLY IN ROW-ORDER FOR BOTH SRC AND SRC2
+
     int *temc = dst;
 
-    for(i=0; i < dim; i++){
+    for(i=0; i < dim; i+=2){
         z = i*dim;
-        for(j=0; j < dim; j++){
-            
-            //dst[z + j] = 0;
-            //dst[z + j + 1] = 0;
+        for(j=0; j < dim; j+=4){
             y = j*dim;
             int *tema = src  + z;
-            int *temb = temp + y;
             sum = 0;
-            for(int k=0; k< dim; k+=2)
+            int *temb = temp + y;
+            for(int k=0; k< dim; k+=8)
             {
+                sum +=  *tema * *temb;
+                tema++;
+                temb++;
+                sum +=  *tema * *temb;
+                tema++;
+                temb++; 
+                sum +=  *tema * *temb;
+                tema++;
+                temb++;
+                sum +=  *tema * *temb;
+                tema++;
+                temb++; 
+                sum +=  *tema * *temb;
+                tema++;
+                temb++;
+                sum +=  *tema * *temb;
+                tema++;
+                temb++; 
+                sum +=  *tema * *temb;
+                tema++;
+                temb++;
+                sum +=  *tema * *temb;
+                tema++;
+                temb++; 
+            }
+            *temc++ = sum;
+            y += dim;
+            tema = src  + z;
+            sum = 0;
+            temb = temp + y;
+            for(int k=0; k< dim; k+=8)
+            {
+                sum += *tema * *temb;
+                tema++;
+                temb++;
+                sum += *tema * *temb;
+                tema++;
+                temb++; 
+                sum += *tema * *temb;
+                tema++;
+                temb++;
+                sum += *tema * *temb;
+                tema++;
+                temb++; 
+                sum += *tema * *temb;
+                tema++;
+                temb++;
+                sum += *tema * *temb;
+                tema++;
+                temb++; 
                 sum += *tema * *temb;
                 tema++;
                 temb++;
@@ -175,36 +323,208 @@ void matrix_multiplication(int dim,int *src, int *src2,int *dst)
                 temb++; 
             }
             *temc++ = sum;
-            /*
-            for(k=0; k < dim; k+=8){
-                sum += src[z + k] * temp[y + k];
-                sum += src[z + k + 1] * temp[y + k + 1];
-                sum += src[z + k + 2] * temp[y + k + 2];
-                sum += src[z + k + 3] * temp[y + k + 3];
-                sum += src[z + k + 4] * temp[y + k + 4];
-                sum += src[z + k + 5] * temp[y + k + 5];
-                sum += src[z + k + 6] * temp[y + k + 6];
-                sum += src[z + k + 7] * temp[y + k + 7];
-           }
-            dst[z + j] = sum;
-            y += dim; 
+ 
+            y += dim;
+            tema = src  + z;
             sum = 0;
-            for(k=0;k < dim; k+=8){
-                sum += src[z + k] * temp[y + k];
-                sum += src[z + k + 1] * temp[y + k + 1];
-                sum += src[z + k + 2] * temp[y + k + 2];
-                sum += src[z + k + 3] * temp[y + k + 3];
-                sum += src[z + k + 4] * temp[y + k + 4];
-                sum += src[z + k + 5] * temp[y + k + 5];
-                sum += src[z + k + 6] * temp[y + k + 6];
-                sum += src[z + k + 7] * temp[y + k + 7];
-                
-                }
-            dst[z + j + 1] = sum;
-        */
-        
+            temb = temp + y;
+            for(int k=0; k< dim; k+=8)
+            {
+                sum +=  *tema * *temb;
+                tema++;
+                temb++;
+                sum +=  *tema * *temb;
+                tema++;
+                temb++; 
+                sum +=  *tema * *temb;
+                tema++;
+                temb++;
+                sum +=  *tema * *temb;
+                tema++;
+                temb++; 
+                sum +=  *tema * *temb;
+                tema++;
+                temb++;
+                sum +=  *tema * *temb;
+                tema++;
+                temb++; 
+                sum +=  *tema * *temb;
+                tema++;
+                temb++;
+                sum +=  *tema * *temb;
+                tema++;
+                temb++; 
+            }
+            *temc++ = sum;
+            y += dim;
+            tema = src  + z;
+            sum = 0;
+            temb = temp + y;
+            for(int k=0; k< dim; k+=8)
+            {
+                sum += *tema * *temb;
+                tema++;
+                temb++;
+                sum += *tema * *temb;
+                tema++;
+                temb++; 
+                sum += *tema * *temb;
+                tema++;
+                temb++;
+                sum += *tema * *temb;
+                tema++;
+                temb++; 
+                sum += *tema * *temb;
+                tema++;
+                temb++;
+                sum += *tema * *temb;
+                tema++;
+                temb++; 
+                sum += *tema * *temb;
+                tema++;
+                temb++;
+                sum += *tema * *temb;
+                tema++;
+                temb++; 
+            }
+            *temc++ = sum;
+ 
+ 
         }
-
+////////////////////////////////
+        z += dim;
+        for(j=0; j < dim; j+=4){
+            y = j*dim;
+            int *tema = src  + z;
+            sum = 0;
+            int *temb = temp + y;
+            for(int k=0; k< dim; k+=8)
+            {
+                sum +=  *tema * *temb;
+                tema++;
+                temb++;
+                sum +=  *tema * *temb;
+                tema++;
+                temb++; 
+                sum +=  *tema * *temb;
+                tema++;
+                temb++;
+                sum +=  *tema * *temb;
+                tema++;
+                temb++; 
+                sum +=  *tema * *temb;
+                tema++;
+                temb++;
+                sum +=  *tema * *temb;
+                tema++;
+                temb++; 
+                sum +=  *tema * *temb;
+                tema++;
+                temb++;
+                sum +=  *tema * *temb;
+                tema++;
+                temb++; 
+            }
+            *temc++ = sum;
+            y += dim;
+            tema = src  + z;
+            sum = 0;
+            temb = temp + y;
+            for(int k=0; k< dim; k+=8)
+            {
+                sum += *tema * *temb;
+                tema++;
+                temb++;
+                sum += *tema * *temb;
+                tema++;
+                temb++; 
+                sum += *tema * *temb;
+                tema++;
+                temb++;
+                sum += *tema * *temb;
+                tema++;
+                temb++; 
+                sum += *tema * *temb;
+                tema++;
+                temb++;
+                sum += *tema * *temb;
+                tema++;
+                temb++; 
+                sum += *tema * *temb;
+                tema++;
+                temb++;
+                sum += *tema * *temb;
+                tema++;
+                temb++; 
+            }
+            *temc++ = sum;
+ 
+            y += dim;
+            tema = src  + z;
+            sum = 0;
+            temb = temp + y;
+            for(int k=0; k< dim; k+=8)
+            {
+                sum +=  *tema * *temb;
+                tema++;
+                temb++;
+                sum +=  *tema * *temb;
+                tema++;
+                temb++; 
+                sum +=  *tema * *temb;
+                tema++;
+                temb++;
+                sum +=  *tema * *temb;
+                tema++;
+                temb++; 
+                sum +=  *tema * *temb;
+                tema++;
+                temb++;
+                sum +=  *tema * *temb;
+                tema++;
+                temb++; 
+                sum +=  *tema * *temb;
+                tema++;
+                temb++;
+                sum +=  *tema * *temb;
+                tema++;
+                temb++; 
+            }
+            *temc++ = sum;
+            y += dim;
+            tema = src  + z;
+            sum = 0;
+            temb = temp + y;
+            for(int k=0; k< dim; k+=8)
+            {
+                sum += *tema * *temb;
+                tema++;
+                temb++;
+                sum += *tema * *temb;
+                tema++;
+                temb++; 
+                sum += *tema * *temb;
+                tema++;
+                temb++;
+                sum += *tema * *temb;
+                tema++;
+                temb++; 
+                sum += *tema * *temb;
+                tema++;
+                temb++;
+                sum += *tema * *temb;
+                tema++;
+                temb++; 
+                sum += *tema * *temb;
+                tema++;
+                temb++;
+                sum += *tema * *temb;
+                tema++;
+                temb++; 
+            }
+            *temc++ = sum;
+ 
+    }
     }
 free(temp);
 }
