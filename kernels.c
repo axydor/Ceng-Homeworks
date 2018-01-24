@@ -58,7 +58,7 @@ void convolution(int dim,int *src, int *ker,int *dst)
     z1 = dim - 7;
     for(i = 0; i < z1; i++){
         f = i*dim;
-        for(j = 0; j < z1; j+=2) { 
+        for(j = 0; j < z1; j++) { 
             sum = 0;
                 y = 0;
                 z = f+y;
@@ -151,98 +151,7 @@ void convolution(int dim,int *src, int *ker,int *dst)
             dst [ f + j ] = sum;
         
      ////             j += 2;
-     
-      
-            sum = 0;
-                y = 0;
-                z = f+y;
-                sum += src[z+j+1]*ker[y];
-                sum += src[z+j+1 + 1]*ker[y + 1];
-                sum += src[z+j+1 + 2]*ker[y + 2];
-                sum += src[z+j+1 + 3]*ker[y + 3];
-                sum += src[z+j+1 + 4]*ker[y + 4];
-                sum += src[z+j+1 + 5]*ker[y + 5];
-                sum += src[z+j+1 + 6]*ker[y + 6];
-                sum += src[z+j+1 + 7]*ker[y + 7];
-                y += dim;
-                z = f+y;
-                sum += src[z+j+1]*ker[y];
-                sum += src[z+j+1 + 1]*ker[y + 1];
-                sum += src[z+j+1 + 2]*ker[y + 2];
-                sum += src[z+j+1 + 3]*ker[y + 3];
-                sum += src[z+j+1 + 4]*ker[y + 4];
-                sum += src[z+j+1 + 5]*ker[y + 5];
-                sum += src[z+j+1 + 6]*ker[y + 6];
-                sum += src[z+j+1 + 7]*ker[y + 7];
 
-                y += dim;;
-                z = f+y;
-                sum += src[z+j+1]*ker[y];
-                sum += src[z+j+1 + 1]*ker[y + 1];
-                sum += src[z+j+1 + 2]*ker[y + 2];
-                sum += src[z+j+1 + 3]*ker[y + 3];
-                sum += src[z+j+1 + 4]*ker[y + 4];
-                sum += src[z+j+1 + 5]*ker[y + 5];
-                sum += src[z+j+1 + 6]*ker[y + 6];
-                sum += src[z+j+1 + 7]*ker[y + 7];
-                y += dim;
-                z = f+y;
-                sum += src[z+j+1]*ker[y];
-                sum += src[z+j+1 + 1]*ker[y + 1];
-                sum += src[z+j+1 + 2]*ker[y + 2];
-                sum += src[z+j+1 + 3]*ker[y + 3];
-                sum += src[z+j+1 + 4]*ker[y + 4];
-                sum += src[z+j+1 + 5]*ker[y + 5];
-                sum += src[z+j+1 + 6]*ker[y + 6];
-                sum += src[z+j+1 + 7]*ker[y + 7];
-
-////////////
-
-                y += dim;;
-                z = f+y;
-                sum += src[z+j+1]*ker[y];
-                sum += src[z+j+1 + 1]*ker[y + 1];
-                sum += src[z+j+1 + 2]*ker[y + 2];
-                sum += src[z+j+1 + 3]*ker[y + 3];
-                sum += src[z+j+1 + 4]*ker[y + 4];
-                sum += src[z+j+1 + 5]*ker[y + 5];
-                sum += src[z+j+1 + 6]*ker[y + 6];
-                sum += src[z+j+1 + 7]*ker[y + 7];
-                y += dim;
-                z = f+y;
-                sum += src[z+j+1]*ker[y];
-                sum += src[z+j+1 + 1]*ker[y + 1];
-                sum += src[z+j+1 + 2]*ker[y + 2];
-                sum += src[z+j+1 + 3]*ker[y + 3];
-                sum += src[z+j+1 + 4]*ker[y + 4];
-                sum += src[z+j+1 + 5]*ker[y + 5];
-                sum += src[z+j+1 + 6]*ker[y + 6];
-                sum += src[z+j+1 + 7]*ker[y + 7];
-
-                y += dim;;
-                z = f+y;
-                sum += src[z+j+1]*ker[y];
-                sum += src[z+j+1 + 1]*ker[y + 1];
-                sum += src[z+j+1 + 2]*ker[y + 2];
-                sum += src[z+j+1 + 3]*ker[y + 3];
-                sum += src[z+j+1 + 4]*ker[y + 4];
-                sum += src[z+j+1 + 5]*ker[y + 5];
-                sum += src[z+j+1 + 6]*ker[y + 6];
-                sum += src[z+j+1 + 7]*ker[y + 7];
-                y += dim;
-                z = f+y;
-                sum += src[z+j+1]*ker[y];
-                sum += src[z+j+1 + 1]*ker[y + 1];
-                sum += src[z+j+1 + 2]*ker[y + 2];
-                sum += src[z+j+1 + 3]*ker[y + 3];
-                sum += src[z+j+1 + 4]*ker[y + 4];
-                sum += src[z+j+1 + 5]*ker[y + 5];
-                sum += src[z+j+1 + 6]*ker[y + 6];
-                sum += src[z+j+1 + 7]*ker[y + 7];
-
-
-            
-            dst [ f + j+1 ] = sum;
            
  /////////////////////////// j += 4       
         
