@@ -202,7 +202,7 @@ void naive_matrix_multiplication(int dim,int *src, int *src2,int *dst) {
 char matrix_multiplication_descr[] = "Matrix multiplications: Current working version";
 void matrix_multiplication(int dim,int *src, int *src2,int *dst) 
 {
-    int i,j,z,y,sum;//,k;
+    int i,j,z,y,sum,f;//,k;
             //naive_matrix_multiplication(dim,src,src2,dst);
 
     //int block_size=32;
@@ -226,106 +226,114 @@ void matrix_multiplication(int dim,int *src, int *src2,int *dst)
         z = i * dim;
         for(j=0; j < dim; j+=8){
             y = j*dim;
-            temp[z + j]   = src2[y + i];
-            temp[z + j+1] = src2[y+dim + i];
-            temp[z + j+2] = src2[y+dim+dim + i];
-            temp[z + j+3] = src2[y+dim+dim+dim + i];
-            temp[z + j+4] = src2[y+dim+dim+dim +dim+ i];
-            temp[z + j+5] = src2[y+dim+dim+dim +dim+dim+ i];
-            temp[z + j+6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
-            temp[z + j+7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
+            f = z + j;
+            temp[f ]   = src2[y + i];
+            temp[f +1] = src2[y+dim + i];
+            temp[f +2] = src2[y+dim+dim + i];
+            temp[f +3] = src2[y+dim+dim+dim + i];
+            temp[f +4] = src2[y+dim+dim+dim +dim+ i];
+            temp[f +5] = src2[y+dim+dim+dim +dim+dim+ i];
+            temp[f +6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
+            temp[f +7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
             }
         z += dim;
         i++;
         for(j=0; j < dim; j+=8){
             y = j*dim;
-            temp[z + j]   = src2[y + i];
-            temp[z + j+1] = src2[y+dim + i];
-            temp[z + j+2] = src2[y+dim+dim + i];
-            temp[z + j+3] = src2[y+dim+dim+dim + i];
-            temp[z + j+4] = src2[y+dim+dim+dim +dim+ i];
-            temp[z + j+5] = src2[y+dim+dim+dim +dim+dim+ i];
-            temp[z + j+6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
-            temp[z + j+7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
+            f = z + j;
+            temp[f ]   = src2[y + i];
+            temp[f +1] = src2[y+dim + i];
+            temp[f +2] = src2[y+dim+dim + i];
+            temp[f +3] = src2[y+dim+dim+dim + i];
+            temp[f +4] = src2[y+dim+dim+dim +dim+ i];
+            temp[f +5] = src2[y+dim+dim+dim +dim+dim+ i];
+            temp[f +6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
+            temp[f +7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
             }
         z += dim;
         i++;
         for(j=0; j < dim; j+=8){
             y = j*dim;
-            temp[z + j]   = src2[y + i];
-            temp[z + j+1] = src2[y+dim + i];
-            temp[z + j+2] = src2[y+dim+dim + i];
-            temp[z + j+3] = src2[y+dim+dim+dim + i];
-            temp[z + j+4] = src2[y+dim+dim+dim +dim+ i];
-            temp[z + j+5] = src2[y+dim+dim+dim +dim+dim+ i];
-            temp[z + j+6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
-            temp[z + j+7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
+            f = z + j;
+            temp[f ]   = src2[y + i];
+            temp[f +1] = src2[y+dim + i];
+            temp[f +2] = src2[y+dim+dim + i];
+            temp[f +3] = src2[y+dim+dim+dim + i];
+            temp[f +4] = src2[y+dim+dim+dim +dim+ i];
+            temp[f +5] = src2[y+dim+dim+dim +dim+dim+ i];
+            temp[f +6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
+            temp[f +7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
             }
         z += dim;
         i++;
         for(j=0; j < dim; j+=8){
             y = j*dim;
-            temp[z + j]   = src2[y + i];
-            temp[z + j+1] = src2[y+dim + i];
-            temp[z + j+2] = src2[y+dim+dim + i];
-            temp[z + j+3] = src2[y+dim+dim+dim + i];
-            temp[z + j+4] = src2[y+dim+dim+dim +dim+ i];
-            temp[z + j+5] = src2[y+dim+dim+dim +dim+dim+ i];
-            temp[z + j+6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
-            temp[z + j+7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
+            f = z + j;
+            temp[f ]   = src2[y + i];
+            temp[f +1] = src2[y+dim + i];
+            temp[f +2] = src2[y+dim+dim + i];
+            temp[f +3] = src2[y+dim+dim+dim + i];
+            temp[f +4] = src2[y+dim+dim+dim +dim+ i];
+            temp[f +5] = src2[y+dim+dim+dim +dim+dim+ i];
+            temp[f +6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
+            temp[f +7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
             }
         z += dim;
         i++;
 
         for(j=0; j < dim; j+=8){
             y = j*dim;
-            temp[z + j]   = src2[y + i];
-            temp[z + j+1] = src2[y+dim + i];
-            temp[z + j+2] = src2[y+dim+dim + i];
-            temp[z + j+3] = src2[y+dim+dim+dim + i];
-            temp[z + j+4] = src2[y+dim+dim+dim +dim+ i];
-            temp[z + j+5] = src2[y+dim+dim+dim +dim+dim+ i];
-            temp[z + j+6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
-            temp[z + j+7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
+            f = z + j;
+            temp[f ]   = src2[y + i];
+            temp[f +1] = src2[y+dim + i];
+            temp[f +2] = src2[y+dim+dim + i];
+            temp[f +3] = src2[y+dim+dim+dim + i];
+            temp[f +4] = src2[y+dim+dim+dim +dim+ i];
+            temp[f +5] = src2[y+dim+dim+dim +dim+dim+ i];
+            temp[f +6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
+            temp[f +7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
             }
         z += dim;
         i++;
         for(j=0; j < dim; j+=8){
             y = j*dim;
-            temp[z + j]   = src2[y + i];
-            temp[z + j+1] = src2[y+dim + i];
-            temp[z + j+2] = src2[y+dim+dim + i];
-            temp[z + j+3] = src2[y+dim+dim+dim + i];
-            temp[z + j+4] = src2[y+dim+dim+dim +dim+ i];
-            temp[z + j+5] = src2[y+dim+dim+dim +dim+dim+ i];
-            temp[z + j+6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
-            temp[z + j+7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
+            f = z + j;
+            temp[f ]   = src2[y + i];
+            temp[f +1] = src2[y+dim + i];
+            temp[f +2] = src2[y+dim+dim + i];
+            temp[f +3] = src2[y+dim+dim+dim + i];
+            temp[f +4] = src2[y+dim+dim+dim +dim+ i];
+            temp[f +5] = src2[y+dim+dim+dim +dim+dim+ i];
+            temp[f +6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
+            temp[f +7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
             }
         z += dim;
         i++;
         for(j=0; j < dim; j+=8){
             y = j*dim;
-            temp[z + j]   = src2[y + i];
-            temp[z + j+1] = src2[y+dim + i];
-            temp[z + j+2] = src2[y+dim+dim + i];
-            temp[z + j+3] = src2[y+dim+dim+dim + i];
-            temp[z + j+4] = src2[y+dim+dim+dim +dim+ i];
-            temp[z + j+5] = src2[y+dim+dim+dim +dim+dim+ i];
-            temp[z + j+6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
-            temp[z + j+7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
+            f = z + j;
+            temp[f ]   = src2[y + i];
+            temp[f +1] = src2[y+dim + i];
+            temp[f +2] = src2[y+dim+dim + i];
+            temp[f +3] = src2[y+dim+dim+dim + i];
+            temp[f +4] = src2[y+dim+dim+dim +dim+ i];
+            temp[f +5] = src2[y+dim+dim+dim +dim+dim+ i];
+            temp[f +6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
+            temp[f +7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
             }
         z += dim;
         i++;
         for(j=0; j < dim; j+=8){
             y = j*dim;
-            temp[z + j]   = src2[y + i];
-            temp[z + j+1] = src2[y+dim + i];
-            temp[z + j+2] = src2[y+dim+dim + i];
-            temp[z + j+3] = src2[y+dim+dim+dim + i];
-            temp[z + j+4] = src2[y+dim+dim+dim +dim+ i];
-            temp[z + j+5] = src2[y+dim+dim+dim +dim+dim+ i];
-            temp[z + j+6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
-            temp[z + j+7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
+            f = z + j;
+            temp[f ]   = src2[y + i];
+            temp[f +1] = src2[y+dim + i];
+            temp[f +2] = src2[y+dim+dim + i];
+            temp[f +3] = src2[y+dim+dim+dim + i];
+            temp[f +4] = src2[y+dim+dim+dim +dim+ i];
+            temp[f +5] = src2[y+dim+dim+dim +dim+dim+ i];
+            temp[f +6] = src2[y+dim+dim+dim +dim+dim+dim+ i];
+            temp[f +7] = src2[y+dim+dim+dim +dim+dim+dim+dim+ i];
             }
         i++;
  
