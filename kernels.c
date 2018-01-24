@@ -54,24 +54,203 @@ char convolution_descr[] = "Dot product: Current working version";
 void convolution(int dim,int *src, int *ker,int *dst) 
 {
     //       naive_conv(dim,src,ker,dst);
-    int i,j,k,l,sum,f,y;
-    int z = dim -7;
+    int i,j,k,sum,f,y,z,z1;//l
+    z1 = dim - 7;
+    for(i = 0; i < z1; i++){
+        f = i*dim;
+        for(j = 0; j < z1; j+=2) { 
+            sum = 0;
+                y = 0;
+                z = f+y;
+                sum += src[z+j]*ker[y];
+                sum += src[z+j + 1]*ker[y + 1];
+                sum += src[z+j + 2]*ker[y + 2];
+                sum += src[z+j + 3]*ker[y + 3];
+                sum += src[z+j + 4]*ker[y + 4];
+                sum += src[z+j + 5]*ker[y + 5];
+                sum += src[z+j + 6]*ker[y + 6];
+                sum += src[z+j + 7]*ker[y + 7];
+                y += dim;
+                z = f+y;
+                sum += src[z+j]*ker[y];
+                sum += src[z+j + 1]*ker[y + 1];
+                sum += src[z+j + 2]*ker[y + 2];
+                sum += src[z+j + 3]*ker[y + 3];
+                sum += src[z+j + 4]*ker[y + 4];
+                sum += src[z+j + 5]*ker[y + 5];
+                sum += src[z+j + 6]*ker[y + 6];
+                sum += src[z+j + 7]*ker[y + 7];
 
-    for(i = 0; i < z; i++) {
-        for(j = 0; j < z; j++) {
-            dst[j*dim+i] = 0;
-            f = j*dim;
-            for(k = 0; k < 8; k++){
-                sum = 0;
-                y = i + k;
-                for(l = 0; l < 8; l++) {
-                    sum += src[l*dim+f+y]*ker[l*dim+k];
-                }
-                dst[f+i] += sum;
-            }
+                y += dim;;
+                z = f+y;
+                sum += src[z+j]*ker[y];
+                sum += src[z+j + 1]*ker[y + 1];
+                sum += src[z+j + 2]*ker[y + 2];
+                sum += src[z+j + 3]*ker[y + 3];
+                sum += src[z+j + 4]*ker[y + 4];
+                sum += src[z+j + 5]*ker[y + 5];
+                sum += src[z+j + 6]*ker[y + 6];
+                sum += src[z+j + 7]*ker[y + 7];
+                y += dim;
+                z = f+y;
+                sum += src[z+j]*ker[y];
+                sum += src[z+j + 1]*ker[y + 1];
+                sum += src[z+j + 2]*ker[y + 2];
+                sum += src[z+j + 3]*ker[y + 3];
+                sum += src[z+j + 4]*ker[y + 4];
+                sum += src[z+j + 5]*ker[y + 5];
+                sum += src[z+j + 6]*ker[y + 6];
+                sum += src[z+j + 7]*ker[y + 7];
+
+////////////
+
+                y += dim;;
+                z = f+y;
+                sum += src[z+j]*ker[y];
+                sum += src[z+j + 1]*ker[y + 1];
+                sum += src[z+j + 2]*ker[y + 2];
+                sum += src[z+j + 3]*ker[y + 3];
+                sum += src[z+j + 4]*ker[y + 4];
+                sum += src[z+j + 5]*ker[y + 5];
+                sum += src[z+j + 6]*ker[y + 6];
+                sum += src[z+j + 7]*ker[y + 7];
+                y += dim;
+                z = f+y;
+                sum += src[z+j]*ker[y];
+                sum += src[z+j + 1]*ker[y + 1];
+                sum += src[z+j + 2]*ker[y + 2];
+                sum += src[z+j + 3]*ker[y + 3];
+                sum += src[z+j + 4]*ker[y + 4];
+                sum += src[z+j + 5]*ker[y + 5];
+                sum += src[z+j + 6]*ker[y + 6];
+                sum += src[z+j + 7]*ker[y + 7];
+
+                y += dim;;
+                z = f+y;
+                sum += src[z+j]*ker[y];
+                sum += src[z+j + 1]*ker[y + 1];
+                sum += src[z+j + 2]*ker[y + 2];
+                sum += src[z+j + 3]*ker[y + 3];
+                sum += src[z+j + 4]*ker[y + 4];
+                sum += src[z+j + 5]*ker[y + 5];
+                sum += src[z+j + 6]*ker[y + 6];
+                sum += src[z+j + 7]*ker[y + 7];
+                y += dim;
+                z = f+y;
+                sum += src[z+j]*ker[y];
+                sum += src[z+j + 1]*ker[y + 1];
+                sum += src[z+j + 2]*ker[y + 2];
+                sum += src[z+j + 3]*ker[y + 3];
+                sum += src[z+j + 4]*ker[y + 4];
+                sum += src[z+j + 5]*ker[y + 5];
+                sum += src[z+j + 6]*ker[y + 6];
+                sum += src[z+j + 7]*ker[y + 7];
+
+
+            
+            dst [ f + j ] = sum;
+        
+     ////             j += 2;
+     
+      
+            sum = 0;
+                y = 0;
+                z = f+y;
+                sum += src[z+j+1]*ker[y];
+                sum += src[z+j+1 + 1]*ker[y + 1];
+                sum += src[z+j+1 + 2]*ker[y + 2];
+                sum += src[z+j+1 + 3]*ker[y + 3];
+                sum += src[z+j+1 + 4]*ker[y + 4];
+                sum += src[z+j+1 + 5]*ker[y + 5];
+                sum += src[z+j+1 + 6]*ker[y + 6];
+                sum += src[z+j+1 + 7]*ker[y + 7];
+                y += dim;
+                z = f+y;
+                sum += src[z+j+1]*ker[y];
+                sum += src[z+j+1 + 1]*ker[y + 1];
+                sum += src[z+j+1 + 2]*ker[y + 2];
+                sum += src[z+j+1 + 3]*ker[y + 3];
+                sum += src[z+j+1 + 4]*ker[y + 4];
+                sum += src[z+j+1 + 5]*ker[y + 5];
+                sum += src[z+j+1 + 6]*ker[y + 6];
+                sum += src[z+j+1 + 7]*ker[y + 7];
+
+                y += dim;;
+                z = f+y;
+                sum += src[z+j+1]*ker[y];
+                sum += src[z+j+1 + 1]*ker[y + 1];
+                sum += src[z+j+1 + 2]*ker[y + 2];
+                sum += src[z+j+1 + 3]*ker[y + 3];
+                sum += src[z+j+1 + 4]*ker[y + 4];
+                sum += src[z+j+1 + 5]*ker[y + 5];
+                sum += src[z+j+1 + 6]*ker[y + 6];
+                sum += src[z+j+1 + 7]*ker[y + 7];
+                y += dim;
+                z = f+y;
+                sum += src[z+j+1]*ker[y];
+                sum += src[z+j+1 + 1]*ker[y + 1];
+                sum += src[z+j+1 + 2]*ker[y + 2];
+                sum += src[z+j+1 + 3]*ker[y + 3];
+                sum += src[z+j+1 + 4]*ker[y + 4];
+                sum += src[z+j+1 + 5]*ker[y + 5];
+                sum += src[z+j+1 + 6]*ker[y + 6];
+                sum += src[z+j+1 + 7]*ker[y + 7];
+
+////////////
+
+                y += dim;;
+                z = f+y;
+                sum += src[z+j+1]*ker[y];
+                sum += src[z+j+1 + 1]*ker[y + 1];
+                sum += src[z+j+1 + 2]*ker[y + 2];
+                sum += src[z+j+1 + 3]*ker[y + 3];
+                sum += src[z+j+1 + 4]*ker[y + 4];
+                sum += src[z+j+1 + 5]*ker[y + 5];
+                sum += src[z+j+1 + 6]*ker[y + 6];
+                sum += src[z+j+1 + 7]*ker[y + 7];
+                y += dim;
+                z = f+y;
+                sum += src[z+j+1]*ker[y];
+                sum += src[z+j+1 + 1]*ker[y + 1];
+                sum += src[z+j+1 + 2]*ker[y + 2];
+                sum += src[z+j+1 + 3]*ker[y + 3];
+                sum += src[z+j+1 + 4]*ker[y + 4];
+                sum += src[z+j+1 + 5]*ker[y + 5];
+                sum += src[z+j+1 + 6]*ker[y + 6];
+                sum += src[z+j+1 + 7]*ker[y + 7];
+
+                y += dim;;
+                z = f+y;
+                sum += src[z+j+1]*ker[y];
+                sum += src[z+j+1 + 1]*ker[y + 1];
+                sum += src[z+j+1 + 2]*ker[y + 2];
+                sum += src[z+j+1 + 3]*ker[y + 3];
+                sum += src[z+j+1 + 4]*ker[y + 4];
+                sum += src[z+j+1 + 5]*ker[y + 5];
+                sum += src[z+j+1 + 6]*ker[y + 6];
+                sum += src[z+j+1 + 7]*ker[y + 7];
+                y += dim;
+                z = f+y;
+                sum += src[z+j+1]*ker[y];
+                sum += src[z+j+1 + 1]*ker[y + 1];
+                sum += src[z+j+1 + 2]*ker[y + 2];
+                sum += src[z+j+1 + 3]*ker[y + 3];
+                sum += src[z+j+1 + 4]*ker[y + 4];
+                sum += src[z+j+1 + 5]*ker[y + 5];
+                sum += src[z+j+1 + 6]*ker[y + 6];
+                sum += src[z+j+1 + 7]*ker[y + 7];
+
+
+            
+            dst [ f + j+1 ] = sum;
+           
+ /////////////////////////// j += 4       
+        
+        
+        
+        
         }
     }
-
 }
 
 /*********************************************************************
@@ -122,13 +301,13 @@ void naive_matrix_multiplication(int dim,int *src, int *src2,int *dst) {
 char matrix_multiplication_descr[] = "Matrix multiplications: Current working version";
 void matrix_multiplication(int dim,int *src, int *src2,int *dst) 
 {
-    int i,j,k,z,y,sum,sum2;
-        //naive_matrix_multiplication(dim,src,src2,dst);
+    int i,j,z,y,sum;//,k;
+            //naive_matrix_multiplication(dim,src,src2,dst);
 
-    int block_size=32;
+    //int block_size=32;
     int *temp = malloc(sizeof(int) * dim * dim );
-    if( dim == 32 || dim == 128)// || dim == 256)
-        block_size = 8;
+    //if( dim == 32 || dim == 128)// || dim == 256)
+    //    block_size = 8;
 /*
     for(i=0; i < dim; i+=block_size){
         for(j=0; j < dim; j+=block_size){
