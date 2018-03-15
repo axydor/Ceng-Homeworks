@@ -1,44 +1,62 @@
-#include<unistd.h>
-#include<stdio.h>
+#include <unistd.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include<sys/socket.h>
+#include <sys/socket.h>
+#include <sys/select.h>
+#include <poll.h>
 
-
-int main()
+typedef struct coordinate
 {
-    int i;
+    int x;
+    int y;    
+} coordinate;
+
+typedef struct ph_message 
+{
+    coordinate move_request;
+} ph_message;
+
+
+typedef struct server_message
+{
+    coordinate pos;
+    coordinate adv_pos;
+    int object_count;
+    coordinate object_pos[4];
+} server_message;
+
+int main(int argc, char* args[])
+{
+    int i,retval;
     int height,width;
     int MH; // Manhattan Distance
     coordinate cor;
     ph_message message;
     server_message s_m;
  
-  
+    struct pollfd fds[2];
+
+    fds[0].fd = STDIN_FILENO;
+    fds[0].events = POLLIN;
+
     height = atoi(args[1]);
 
     width  = atoi(args[2]);
     
-    fd_set rfds;
-    struct timeval tv;
-    int retval;
 
-    FD_ZERO(&rfds);
-    FD_SET(1,&rfds);
-
-
-    retval = select(1, &rfds, NULL, NULL, &tv);
+    retval = poll(fds,2,-1);
     read(0,&s_m,sizeof(server_message));
 
     cor = s_m.pos;
-    
+
     while(1)
     {
         int N=1,S=1,L=1,R=1;        
 
-        retval = select(1, &rfds, NULL, NULL, &tv);
+        retval = poll(fds,2,-1);
         read(0,&s_m,sizeof(server_message));
     
         cor = s_m.pos;
@@ -130,11 +148,7 @@ int main()
                 break;                
             }
         }
-    }    
-    
-    
-    
-    
-    
+    } 
+
     return 0;    
 }

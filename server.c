@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/socket.h>
+#include <string.h>
 #define PIPE(fd) socketpair(AF_UNIX, SOCK_STREAM, PF_UNIX, fd)
 
 typedef struct coordinate
@@ -20,6 +21,7 @@ typedef struct object
 	int health;
     coordinate cor;
     int pid;
+    int fd;
 } object;
 
 typedef struct server_message
@@ -34,12 +36,6 @@ typedef struct ph_message
 {
     coordinate move_request;
 } ph_message;
-
-typedef struct type_pid
-{
-	int  pid;
-	char type;
-} type_pid;
 
 int width, height, no_obstacles, no_hunters, no_preys;
 
@@ -191,117 +187,161 @@ int no_neighbours(object grid[height][width],coordinate cor, coordinate object_p
 
 int main()
 {
-	int i,j;
+	int i, j, z, lock=0;
 
     scanf("%d %d", &width, &height);
 	object grid[height][width];
 	take_input(grid);
-	
     print_grid(width, height, grid);
 
     struct pollfd fds[ no_hunters + no_preys ];  //	ARRAY OF FILE DESCRIPTORS
-    int ip;            //  ARRAY OF PID, PID AND RELATED FD ARE AT THE SAME INDEX ON THE TWO ARRAYS(fds[],pid[]).
+    int ip=-1;            //  ARRAY OF PID, PID AND RELATED FD ARE AT THE SAME INDEX ON THE TWO ARRAYS(fds[],control[]).
     int child,k;
     
     // FORK TIME
-    for(i=0; i < height; i++)
-    {
-	   	for(j=0; j < width; j++)
-	   	{
-	   		if(grid[i][j].type == 'H' || grid[i][j].type == 'P' )
-	   		{
-		        int fd[2];
-		        PIPE(fd);
-		        int h_chil;
-		        if(fork())
-		        {
-		            dup2(fd[0],0);
-		            close(fd[0]);
-		            close(fd[1]);
-		            server_message s_m;
-		            coordinate object_pos[4];
-		            s_m.adv_pos = MH(grid, grid[i][j].cor); // LOCATION OF CLOSES ADVERSARY
-		            s_m.object_count =  no_neighbours(grid, grid[i][j].cor,s_m.object_pos);// NUMBER OF NEIGHBOURING OBJECT
-		            
-		            write(0,&s_m,sizeof(server_message));
-		        }
-		 	    else
-		 	    {   
-		 	        dup2(fd[1],1);
-		 	        fds[i].fd = fd[1];
-		 	        fds[i].events = POLLIN;
-		 	        close(fd[0]);
-		 	        close(fd[1]);
-		 	        char s_height[3];
-		 	        char s_width[3];
-		 	        sprintf( s_height, "%d", height );
-		 	        sprintf( s_width, "%d", width );
-		            if(grid[i][j].type == 'H')
-		            {
-			            char* newargv[] = { "./hunt", s_height, s_width };
-			            char* newenv[] = { NULL };
-			            grid[i][j].pid = getpid();
-		            	type_pid[ip].pid = getpid();
-		            	type_pid[ip].type = 'H';
-		            	ip++;
-			            execve( "./hunt", newargv, newenv );		                	
-		            }
-		            else
-		            {
-		                char* newargv[] = { "./prey", s_height, s_width };
-		                char* newenv[] = { NULL };
-		            	type_pid[ip].pid = getpid();
-		            	type_pid[ip].type = 'P';
-		                ip++;
-		                execve( "./prey", newargv, newenv );
-		            }
-		        }
-		    }
+	    for(i=0; i < height; i++)
+	    {
+		   	for(j=0; j < width; j++)
+		   	{
+		   		if(grid[i][j].type == 'H' || grid[i][j].type == 'P' )
+		   		{
+			   		ip++;
+			        int fd[2];
+			        PIPE(fd);
+			        int h_chil;
+			        if( grid[i][j].pid = fork() )
+			        {
+			 	    	printf("PARENT- %d\n",ip );
+		 	        fflush(stdout);
+
+			        	close(fd[1]);
+			        	fds[ip].fd       = fd[0];
+			 	        fds[ip].events   = POLLIN;
+				        grid[i][j].fd    = fd[0];
+
+			            server_message s_m;
+			            memset(&s_m,0,sizeof(server_message));
+			            coordinate object_pos[4];
+			            s_m.adv_pos = MH(grid, grid[i][j].cor); // LOCATION OF CLOSES ADVERSARY
+			            s_m.object_count =  no_neighbours(grid, grid[i][j].cor,s_m.object_pos);// NUMBER OF NEIGHBOURING OBJECT
+			            if(write(fd[0],&s_m,sizeof(server_message)) == -1 )
+			            	perror("SERVER-WRITE-ERROR\n");
+			            char line[80];
+			            read(fd[0],line,80);
+			            printf("%s\n",line );
+			            fflush(stdout);
+
+			        }
+			 	    else
+			 	    {   
+			 	    	printf("CHILD- %d\n",ip );
+		 	        fflush(stdout);
+
+			 	        dup2(fd[1],0);
+			 	        dup2(fd[1],1);
+   			            close(fd[0]);
+			            close(fd[1]);
+
+			 	        char s_height[3];
+			 	        char s_width[3];
+			 	        sprintf( s_height, "%d", height );
+			 	        sprintf( s_width, "%d", width );
+			            if(grid[i][j].type == 'H')
+			            {
+				            char* newargv[] = { "./hunt", s_height, s_width, NULL };
+				            char* newenv[] = { NULL };
+				            if( execve( "./hunt", newargv, newenv ) == -1)
+				            	write(2,"EXECVE ERROR",20);		                	
+			            }
+			            else
+			            {
+			                char* newargv[] = { "./prey", s_height, s_width, NULL };
+			                char* newenv[] = { NULL };
+				            if( execve( "./prey", newargv, newenv ) == -1)
+				            	write(2,"EXECVE ERROR",20);		  
+			            }
+			        }
+			    }
+			}
+		}
+
+/*
+		for(z=0; z <no_hunters+no_preys; z++)
+		{
+			for(i=0; i < height; i++)
+			{
+				for(j=0; j < width; j++)
+				{
+					if(grid[i][j].type == 'H' || grid[i][j].type == 'P' )
+					{
+						if(fds[z].fd == grid[i][j].fd)
+						{
+							;
+						}
+					}
+				}
+			}
+		}
+
+*/
+/*
+	    while(1)
+	    {
+	    	int pid;
+	        char line[128];
+	        int retval;
+	        retval = poll(fds,no_hunters+no_preys,-1);
+	        if(retval == -1)
+	        {
+	        	perror("POLL");
+	        }
+	        for(i=0; i <no_hunters+no_preys; i++)  // CHECK THE ALIVE PROCESSES (WHICH ARE MORTAL :) 
+	        {
+	        	if(type_pid[i].pid == 0) // THAT PROCESS IS KILLED
+	        	{
+	        		continue;
+	        	}
+	        	if(fds[i].revents & POLLIN)
+	        	{
+	        		int x = message.move_request.x;
+			     	int y = message.move_request.y
+			        char being_type = type_pid[i].type;
+			        char tile_type  = grid[x][y].type;
+			        ph_message message;
+	        		read(0,&message;,sizeof(ph_message));
+	        		if( 0 <= x < height && 0 <= y < width) // CHECK IF THE REQUEST IS VALID
+	        		{
+	        			if(being_type == 'H' && tile_type == 'P')  // HUNTER KILSS PREY
+	        			{
+	        				kill()
+	        			}
+	        		}
+	        		//send(fd[i])
+	        	}
+	        }
+
+	        if(no_hunters == 0 || no_preys == 0)
+	        {
+	        	//massacare();
+	        	break;
+	        }
+	    }  
+*/
+	sleep(1);
+	for(i=0; i < height; i++)
+	{
+		for(j=0; j < width; j++)
+		{
+			if(grid[i][j].type == 'H' || grid[i][j].type == 'P' )
+			{
+				int dip = grid[i][j].pid;
+    		    printf("pid:%d\n",dip);
+    		    close(grid[i][j].fd);
+    		    kill(dip,SIGTERM);
+				waitpid(dip,NULL,0);
+			}
 		}
 	}
-
-    while(1)
-    {
-    	int pid;
-        char line[128];
-        int retval;
-        retval = poll(fds,no_hunters+no_preys,-1);
-        if(retval == -1)
-        {
-        	perror("POLL");
-        }
-        for(i=0; i <no_hunters+no_preys; i++)  // CHECK THE ALIVE PROCESSES (WHICH ARE MORTAL :) 
-        {
-        	if(type_pid[i].pid == 0) // THAT PROCESS IS KILLED
-        	{
-        		continue;
-        	}
-        	if(fds[i].revents & POLLIN)
-        	{
-        		int x = message.move_request.x;
-		     	int y = message.move_request.y
-		        char being_type = type_pid[i].type;
-		        char tile_type  = grid[x][y].type;
-		        ph_message message;
-        		read(0,&message;,sizeof(ph_message));
-        		if( 0 <= x < height && 0 <= y < width) // CHECK IF THE REQUEST IS VALID
-        		{
-        			if(being_type == 'H' && tile_type == 'P')  // HUNTER KILSS PREY
-        			{
-        				kill()
-        			}
-        		}
-        		//send(fd[i])
-        	}
-        }
-
-        if(no_hunters == 0 || no_preys == 0)
-        {
-        	//massacare();
-        	break;
-        }
-    }   
-    
     return 0;
     
 }

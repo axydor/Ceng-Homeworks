@@ -6,6 +6,7 @@
 #include <sys/wait.h>
 #include <sys/socket.h>
 #include <sys/select.h>
+#include <poll.h>
 
 typedef struct coordinate
 {
@@ -44,18 +45,19 @@ int main(int argc, char* args[])
     height = atoi(args[1]);
 
     width  = atoi(args[2]);
+    retval = poll(fds,1,-1);
+    if( retval < 0 )
+        write(2,"HUNTER-POLL-ERROR\n",80);
     
-
-    retval = poll(fds,2,-1);
     read(0,&s_m,sizeof(server_message));
 
     cor = s_m.pos;
-    
+
     while(1)
     {
         int N=1,S=1,L=1,R=1;        
 
-        retval = select(1, &rfds, NULL, NULL, &tv);
+        retval = poll(fds,2,-1);
         read(0,&s_m,sizeof(server_message));
     
         cor = s_m.pos;
@@ -148,6 +150,6 @@ int main(int argc, char* args[])
             }
         }
     }    
-    
+
     return 0;    
 }
