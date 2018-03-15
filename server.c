@@ -232,18 +232,18 @@ void hunter_moves(object grid[height][width],int i,int j,int x,int y)
 	int new_health = grid[i][j].health - 1;
 
 	//	CLEAN THE PREVIOUS TILE
-	grid[i][j].type = ' ';
-	grid[i][j].fd=0;
-	grid[i][j].pid=0;
-	grid[i][j].health=0;	
 
 	if(new_health <= 0)
 	{
+		grid[i][j].type = ' ';
+		grid[i][j].fd=0;
+		grid[i][j].pid=0;
+		grid[i][j].health=0;	
 		int pid_hunter = grid[i][j].pid;
 		close(grid[i][j].fd);
 		kill(pid_hunter,SIGTERM);
 		waitpid(pid_hunter,NULL,0);
-		
+
 	}
 	else
 	{
@@ -251,6 +251,11 @@ void hunter_moves(object grid[height][width],int i,int j,int x,int y)
 	    grid[x][y].type = 'H';
 	    grid[x][y].fd = grid[i][j].fd;
 	    grid[x][y].pid = grid[i][j].pid;
+
+		grid[i][j].type = ' ';
+		grid[i][j].fd=0;
+		grid[i][j].pid=0;
+		grid[i][j].health=0;	
 
 	    server_message s_m;
 	    memset(&s_m,0,sizeof(server_message));
