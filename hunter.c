@@ -7,6 +7,7 @@
 #include <sys/socket.h>
 #include <sys/select.h>
 #include <poll.h>
+#include <string.h>
 
 typedef struct coordinate
 {
@@ -34,30 +35,36 @@ int main(int argc, char* args[])
     int height,width;
     int MH; // Manhattan Distance
     coordinate cor;
-    ph_message message;
     server_message s_m;
  
     struct pollfd fds[2];
 
-    fds[0].fd = STDIN_FILENO;
+    fds[0].fd = 0;
     fds[0].events = POLLIN;
 
     height = atoi(args[1]);
 
     width  = atoi(args[2]);
+    
+/*
     retval = poll(fds,1,-1);
     if( retval < 0 )
-        write(2,"HUNTER-POLL-ERROR\n",80);
+        if(write(2,"HUNTER-POLL-ERROR\n",80) == -1)
+        perror("HUNTER OR PREY WRITE ERROR");
     
     read(0,&s_m,sizeof(server_message));
 
     cor = s_m.pos;
+    */
 
     while(1)
     {
         int N=1,S=1,L=1,R=1;        
 
-        retval = poll(fds,2,-1);
+        ph_message message;
+        memset(&message,0,sizeof(ph_message));
+
+        retval = poll(fds,1,-1);
         read(0,&s_m,sizeof(server_message));
     
         cor = s_m.pos;
@@ -96,7 +103,8 @@ int main(int argc, char* args[])
                     MH = new_MH;
                     message.move_request.x = cor.x-1;
                     message.move_request.y = cor.y;
-                    write(1,&message,sizeof(message));
+                    if(write(1,&message,sizeof(ph_message)) == -1)
+                        perror("HUNTER OR PREY WRITE ERROR");
                     usleep(10000*(1+rand()*100/9));
                     break;
                 }
@@ -109,7 +117,8 @@ int main(int argc, char* args[])
                     MH = new_MH;
                     message.move_request.x = cor.x+1;
                     message.move_request.y = cor.y;
-                    write(1,&message,sizeof(message));
+                    if(write(1,&message,sizeof(ph_message)) == -1)
+                        perror("HUNTER OR PREY WRITE ERROR");
                     usleep(10000*(1+rand()*100/9));                    
                     break;
                 }                
@@ -122,7 +131,8 @@ int main(int argc, char* args[])
                     MH = new_MH;
                     message.move_request.x = cor.x;
                     message.move_request.y = cor.y-1;
-                    write(1,&message,sizeof(message));
+                    if(write(1,&message,sizeof(ph_message)) == -1)
+                        perror("HUNTER OR PREY WRITE ERROR");
                     usleep(10000*(1+rand()*100/9));
                     break;
                 }                   
@@ -135,7 +145,8 @@ int main(int argc, char* args[])
                     MH = new_MH;
                     message.move_request.x = cor.x;
                     message.move_request.y = cor.y+1;
-                    write(1,&message,sizeof(message));
+                    if(write(1,&message,sizeof(ph_message)) == -1)
+                        perror("HUNTER OR PREY WRITE ERROR");
                     usleep(10000*(1+rand()*100/9));
                     break;
                 }                   
@@ -144,7 +155,8 @@ int main(int argc, char* args[])
             {
                 message.move_request.x = cor.x;
                 message.move_request.y = cor.y;
-                write(1,&message,sizeof(message));
+                if(write(1,&message,sizeof(ph_message)) == -1)
+                    perror("HUNTER OR PREY WRITE ERROR");
                 usleep(10000*(1+rand()*100/9));
                 break;                
             }
