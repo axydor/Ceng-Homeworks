@@ -46,16 +46,6 @@ int main(int argc, char* args[])
 
     width  = atoi(args[2]);
     
-/*
-    retval = poll(fds,1,-1);
-    if( retval < 0 )
-        if(write(2,"HUNTER-POLL-ERROR\n",80) == -1)
-        perror("HUNTER OR PREY WRITE ERROR");
-    
-    read(0,&s_m,sizeof(server_message));
-
-    cor = s_m.pos;
-    */
 
     while(1)
     {
@@ -63,9 +53,18 @@ int main(int argc, char* args[])
 
         ph_message message;
         memset(&message,0,sizeof(ph_message));
+        memset(&s_m,0,sizeof(server_message));
 
-        retval = poll(fds,1,-1);
-        read(0,&s_m,sizeof(server_message));
+        retval = poll(fds,1,-1);    
+        if(fds[0].revents & POLLIN)
+        {
+            if(read(0,&s_m,sizeof(server_message)) <= 0 )
+                write(2,"HUNTER CANT READ\n",15);
+        }
+        else
+        {
+            continue;
+        }
     
         cor = s_m.pos;
         MH = abs(cor.x - s_m.adv_pos.x) + abs(cor.y - s_m.adv_pos.y);
@@ -93,61 +92,59 @@ int main(int argc, char* args[])
         for(i=0; i <  4 - s_m.object_count; i++)   // CREATE AND SEND A REQUEST TOs MOVE
         {
             int new_MH;
-            int posib_x = s_m.object_pos[i].x;
-            int posib_y = s_m.object_pos[i].y;
             if(N && 0 <= cor.x-1 ) // UP TILE IS NOT OBSTRUCTED
             {
-                new_MH = abs(cor.x-1 - posib_x) + abs(cor.y - posib_y);
-                if( new_MH < MH)
+                new_MH = abs(cor.x-1 - s_m.adv_pos.x) + abs(cor.y - s_m.adv_pos.y);
+                if( new_MH > MH)
                 {
                     MH = new_MH;
                     message.move_request.x = cor.x-1;
                     message.move_request.y = cor.y;
-                    if(write(1,&message,sizeof(ph_message)) == -1)
+                    if(write(1,&message,sizeof(ph_message)) <= 0)
                         perror("HUNTER OR PREY WRITE ERROR");
-                    usleep(10000*(1+rand()*100/9));
+                    usleep(10000*(1+rand()%9));
                     break;
                 }
             }
             else if(S && cor.x+1 < height)  // DOWN TILE IS NOT OBSTRUCTED
             {
-                new_MH = abs(cor.x+1 - posib_x) + abs(cor.y - posib_y);
-                if( new_MH < MH)
+                new_MH = abs(cor.x+1 - s_m.adv_pos.x) + abs(cor.y - s_m.adv_pos.y);
+                if( new_MH > MH)
                 {
                     MH = new_MH;
                     message.move_request.x = cor.x+1;
                     message.move_request.y = cor.y;
-                    if(write(1,&message,sizeof(ph_message)) == -1)
+                    if(write(1,&message,sizeof(ph_message)) <= 0)
                         perror("HUNTER OR PREY WRITE ERROR");
-                    usleep(10000*(1+rand()*100/9));                    
+                    usleep(10000*(1+rand()%9));                    
                     break;
                 }                
             }
             else if(L && 0 <= cor.y-1)   // LEFT TILE IS NOT OBSTURCTED
             {
-                new_MH = abs(cor.x - posib_x) + abs(cor.y-1 - posib_y);
-                if( new_MH < MH)
+                new_MH = abs(cor.x - s_m.adv_pos.x) + abs(cor.y-1 - s_m.adv_pos.y);
+                if( new_MH > MH)
                 {
                     MH = new_MH;
                     message.move_request.x = cor.x;
                     message.move_request.y = cor.y-1;
-                    if(write(1,&message,sizeof(ph_message)) == -1)
+                    if(write(1,&message,sizeof(ph_message)) <= 0)
                         perror("HUNTER OR PREY WRITE ERROR");
-                    usleep(10000*(1+rand()*100/9));
+                    usleep(10000*(1+rand()%9));
                     break;
                 }                   
             }
             else if(R && cor.y+1 < width) // RIGHT TILE IS NOT OBSTRUCTED
             {
-                new_MH = abs(cor.x - posib_x) + abs(cor.y+1 - posib_y);
-                if( new_MH < MH)
+                new_MH = abs(cor.x - s_m.adv_pos.x) + abs(cor.y+1 - s_m.adv_pos.y);
+                if( new_MH > MH)
                 {
                     MH = new_MH;
                     message.move_request.x = cor.x;
                     message.move_request.y = cor.y+1;
-                    if(write(1,&message,sizeof(ph_message)) == -1)
+                    if(write(1,&message,sizeof(ph_message)) <= 0)
                         perror("HUNTER OR PREY WRITE ERROR");
-                    usleep(10000*(1+rand()*100/9));
+                    usleep(10000*(1+rand()%9));
                     break;
                 }                   
             }
@@ -155,9 +152,9 @@ int main(int argc, char* args[])
             {
                 message.move_request.x = cor.x;
                 message.move_request.y = cor.y;
-                if(write(1,&message,sizeof(ph_message)) == -1)
+                if(write(1,&message,sizeof(ph_message)) <= 0)
                     perror("HUNTER OR PREY WRITE ERROR");
-                usleep(10000*(1+rand()*100/9));
+                usleep(10000*(1+rand()%9));
                 break;                
             }
         }
