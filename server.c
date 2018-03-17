@@ -237,6 +237,8 @@ void hunter_kills_prey(struct pollfd fds[no_h+no_p],coordinate cor_of_fd[no_h+no
     grid[i][j].health = 0;
     server_message s_m;
     memset(&s_m,0,sizeof(server_message));
+    memset(&s_m.adv_pos,0,sizeof(coordinate));
+    memset(s_m.object_pos,0,sizeof(coordinate)*4);
     s_m.pos.x = x;
     s_m.pos.y = y;
     s_m.adv_pos = MH(grid, x, y); // LOCATION OF CLOSES ADVERSARY
@@ -349,8 +351,8 @@ void prey_moves(struct pollfd* fds,coordinate cor_of_fd[no_h+no_p],object** grid
 
 void massacre(object** grid)
 {
-	printf("MASSACRE IS INEVITABLE\n");
-    fflush(stdout);
+	//printf("MASSACRE IS INEVITABLE\n");
+    //fflush(stdout);
 	int i,j;
 	for(i=0; i < height; i++)
 	{
@@ -359,7 +361,7 @@ void massacre(object** grid)
 			if(grid[i][j].type == 'H' || grid[i][j].type == 'P' )
 			{
 				int dip = grid[i][j].pid;
-    		    printf("TYPE:%c, LOC:%d-%d, pid:%d\n",grid[i][j].type,i,j,dip);
+    		    //printf("TYPE:%c, LOC:%d-%d, pid:%d\n",grid[i][j].type,i,j,dip);
     		    fflush(stdout);
                 close(grid[i][j].fd);
     		    kill(dip,SIGTERM);
@@ -576,6 +578,5 @@ int main()
     }
     free(grid);
 
-return 0;
-    
+    return 0;
 }
