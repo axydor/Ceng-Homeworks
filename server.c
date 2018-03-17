@@ -239,13 +239,11 @@ void hunter_kills_prey(struct pollfd fds[no_h+no_p],coordinate cor_of_fd[no_h+no
     // //memset(&s_m,0,sizeof(server_message));
     s_m.pos.x = x;
     s_m.pos.y = y;
-    coordinate object_pos[4];
     s_m.adv_pos = MH(grid, x, y); // LOCATION OF CLOSES ADVERSARY
     s_m.object_count =  no_neighbours(grid,x,y,s_m.object_pos);// NUMBER OF NEIGHBOURING OBJECT
     if(write(grid[x][y].fd,&s_m,sizeof(server_message)) == -1 )
         perror("HUNTER-KILLS-PREY-ERRO\n");
     
-    real_no_p;
 }
 
 void cant_move(object** grid,int i,int j)
@@ -254,7 +252,6 @@ void cant_move(object** grid,int i,int j)
     // //memset(&s_m,0,sizeof(server_message));
     s_m.pos.x = i;
     s_m.pos.y = j;
-    coordinate object_pos[4];
     s_m.adv_pos = MH(grid, i, j); // LOCATION OF CLOSES ADVERSARY
     s_m.object_count =  no_neighbours(grid,i,j,s_m.object_pos);// NUMBER OF NEIGHBOURING OBJECT
     if(write(grid[i][j].fd,&s_m,sizeof(server_message)) == -1 )
@@ -303,7 +300,6 @@ void hunter_moves(struct pollfd* fds,coordinate* cor_of_fd,object** grid,int i,i
 	    // //memset(&s_m,0,sizeof(server_message));
 	    s_m.pos.x = x;
 	    s_m.pos.y = y;
-	    coordinate object_pos[4];
 	    // //memset(&object_pos,0,sizeof(coordinate)*4);
 	    s_m.adv_pos = MH(grid, x, y); // LOCATION OF CLOSES ADVERSARY
 	    //printf("s_m_.adv_pos x : %d - y: %d\n", s_m.adv_pos.x,s_m.adv_pos.y);
@@ -376,7 +372,7 @@ void massacre(object** grid)
 
 int main()
 {
-	int i, j, z, lock=0;
+	int i, j, z;
     object** grid;
 
     struct pollfd* fds;
@@ -400,8 +396,7 @@ int main()
     cor_of_fd = malloc(sizeof(coordinate) * (no_h+no_p));
     
     int ip=-1;            //  ARRAY OF PID, PID AND RELATED FD ARE AT THE SAME INDEX ON THE TWO ARRAYS(fds[],control[]).
-    int child,k;
-    
+
     // FORK TIME
     for(i=0; i < height; i++)
     {
@@ -412,8 +407,7 @@ int main()
             	ip++;
                 int fd[2];
                 PIPE(fd);
-                int h_chil;
-                if( grid[i][j].pid = fork() )
+                if( ( grid[i][j].pid = fork() ) )
                 {
                     close(fd[1]);
                     fds[ip].fd       = fd[0];
@@ -428,7 +422,6 @@ int main()
 
 			        s_m.pos.x = i;
 			        s_m.pos.y = j;
-			        coordinate object_pos[4];
 			        s_m.adv_pos = MH(grid, i,j); // LOCATION OF CLOSES ADVERSARY
 			        s_m.object_count =  no_neighbours(grid,i,j,s_m.object_pos);// NUMBER OF NEIGHBOURING OBJECT
 			        if(write(fd[0],&s_m,sizeof(server_message)) < 0 )
@@ -467,13 +460,14 @@ int main()
 
 	int retval,map_updated;
 
-    while(1)
+    while(real_no_h && real_no_p)
     {
     	retval = poll(fds,no_h+no_p,0);
     	if(retval < 0 )
     	{
     		continue;
     	}
+
         //printf("RAMBO\n" );	
         for(z=0; z < no_p + no_h; z++)          
         {
@@ -489,12 +483,14 @@ int main()
                 int i = cor_of_fd[z].x;
                 int j = cor_of_fd[z].y;
 
+                if(i == -1 || j == -1)
+                {
+                    continue;
+                }
                 int x = message.move_request.x;
                 int y = message.move_request.y;
  
                 char being_type = grid[i][j].type;
-                if(being_type == 'P')
-                    printf("PREY REQUEST\n");
 
                 char tile_type  = grid[x][y].type;
 
@@ -534,21 +530,21 @@ int main()
                     if(tile_type == 'H') 
                     {
                         cant_move(grid,i,j);
-                        printf("PREY-CANT-MOVED\n");
+                        //printf("PREY-CANT-MOVED\n");
                         fflush(stdout);
 
                     }
                     else if(tile_type == 'X')
                     {
                         cant_move(grid,i,j);
-                        printf("PREY-CANT-MOVED\n");
+                        //printf("PREY-CANT-MOVED\n");
                         fflush(stdout);
 
                     }
                     else if(tile_type == 'P')
                     {
                         cant_move(grid,i,j);
-                        printf("PREY-CANT-MOVED\n");
+                        //printf("PREY-CANT-MOVED\n");
                         fflush(stdout);
                     
                     }
@@ -556,7 +552,7 @@ int main()
                     {
                         map_updated=1;
                         prey_moves(fds,cor_of_fd,grid,i,j,x,y);
-                        printf("PREY-MOVED\n");
+                        //printf("PREY-MOVED\n");
                     	fflush(stdout);
                     }							        	
                 }
@@ -565,16 +561,11 @@ int main()
                     printf("SERIOUS PROBLEM\n");
                 }
             }
-		    if(map_updated)
-		    {
-		        print_grid(grid,height,width);
-		    }
-    	}
-	        if(real_no_h == 0 || real_no_p == 0)
-	        {
-
-	            break;
-	        }
+            if(map_updated)
+            {
+                print_grid(grid,height,width);
+            }
+        }
     }
     
 	massacre(grid);

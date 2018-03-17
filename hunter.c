@@ -50,36 +50,57 @@ int main(int argc, char* args[])
         if(read(0,&s_m,sizeof(server_message)))
         {
             int N=1,S=1,L=1,R=1;        
-            //fprintf(stderr, "HUNTER-READ -MESSAGE\n");
+            ////fprintf(stderr, "HUNTER-READ -MESSAGE\n");
             cor = s_m.pos;
             MH = abs(cor.x - s_m.adv_pos.x) + abs(cor.y - s_m.adv_pos.y);
 
-            for(i=0; i < s_m.object_count; i++)  //  CHECK WHICH TILE MOVEABLE;  
+            if(cor.x-1 < 0 )
             {
-                if(cor.x-1 == s_m.object_pos[i].x)
+                N = 0;
+            }
+            if(cor.x+1 >= height)
+            {
+                S = 0;
+            }    
+            if(cor.y-1 < 0)
+            {
+                L = 0;
+            }
+            if(cor.y+1 >= width)
+            {
+                R = 0;    
+            }            
+
+            for(i=0; i < s_m.object_count; i++)  //  CHECK WHICH TILE MOVEABLE;   // OBJECT COUNT = 0 ?
+            {
+                if(cor.x-1 == s_m.object_pos[i].x || cor.x-1 < 0 )
                 {
                     N = 0;
                 }
-                else if(cor.x+1 == s_m.object_pos[i].x)
+                if(cor.x+1 == s_m.object_pos[i].x || cor.x+1 >= height)
                 {
                     S = 0;
                 }    
-                if(cor.y-1 == s_m.object_pos[i].y)
+                if(cor.y-1 == s_m.object_pos[i].y || cor.y-1 < 0)
                 {
                     L = 0;
                 }
-                if(cor.y-1 == s_m.object_pos[i].y)
+                if(cor.y+1 == s_m.object_pos[i].y || cor.y+1 >= width)
                 {
                     R = 0;    
                 }
             }
-
+            //fprintf(stderr, "PREY AT x:%d - y:%d\n",cor.x,cor.y );
+            //fprintf(stderr, "OBJECT COUNT:%d\n",s_m.object_count );
+            //fprintf(stderr, "N:%d,S:%d,L:%d,R:%d,\n",N,S,L,R );
+            //fprintf(stderr, "LOC OF CLOSEST HUNTER x:%d, y%d\n",s_m.adv_pos.x,s_m.adv_pos.y );
             for(i=0; i <  4 - s_m.object_count; i++)   // CREATE AND SEND A REQUEST TOs MOVE
             {
                 int new_MH;
                 if(N && 0 <= cor.x-1 ) // UP TILE IS NOT OBSTRUCTED
                 {
                     new_MH = abs(cor.x-1 - s_m.adv_pos.x) + abs(cor.y - s_m.adv_pos.y);
+                    //fprintf(stderr, "MH:%d, NEW_MH:%d\n",MH,new_MH );
                     if( new_MH < MH)
                     {
                         MH = new_MH;
@@ -133,17 +154,15 @@ int main(int argc, char* args[])
                         break;
                     }                   
                 }
-                else // NO POSSIBLE MOVE;
-                {
+                    //fprintf(stderr, "NO POSSIBLE MOVE MH:%d\n",MH );
                     message.move_request.x = cor.x;
                     message.move_request.y = cor.y;
                     if(write(1,&message,sizeof(ph_message)) < 0)
                         perror("HUNTER OR PREY WRITE ERROR");
                     usleep(10000*(1+rand()%9));
                     break;                
-                }
             }
-            //fprintf(stderr, "HUNTER-WROTE\n");
+            ////fprintf(stderr, "HUNTER-WROTE\n");
             
         }
     }    
