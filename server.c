@@ -236,7 +236,7 @@ void hunter_kills_prey(struct pollfd fds[no_h+no_p],coordinate cor_of_fd[no_h+no
     grid[i][j].pid = -1;
     grid[i][j].health = 0;
     server_message s_m;
-    // //memset(&s_m,0,sizeof(server_message));
+    memset(&s_m,0,sizeof(server_message));
     s_m.pos.x = x;
     s_m.pos.y = y;
     s_m.adv_pos = MH(grid, x, y); // LOCATION OF CLOSES ADVERSARY
@@ -249,7 +249,7 @@ void hunter_kills_prey(struct pollfd fds[no_h+no_p],coordinate cor_of_fd[no_h+no
 void cant_move(object** grid,int i,int j)
 {
     server_message s_m;
-    // //memset(&s_m,0,sizeof(server_message));
+    memset(&s_m,0,sizeof(server_message));
     s_m.pos.x = i;
     s_m.pos.y = j;
     s_m.adv_pos = MH(grid, i, j); // LOCATION OF CLOSES ADVERSARY
@@ -297,10 +297,9 @@ void hunter_moves(struct pollfd* fds,coordinate* cor_of_fd,object** grid,int i,i
 		grid[i][j].fd=-1;	
 
 	    server_message s_m;
-	    // //memset(&s_m,0,sizeof(server_message));
+	    memset(&s_m,0,sizeof(server_message));
 	    s_m.pos.x = x;
 	    s_m.pos.y = y;
-	    // //memset(&object_pos,0,sizeof(coordinate)*4);
 	    s_m.adv_pos = MH(grid, x, y); // LOCATION OF CLOSES ADVERSARY
 	    //printf("s_m_.adv_pos x : %d - y: %d\n", s_m.adv_pos.x,s_m.adv_pos.y);
 	    //printf("HUNTER MOVED FROM %d-%d to %d,%d\n",i,j,x,y );
@@ -418,7 +417,7 @@ int main()
                     cor_of_fd[ip].y = j;
 			        
 			        server_message s_m;
-			        // //memset(&s_m,0,sizeof(server_message));
+			        memset(&s_m,0,sizeof(server_message));
 
 			        s_m.pos.x = i;
 			        s_m.pos.y = j;
@@ -476,7 +475,7 @@ int main()
             if(fds[z].revents & POLLIN)
             {
                 ph_message message;
-                // //memset(&message,0,sizeof(ph_message));
+                memset(&message,0,sizeof(ph_message));
 
                 read(fds[z].fd, &message, sizeof(ph_message));
 
