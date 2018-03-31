@@ -40,6 +40,7 @@ move_down_2 res 1  ; Toggle flag to move the paddle2 down
 counter res 1;     ; Counter for 300 ms (It will count up to 46)
 Yok_olan46 res 1;
 move_ball_flag res 1;
+direction res 1    ; IN WHICH DIRECTION THE BALL IS MOVING LEFT=1, RIGHT=0
 
 RES_VECT  CODE    0x0000            ; processor reset vector
     GOTO    START                   ; go to beginning of program
@@ -72,8 +73,43 @@ main:
     goto main
 
 move_ball:
+    btfss move_ball_flag,0
+    return
+    clrf  move_ball_flag
+    btfss direction, 0
+    goto  moving_to_right
 
+    moving_to_left:
+        movf  where_is_ball, w
+        xorlw 0
+        btfsc STATUS, z
+        goto  left_a
+        xorlw 1^0 ; 1
+        btfsc STATUS, z
+        goto  left_b
+        xorlw 2^1 ;
+        btfsc STATUS, z
+        goto  left_c
+        xorlw 3^2
+        btfsc STATUS, z
+        goto  left_d
+        xorlw 4^3
+        btfsc STATUS, z
+        goto  left_e
+        xorlw 5^4
+        btfsc STATUS, z
+        goto  left_f
+
+        left_a:
+            
+
+
+
+    moving_to_right:
+
+    return
 display:
+
 
 ; CHECK WHETHER THE BUTTONS RG1 AND RG0 IS PRESSED    
 paddle_1: 
