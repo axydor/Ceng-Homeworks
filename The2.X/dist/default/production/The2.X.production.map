@@ -1,0 +1,115 @@
+MPLINK 5.08, LINKER
+Linker Map File - Created Sat Mar 31 10:36:42 2018
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                 RES_VECT       code   0x000000    program   0x000004
+                   .cinit    romdata   0x000004    program   0x000002
+                   .org_0       code   0x000008    program   0x0000e6
+.config_300001_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x300001    program   0x000001
+.config_300002_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x300002    program   0x000001
+.config_300003_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x300003    program   0x000001
+.config_300004_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x300004    program   0x000001
+.config_300005_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x300005    program   0x000001
+.config_300006_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x300006    program   0x000001
+.config_300008_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x300008    program   0x000001
+.config_300009_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x300009    program   0x000001
+.config_30000A_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x30000a    program   0x000001
+.config_30000B_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x30000b    program   0x000001
+.config_30000C_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x30000c    program   0x000001
+.config_30000D_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x30000d    program   0x000001
+               .udata_acs      udata   0x000000       data   0x000008
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000005      
+                            0x000008    0x0000ed      
+                            0x300001    0x300006      
+                            0x300008    0x30000d      
+            248 out of 132120 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                 HIGH_ISR   0x00000c    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                     INIT   0x0000c6    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+              RG0_pressed   0x000040    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+             RG0_released   0x000036    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                  RG1_end   0x000032    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+              RG1_pressed   0x00002c    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+             RG1_released   0x000022    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+              RG2_pressed   0x000094    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+             RG2_released   0x00008a    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                  RG3_end   0x000086    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+              RG3_pressed   0x000080    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+             RG3_released   0x000076    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                  RGA_end   0x000046    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                  RGF_end   0x00009a    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                    START   0x00000e    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                     main   0x000012    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+        move_paddle1_down   0x00005e    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+         move_paddle1_end   0x00006c    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+          move_paddle1_up   0x000052    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+        move_paddle2_down   0x0000b2    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+         move_paddle2_end   0x0000c0    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+          move_paddle2_up   0x0000a6    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                 paddle_1   0x00001e    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+        paddle_1_led_task   0x00004c    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                 paddle_2   0x000072    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+        paddle_2_led_task   0x0000a0    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+              move_down_1   0x000005       data     static /home/egemen/MPLABXProjects/The2.X/main.asm
+              move_down_2   0x000007       data     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                move_up_1   0x000004       data     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                move_up_2   0x000006       data     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                 s_1_down   0x000001       data     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                   s_1_up   0x000000       data     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                 s_2_down   0x000003       data     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                   s_2_up   0x000002       data     static /home/egemen/MPLABXProjects/The2.X/main.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                 HIGH_ISR   0x00000c    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                    START   0x00000e    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                     main   0x000012    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                 paddle_1   0x00001e    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+             RG1_released   0x000022    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+              RG1_pressed   0x00002c    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                  RG1_end   0x000032    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+             RG0_released   0x000036    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+              RG0_pressed   0x000040    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                  RGA_end   0x000046    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+        paddle_1_led_task   0x00004c    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+          move_paddle1_up   0x000052    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+        move_paddle1_down   0x00005e    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+         move_paddle1_end   0x00006c    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                 paddle_2   0x000072    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+             RG3_released   0x000076    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+              RG3_pressed   0x000080    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                  RG3_end   0x000086    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+             RG2_released   0x00008a    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+              RG2_pressed   0x000094    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                  RGF_end   0x00009a    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+        paddle_2_led_task   0x0000a0    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+          move_paddle2_up   0x0000a6    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+        move_paddle2_down   0x0000b2    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+         move_paddle2_end   0x0000c0    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                     INIT   0x0000c6    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                   s_1_up   0x000000       data     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                 s_1_down   0x000001       data     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                   s_2_up   0x000002       data     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                 s_2_down   0x000003       data     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                move_up_1   0x000004       data     static /home/egemen/MPLABXProjects/The2.X/main.asm
+              move_down_1   0x000005       data     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                move_up_2   0x000006       data     static /home/egemen/MPLABXProjects/The2.X/main.asm
+              move_down_2   0x000007       data     static /home/egemen/MPLABXProjects/The2.X/main.asm
+
+
