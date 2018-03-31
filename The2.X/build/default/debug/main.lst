@@ -1,4 +1,4 @@
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE  1
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -57,7 +57,7 @@ Warning[205]: Found directive in column 1. (UDATA_ACS)
 000008                00040 counter res 1;     ; Counter for 300 ms (It will count up to 46)
 000009                00041 Yok_olan46 res 1;
                       00042 
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE  2
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -116,7 +116,7 @@ Warning[207]: Found label after column 1. (RG1_end)
 00003E B0??           00089     btfsc s_1_down,0
 000040 D???           00090     bra RG0_pressed
                       00091     
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE  3
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -175,7 +175,7 @@ Warning[207]: Found label after column 1. (move_paddle1_end)
 00007E B0??           00134     btfsc s_2_up,0
 000080 D???           00135     bra RG3_pressed
 Warning[207]: Found label after column 1. (RG3_released)
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE  4
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -234,7 +234,7 @@ Warning[207]: Found label after column 1. (move_paddle2_up)
                       00179             
 Warning[207]: Found label after column 1. (move_paddle2_down)
 0000BE                00180         move_paddle2_down:
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE  5
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -282,7 +282,7 @@ Warning[207]: Found label after column 1. (move_paddle2_end)
 000102 0012           00218     return
                       00219     
                       00220     END
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE  6
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE  6
 
 
 SYMBOL TABLE
@@ -341,7 +341,7 @@ ADIP                              00000006
 ADON                              00000000
 ADRES                             00000FC3
 ADRESH                            00000FC4
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE  7
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE  7
 
 
 SYMBOL TABLE
@@ -400,7 +400,7 @@ C2OUT_PORTF                       00000001
 CCP1                              00000002
 CCP1CON                           00000FBD
 CCP1IE                            00000002
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE  8
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE  8
 
 
 SYMBOL TABLE
@@ -459,7 +459,7 @@ CCP5M3                            00000003
 CCPR1                             00000FBE
 CCPR1H                            00000FBF
 CCPR1L                            00000FBE
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE  9
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE  9
 
 
 SYMBOL TABLE
@@ -518,7 +518,7 @@ CVRSS                             00000004
 D                                 00000005
 DA2                               00000005
 DATA_ADDRESS                      00000005
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 10
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 10
 
 
 SYMBOL TABLE
@@ -577,7 +577,7 @@ ECCP3AS                           00000F6A
 ECCP3AS0                          00000004
 ECCP3AS1                          00000005
 ECCP3AS2                          00000006
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 11
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 11
 
 
 SYMBOL TABLE
@@ -636,7 +636,7 @@ HLVDL1                            00000001
 HLVDL2                            00000002
 HLVDL3                            00000003
 I2C_DAT                           00000005
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 12
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 12
 
 
 SYMBOL TABLE
@@ -695,7 +695,7 @@ IRCF0                             00000004
 IRCF1                             00000005
 IRCF2                             00000006
 IRVST                             00000005
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 13
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 13
 
 
 SYMBOL TABLE
@@ -754,7 +754,7 @@ LATE7                             00000007
 LATF                              00000F8E
 LATF0                             00000000
 LATF1                             00000001
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 14
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 14
 
 
 SYMBOL TABLE
@@ -813,7 +813,7 @@ NOT_A                             00000005
 NOT_ADDRESS                       00000005
 NOT_BOR                           00000000
 NOT_CE                            00000005
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 15
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 15
 
 
 SYMBOL TABLE
@@ -872,7 +872,7 @@ P1M0                              00000006
 P1M1                              00000007
 P1RSEN                            00000007
 P2A_PORTB                         00000003
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 16
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 16
 
 
 SYMBOL TABLE
@@ -931,7 +931,7 @@ PEN                               00000002
 PEN2                              00000002
 PIE1                              00000F9D
 PIE2                              00000FA0
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 17
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 17
 
 
 SYMBOL TABLE
@@ -990,7 +990,7 @@ PSS1BD0                           00000000
 PSS1BD1                           00000001
 PSS2AC0                           00000002
 PSS2AC1                           00000003
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 18
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 18
 
 
 SYMBOL TABLE
@@ -1049,7 +1049,7 @@ RCEN2                             00000003
 RCIDL                             00000006
 RCIDL1                            00000006
 RCIDL2                            00000006
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 19
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 19
 
 
 SYMBOL TABLE
@@ -1108,7 +1108,7 @@ RG3_end                           00000092
 RG3_pressed                       0000008C
 RG3_released                      00000082
 RG4                               00000004
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 20
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 20
 
 
 SYMBOL TABLE
@@ -1167,7 +1167,7 @@ SDA2                              00000005
 SDI                               00000004
 SDI1                              00000004
 SDI2                              00000005
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 21
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 21
 
 
 SYMBOL TABLE
@@ -1226,7 +1226,7 @@ SSPEN                             00000005
 SSPEN2                            00000005
 SSPIE                             00000003
 SSPIF                             00000003
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 22
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 22
 
 
 SYMBOL TABLE
@@ -1285,7 +1285,7 @@ T1OSO                             00000000
 T1RUN                             00000006
 T1SYNC                            00000002
 T2CKPS0                           00000000
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 23
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 23
 
 
 SYMBOL TABLE
@@ -1344,7 +1344,7 @@ TMR3IF                            00000001
 TMR3IP                            00000001
 TMR3L                             00000FB2
 TMR3ON                            00000000
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 24
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 24
 
 
 SYMBOL TABLE
@@ -1403,7 +1403,7 @@ TRISE2                            00000002
 TRISE3                            00000003
 TRISE4                            00000004
 TRISE5                            00000005
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 25
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 25
 
 
 SYMBOL TABLE
@@ -1462,7 +1462,7 @@ TX2IE                             00000004
 TX2IF                             00000004
 TX2IP                             00000004
 TX8_9                             00000006
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 26
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 26
 
 
 SYMBOL TABLE
@@ -1521,7 +1521,7 @@ _ADDRBW_ADDR8BIT_3L               000000CF
 _BBSIZ_BB2K_4L                    000000CF
 _BBSIZ_BB4K_4L                    000000DF
 _BBSIZ_BB8K_4L                    000000EF
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 27
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 27
 
 
 SYMBOL TABLE
@@ -1580,7 +1580,7 @@ _EBTR0_ON_7L                      000000FE
 _EBTR1_OFF_7L                     000000FF
 _EBTR1_ON_7L                      000000FD
 _EBTR2_OFF_7L                     000000FF
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 28
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 28
 
 
 SYMBOL TABLE
@@ -1639,7 +1639,7 @@ _STVREN_OFF_4L                    000000FE
 _STVREN_ON_4L                     000000FF
 _WAIT_OFF_3L                      000000FF
 _WAIT_ON_3L                       0000007F
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 29
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 29
 
 
 SYMBOL TABLE
@@ -1688,6 +1688,8 @@ _WRTD_ON_6H                       0000007F
 _XINST_OFF_4L                     000000BF
 _XINST_ON_4L                      000000FF
 __18F8722                         00000001
+__DEBUG                           
+__MPLAB_DEBUGGER_SIMULATOR        1
 counter                           00000008
 main                              0000001E
 move_down_1                       00000005
@@ -1696,14 +1698,14 @@ move_paddle1_down                 0000006A
 move_paddle1_end                  00000078
 move_paddle1_up                   0000005E
 move_paddle2_down                 000000BE
-move_paddle2_end                  000000CC
-move_paddle2_up                   000000B2
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 30
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:16         PAGE 30
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+move_paddle2_end                  000000CC
+move_paddle2_up                   000000B2
 move_up_1                         00000004
 move_up_2                         00000006
 paddle_1                          0000002A

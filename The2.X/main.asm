@@ -32,12 +32,15 @@ UDATA_ACS
 s_1_up res 1 ; button_state_for_player_1 up
 s_1_down res 1 ; button_state_for_player_1 down
 s_2_up res 1 ; button_state_for_player_2 up
-s_2_down res 1 ; button_state_for_player_2 down
-move_up_1 res 1; Toggle flag to move the paddle1 up
-move_down_1 res 1;  Toggle flag to move the paddle1 down
-move_up_2 res 1; Toggle flag to move the paddle2 up
-move_down_2 res 1;Toggle flag to move the paddle2 down
-  
+s_2_down res 1     ; button_state_for_player_2 down
+move_up_1 res 1    ; Toggle flag to move the paddle1 up
+move_down_1 res 1  ; Toggle flag to move the paddle1 down
+move_up_2 res 1    ; Toggle flag to move the paddle2 up
+move_down_2 res 1  ; Toggle flag to move the paddle2 down
+counter res 1;     ; Counter for 300 ms (It will count up to 46)
+Yok_olan46 res 1;
+move_ball_flag res 1;
+
 RES_VECT  CODE    0x0000            ; processor reset vector
     GOTO    START                   ; go to beginning of program
 
@@ -49,6 +52,13 @@ ORG 0X008
 ;*******************************************************************************         
 
 HIGH_ISR:
+    bcf  INTCON, 2 ; CLEAR INTERRUPT FLAG
+    incf counter
+    movf counter,w
+    cpfseq Yok_olan46
+    retfie
+    clrf counter
+    bsf  move_ball_flag, 0
     retfie
     
 START
@@ -57,7 +67,13 @@ START
 main:
     call paddle_1
     call paddle_2
+    call move_ball
+    call display
     goto main
+
+move_ball:
+
+display:
 
 ; CHECK WHETHER THE BUTTONS RG1 AND RG0 IS PRESSED    
 paddle_1: 
@@ -186,14 +202,14 @@ INIT
     MOVWF   TRISG ; MAKE RG0-RG1-RG2-RG3 PORTS(PINS) INPUT
     CLRF    TRISA  ; MAKE PORTA AS OUTPUT
     CLRF    TRISF  ; MAKE PORTF AS OUTPUT
-    CLRF    INTCON ; 
-    BSF	    INTCON,7; ENABLE INTERRUPTS
+
     MOVLW   0X0F
     MOVWF   ADCON1 ; MAKE PORTA DIGITAL OUTPUT
-    movlw   b'00011100' ; TURN ON THE FIRST LEDS
-    movwf   PORTA
-    movwf   PORTF
-    CLRF    s_1_up   
+    MOVLW   b'00011100' ; TURN ON THE FIRST LEDS
+    MOVWF   PORTA
+    MOVWF   PORTF
+    CLRF    move_ball_flag
+    CLRF    s_1_up
     CLRF    s_2_up   
     CLRF    s_1_down 
     CLRF    s_2_down
@@ -201,6 +217,13 @@ INIT
     CLRF    move_down_1
     CLRF    move_up_2
     CLRF    move_down_2
+    MOVLW   d'46'
+    MOVWF   Yok_olan46
+    CLRF    INTCON ;
+    MOVLW   b'11000111'
+    MOVWF   T0CON
+    BSF     INTCON, 5
+    BSF	    INTCON, 7; ENABLE INTERRUPTS
     return
     
     END
