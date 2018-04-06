@@ -17,7 +17,9 @@ direction res 1    ; IN WHICH DIRECTION THE BALL IS MOVING LEFT=1, RIGHT=0
 column_ball res 1  ; the column of the ball   COLUMN=0-> PORTA , COLUMN=1 -> PORTB
 row res 1     ; the row of the ball
 left_score res 1   ; Holds the score of the left one
+left_score_flag res 1;
 right_score res 1   ; Holds the score of the right one
+right_score_flag res 1
 
 RES_VECT  CODE    0x0000            ; processor reset vector
     GOTO    START                   ; go to beginning of program
@@ -454,12 +456,9 @@ move_ball:
     left_end
 
     return
-display:
-
 
 ; CHECK WHETHER THE BUTTONS RG1 AND RG0 IS PRESSED    
-paddle_1: 
-    ;CHECK RG1 IS PRESSED
+paddle_1:;CHECK RG1 IS PRESSED
     btfsc s_1_up,0
     bra RG1_pressed
     RG1_released: ; IT WAS NOT PRESSED
@@ -470,26 +469,25 @@ paddle_1:
 	bra RG1_end
     
     RG1_pressed: ; IT WAS PRESSED
-	btfsc PORTG,1 ; IT IS NOW RELEASED ?
-	bra RG1_end
-	bcf s_1_up,0
+        btfsc PORTG,1 ; IT IS NOW RELEASED ?
+        bra RG1_end
+    	bcf s_1_up,0
 	
-    RG1_end:
-    ;CHECK RG0 IS PRESSED
-    btfsc s_1_down,0
-    bra RG0_pressed
+    RG1_end:;CHECK RG0 IS PRESSED
+        btfsc s_1_down,0
+        bra RG0_pressed
     
     RG0_released: ; IN THE PREVIOUS STATE RG0 IS NOT PRESSED
-	btfss PORTG,0
-	bra RGA_end
-	bsf move_down_1,0
-	bsf s_1_down,0
-	bra RGA_end
+        btfss PORTG,0
+        bra RGA_end
+        bsf move_down_1,0
+        bsf s_1_down,0
+        bra RGA_end
     
     RG0_pressed:  ; IN THE PREVIOUS STATE RG0 IS  PRESSED
-	btfsc PORTG,0
-	bra RGA_end
-	bcf s_1_down,0
+        btfsc PORTG,0
+        bra RGA_end
+        bcf s_1_down,0
 	
     RGA_end:
     
@@ -498,8 +496,8 @@ paddle_1:
     return 
 
     paddle_1_led_task:            ;MOVE THE PADDLE1 ACCORDING TO THE FLAGS
-	btfss move_up_1, 0
-	goto  move_paddle1_down   ; MOVE UP FLAG IS NOT SET CHECK THE DOWN
+        btfss move_up_1, 0
+        goto  move_paddle1_down   ; MOVE UP FLAG IS NOT SET CHECK THE DOWN
 	move_paddle1_up:
 	    btfsc PORTA, 0
 	    goto  move_paddle1_end; PADDLE CANNOT MOVE UP FURTHER
@@ -552,8 +550,7 @@ paddle_2:
         bcf s_2_down,0 ; RG2 IS RELEASED SO STATE=0
 	
     RGF_end:
-    
-    call paddle_2_led_task ; MOVE THE PADDLE UP OR DOWN
+        call paddle_2_led_task ; MOVE THE PADDLE UP OR DOWN
     
     return 
 
@@ -578,17 +575,61 @@ paddle_2:
             bcf	  move_down_2, 0 ; WE WILL IGNORE THE PREVIOUS RG2 PRESS
             return
 
-
 right_scored:
+    btg right_score_flag, 0; right one made a goal
+    goto display
 
 left_scored:
-	    
+    btg left_score_flag, 0 ; left one made a goal
+    goto display
+
+display:
+    btfss right_score_flag
+    bra   left_goals
+
+    right_goals:
+        clrf  right_score_flag  ; CLEAR FLAG, IT WILL NOT INCREMENT CONTINUOUSLY
+        clrf  PORTH
+        bsf   PORTH, 1
+        incf  right_score
+        movlw right_score
+        call  TABLE
+        movwf PORTJ
+
+    left_goals:
+        btfss left_score_flag
+        goto  display_end
+        clrf  left_score_flag ;
+        clrf  PORTH
+        bsf   PORTH, 3
+        incf  left_score
+        movlw left_score
+        call  TABLE
+        movwf PORTJ
+
+   display_end:
+        return 
+
+TABLE
+    MOVF    PCL, F  ; A simple read of PCL will update PCLATH, PCLATU
+    RLNCF   WREG, W ; multiply index X2
+    ADDWF   PCL, F  ; modify program counter
+    RETLW b'00111111' ;0 representation in 7-seg. disp. portJ
+    RETLW b'00000110' ;1 representation in 7-seg. disp. portJ
+    RETLW b'01011011' ;2 representation in 7-seg. disp. portJ
+    RETLW b'01001111' ;3 representation in 7-seg. disp. portJ
+    RETLW b'01100110' ;4 representation in 7-seg. disp. portJ
+    RETLW b'01101101' ;5 representation in 7-seg. disp. portJ
+    RETLW b'01111101' ;6 representation in 7-seg. disp. portJ
+    RETLW b'00000111' ;7 representation in 7-seg. disp. portJ
+    RETLW b'01111111' ;8 representation in 7-seg. disp. portJ
+    RETLW b'01100111' ;9 representation in 7-seg. disp. portJ
+
 INIT
     MOVLW   b'00001111'
     MOVWF   TRISG ; MAKE RG0-RG1-RG2-RG3 PORTS(PINS) INPUT
     CLRF    TRISA  ; MAKE PORTA AS OUTPUT
     CLRF    TRISF  ; MAKE PORTF AS OUTPUT
-
     MOVLW   0X0F
     MOVWF   ADCON1 ; MAKE PORTA DIGITAL OUTPUT
     MOVLW   b'00011100' ; TURN ON THE FIRST LEDS
@@ -605,6 +646,7 @@ INIT
     CLRF    move_down_2
     CLRF    left_score
     CLRF    right_score
+
     MOVLW   d'46'
     MOVWF   Yok_olan46
     CLRF    INTCON ;
