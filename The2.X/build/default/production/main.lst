@@ -1,4 +1,4 @@
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE  1
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -15,274 +15,778 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00008 ;==========================================================================
                       00009 
                       02557         LIST
-                      00002 ; CONFIG1H
-                      00003   CONFIG  OSC = HSPLL, FCMEN = OFF, IESO = OFF
-                      00004 ; CONFIG2L
-                      00005   CONFIG  PWRT = OFF, BOREN = OFF, BORV = 3
-                      00006 ; CONFIG2H
-                      00007   CONFIG  WDT = OFF, WDTPS = 32768
-                      00008 ; CONFIG3L
-                      00009   CONFIG  MODE = MC, ADDRBW = ADDR20BIT, DATABW = DATA16BIT, WAIT = OFF
-                      00010 ; CONFIG3H
-                      00011   CONFIG  CCP2MX = PORTC, ECCPMX = PORTE, LPT1OSC = OFF, MCLRE = ON
-                      00012 ; CONFIG4L
-                      00013   CONFIG  STVREN = ON, LVP = OFF, BBSIZ = BB2K, XINST = OFF
-                      00014 ; CONFIG5L
-                      00015   CONFIG  CP0 = OFF, CP1 = OFF, CP2 = OFF, CP3 = OFF, CP4 = OFF, CP5 = OFF
-                      00016   CONFIG  CP6 = OFF, CP7 = OFF
-                      00017 ; CONFIG5H
-                      00018   CONFIG  CPB = OFF, CPD = OFF
-                      00019 ; CONFIG6L
-                      00020   CONFIG  WRT0 = OFF, WRT1 = OFF, WRT2 = OFF, WRT3 = OFF, WRT4 = OFF
-                      00021   CONFIG  WRT5 = OFF, WRT6 = OFF, WRT7 = OFF
-                      00022 ; CONFIG6H
-                      00023   CONFIG  WRTC = OFF, WRTB = OFF, WRTD = OFF
-                      00024 ; CONFIG7L
-                      00025   CONFIG  EBTR0 = OFF, EBTR1 = OFF, EBTR2 = OFF, EBTR3 = OFF, EBTR4 = OFF
-                      00026   CONFIG  EBTR5 = OFF, EBTR6 = OFF, EBTR7 = OFF
-                      00027 ; CONFIG7H
-                      00028   CONFIG  EBTRB = OFF
-                      00029 
-                      00030 ; TODO INSERT ISR HERE
+                      00002 
+                      00003 ; TODO INSERT ISR HERE
 Warning[205]: Found directive in column 1. (UDATA_ACS)
-                      00031 UDATA_ACS   
-000000                00032 s_1_up res 1 ; button_state_for_player_1 up
-000001                00033 s_1_down res 1 ; button_state_for_player_1 down
-000002                00034 s_2_up res 1 ; button_state_for_player_2 up
-000003                00035 s_2_down res 1     ; button_state_for_player_2 down
-000004                00036 move_up_1 res 1    ; Toggle flag to move the paddle1 up
-000005                00037 move_down_1 res 1  ; Toggle flag to move the paddle1 down
-000006                00038 move_up_2 res 1    ; Toggle flag to move the paddle2 up
-000007                00039 move_down_2 res 1  ; Toggle flag to move the paddle2 down
-000008                00040 counter res 1;     ; Counter for 300 ms (It will count up to 46)
-000009                00041 Yok_olan46 res 1;
-                      00042 
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE  2
-
-
-LOC  OBJECT CODE     LINE SOURCE TEXT
-  VALUE
-
-                      00043 RES_VECT  CODE    0x0000            ; processor reset vector
-000000 EF?? F???      00044     GOTO    START                   ; go to beginning of program
-                      00045 
+                      00004 UDATA_ACS   
+000000                00005 s_1_up res 1 ; button_state_for_player_1 up
+000001                00006 s_1_down res 1 ; button_state_for_player_1 down
+000002                00007 s_2_up res 1 ; button_state_for_player_2 up
+000003                00008 s_2_down res 1     ; button_state_for_player_2 down
+000004                00009 move_up_1 res 1    ; Toggle flag to move the paddle1 up
+000005                00010 move_down_1 res 1  ; Toggle flag to move the paddle1 down
+000006                00011 move_up_2 res 1    ; Toggle flag to move the paddle2 up
+000007                00012 move_down_2 res 1  ; Toggle flag to move the paddle2 down
+000008                00013 counter res 1;     ; Counter for 300 ms (It will count up to 46)
+000009                00014 Yok_olan46 res 1;
+00000A                00015 move_ball_flag res 1;
+00000B                00016 direction res 1    ; IN WHICH DIRECTION THE BALL IS MOVING LEFT=1, RIGHT=0
+00000C                00017 column_ball res 1  ; the column of the ball   COLUMN=0-> PORTA , COLUMN=1 -> PORTB
+00000D                00018 row res 1     ; the row of the ball
+00000E                00019 left_score res 1   ; Holds the score of the left one
+00000F                00020 right_score res 1   ; Holds the score of the right one
+                      00021 
+                      00022 RES_VECT  CODE    0x0000            ; processor reset vector
+000000 EF?? F???      00023     GOTO    START                   ; go to beginning of program
+                      00024 
 Warning[205]: Found directive in column 1. (ORG)
-                      00046 ORG 0X008
-000008 EF?? F???      00047     GOTO HIGH_ISR
-                      00048     
-                      00049 ;*******************************************************************************
-                      00050 ; MAIN PROGRAM
-                      00051 ;*******************************************************************************         
-                      00052 
-00000C                00053 HIGH_ISR:
-00000C 94F2           00054     bcf  INTCON, 2 ; CLEAR INTERRUPT FLAG
-00000E 2A??           00055     incf counter
-000010 50??           00056     movf counter,w
-000012 62??           00057     cpfseq Yok_olan46
-000014 0010           00058     retfie
-000016 6A??           00059     clrf counter
-000018 0010           00060     retfie
-                      00061     
-00001A                00062 START
-00001A EC?? F???      00063     call INIT    
-                      00064 
-00001E                00065 main:
-00001E EC?? F???      00066     call paddle_1
-000022 EC?? F???      00067     call paddle_2
-000026 EF?? F???      00068     goto main
-                      00069 
-                      00070 ; CHECK WHETHER THE BUTTONS RG1 AND RG0 IS PRESSED    
-00002A                00071 paddle_1: 
-                      00072     ;CHECK RG1 IS PRESSED
-00002A B0??           00073     btfsc s_1_up,0
-00002C D???           00074     bra RG1_pressed
+                      00025 ORG 0X008
+000008 EF?? F???      00026     GOTO HIGH_ISR
+                      00027     
+                      00028 ;*******************************************************************************
+                      00029 ; MAIN PROGRAM
+                      00030 ;*******************************************************************************         
+                      00031 
+00000C                00032 HIGH_ISR:
+00000C 94F2           00033     bcf  INTCON, 2 ; CLEAR INTERRUPT FLAG
+00000E 2A??           00034     incf counter
+000010 50??           00035     movf counter,w
+000012 62??           00036     cpfseq Yok_olan46
+000014 0010           00037     retfie
+000016 6A??           00038     clrf counter
+000018 80??           00039     bsf  move_ball_flag, 0
+00001A 0010           00040     retfie
+                      00041     
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00001C                00042 START
+00001C EC?? F???      00043     call INIT    
+                      00044 
+000020                00045 main:
+000020 EC?? F???      00046     call paddle_1
+000024 EC?? F???      00047     call paddle_2
+000028 EC?? F???      00048     call move_ball
+00002C EC?? F???      00049     call display
+000030 EF?? F???      00050     goto main
+                      00051 
+000034                00052 move_ball:
+000034 A0??           00053     btfss move_ball_flag,0 
+000036 0012           00054     return
+000038 6A??           00055     clrf  move_ball_flag ; CLEAR FLAG SO THAT BALL GET INTO THIS FUNCTION ONLY AFTER 300MS
+00003A A0??           00056     btfss direction, 0
+00003C EF?? F???      00057     goto  moving_to_right
+                      00058 
+Warning[207]: Found label after column 1. (moving_to_left)
+000040                00059     moving_to_left:  ;  SWICH CASES
+000040 50??           00060         movf  column_ball, w
+000042 0A01           00061         xorlw 1 ; BALL AT PORT B
+000044 B4D8           00062         btfsc STATUS, Z
+000046 EF?? F???      00063         goto  left_a  ; BALL MOVES FROM PORTB TO PORTA
+00004A 0A03           00064         xorlw 2^1 ; 1 ; BALL AT PORTC;
+00004C B4D8           00065         btfsc STATUS, 2
+00004E EF?? F???      00066         goto  left_b
+000052 0A01           00067         xorlw 3^2 ;   ; BALL AT PORTD;
+000054 B4D8           00068         btfsc STATUS, 2
+000056 EF?? F???      00069         goto  left_c
+00005A 0A07           00070         xorlw 4^3     ; BALL AT PORTE;
+00005C B4D8           00071         btfsc STATUS, 2
+00005E EF?? F???      00072         goto  left_d
+000062 0A01           00073         xorlw 5^4   ; BALL AT PORTF;
+000064 B4D8           00074         btfsc STATUS, 2
+000066 EF?? F???      00075         goto  left_e
+                      00076 
+Warning[207]: Found label after column 1. (left_a)
+00006A                00077         left_a: ;  BALL MOVES FROM PORTB TO PORTA
+00006A 6A??           00078             clrf   column_ball
+00006C 6A81           00079             clrf   PORTB
+00006E A0D6           00080             btfss  TMR0L, 0
+000070 EF?? F???      00081             goto   a_first_bit_0
+000074 A2D6           00082             btfss  TMR0L, 1
+000076 EF?? F???      00083             goto   a_bit_01
+00007A EF?? F???      00084             goto   a_bit_00_11
+                      00085 
+Warning[207]: Found label after column 1. (a_first_bit_0)
+00007E                00086             a_first_bit_0:
+00007E A2D6           00087                 btfss TMR0L, 1
+000080 EF?? F???      00088                 goto a_bit_00_11
+000084 EF?? F???      00089                 goto a_bit_10
+                      00090 
+Warning[207]: Found label after column 1. (a_bit_00_11)
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000088                00091             a_bit_00_11: ; MOVE AT THE SAME LINE
+000088 50??           00092                 movf  row, w
+00008A 1480           00093                 andwf PORTA, w
+00008C B4D8           00094                 btfsc STATUS, 2
+00008E EF?? F???      00095                 goto right_scored
+000092 70??           00096                 btg  direction, 0   
+000094 EF?? F???      00097                 goto right_b  ;      BALL HITS THE PEDAL AND CHANGES DIRECTION
+                      00098 
+Warning[207]: Found label after column 1. (a_bit_01)
+000098                00099             a_bit_01: ; MOVE UP
+000098 42??           00100                 rrncf row
+00009A A0??           00101                 btfss row,0     ; TEST IF BALL AT THE UPPER-BORDER
+00009C 2A??           00102                 incf  row
+00009E 50??           00103                 movf  row,w
+0000A0 1480           00104                 andwf PORTA, w
+0000A2 B4D8           00105                 btfsc STATUS, 2
+0000A4 EF?? F???      00106                 goto  right_scored    
+0000A8 EF?? F???      00107                 goto  right_b  ;      BALL HITS THE PEDAL AND MOVES
+                      00108 
+Warning[207]: Found label after column 1. (a_bit_10)
+0000AC                00109             a_bit_10: ; MOVE DOWN
+0000AC 46??           00110                 rlncf row
+0000AE 0E20           00111                 movlw d'32'
+0000B0 BC??           00112                 btfsc row, 6   ; TEST IF BALL AT THE LOWER-BORDER
+0000B2 0E20           00113                 movlw d'32'    ; TURN ON BOTTOM LED
+0000B4 50??           00114                 movf  row, w   ;
+0000B6 1480           00115                 andwf PORTA, w ;
+0000B8 B4D8           00116                 btfsc STATUS, 2;
+0000BA EF?? F???      00117                 goto right_scored
+0000BE 70??           00118                 btg  direction, 0
+0000C0 EF?? F???      00119                 goto right_b  ;      BALL HITS THE PEDAL AND CHANGES DIRECTION
+                      00120 
+Warning[207]: Found label after column 1. (left_b)
+0000C4                00121         left_b:
+0000C4 6A??           00122             clrf   column_ball
+0000C6 6A82           00123             clrf   PORTC
+0000C8 A0D6           00124             btfss  TMR0L, 0
+0000CA EF?? F???      00125             goto   b_first_bit_0
+0000CE A2D6           00126             btfss  TMR0L, 1
+0000D0 EF?? F???      00127             goto   b_bit_01
+0000D4 EF?? F???      00128             goto   b_bit_00_11
+                      00129 
+Warning[207]: Found label after column 1. (b_first_bit_0)
+0000D8                00130             b_first_bit_0:
+0000D8 A2D6           00131                 btfss TMR0L, 1
+0000DA EF?? F???      00132                 goto b_bit_00_11
+0000DE EF?? F???      00133                 goto b_bit_10
+                      00134 
+Warning[207]: Found label after column 1. (b_bit_00_11)
+0000E2                00135             b_bit_00_11: ; MOVE AT THE SAME LINE
+0000E2 C??? FF81      00136                 movff row, PORTB
+0000E6 EF?? F???      00137                 goto  left_end
+                      00138 
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[207]: Found label after column 1. (b_bit_01)
+0000EA                00139             b_bit_01: ; MOVE UP
+0000EA 42??           00140                 rrncf row
+0000EC B0??           00141                 btfsc row,0     ; TEST IF BALL AT THE UPPER-BORDER
+0000EE C??? FF81      00142                 movff row, PORTB
+0000F2 0E01           00143                 movlw d'1'      ; TURN ON UPPER MOST LED
+0000F4 6E81           00144                 movwf PORTB
+0000F6 EF?? F???      00145                 goto  left_end
+                      00146 
+Warning[207]: Found label after column 1. (b_bit_10)
+0000FA                00147             b_bit_10: ; MOVE DOWN
+0000FA 46??           00148                 rlncf row
+0000FC BC??           00149                 btfsc row, 6   ; ; TEST IF BALL AT THE LOWER-BORDER
+0000FE C??? FF81      00150                 movff row,PORTB
+000102 0E20           00151                 movlw d'32' ; TURN ON BOTTOM LED
+000104 C??? FF81      00152                 movff row, PORTB
+000108 EF?? F???      00153                 goto  left_end
+                      00154 
+Warning[207]: Found label after column 1. (left_c)
+00010C                00155         left_c:
+00010C 0E01           00156             movlw  d'1'
+00010E 6E??           00157             movwf  column_ball
+000110 6A83           00158             clrf   PORTD
+000112 A0D6           00159             btfss  TMR0L, 0
+000114 EF?? F???      00160             goto   c_first_bit_0
+000118 A2D6           00161             btfss  TMR0L, 1
+00011A EF?? F???      00162             goto   c_bit_01
+00011E EF?? F???      00163             goto   c_bit_00_11
+                      00164 
+Warning[207]: Found label after column 1. (c_first_bit_0)
+000122                00165             c_first_bit_0:
+000122 A2D6           00166                 btfss TMR0L, 1
+000124 EF?? F???      00167                 goto c_bit_00_11
+000128 EF?? F???      00168                 goto c_bit_10
+                      00169 
+Warning[207]: Found label after column 1. (c_bit_00_11)
+00012C                00170             c_bit_00_11:
+00012C C??? FF82      00171                 movff row, PORTC
+000130 EF?? F???      00172                 goto  left_end
+                      00173 
+Warning[207]: Found label after column 1. (c_bit_01)
+000134                00174             c_bit_01:
+000134 42??           00175                 rrncf row
+000136 B0??           00176                 btfsc row,0
+000138 C??? FF82      00177                 movff row, PORTC
+00013C 0E01           00178                 movlw d'1'
+00013E 6E82           00179                 movwf PORTC
+000140 EF?? F???      00180                 goto  left_end
+                      00181 
+Warning[207]: Found label after column 1. (c_bit_10)
+000144                00182             c_bit_10:
+000144 46??           00183                 rlncf row
+000146 BC??           00184                 btfsc row, 6   ; ; TEST IF BALL AT THE LOWER-BORDER
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000148 C??? FF82      00185                 movff row,PORTC
+00014C 0E20           00186                 movlw d'32' ; TURN ON BOTTOM LED
+00014E C??? FF82      00187                 movff row, PORTC
+000152 EF?? F???      00188                 goto  left_end
+                      00189 
+Warning[207]: Found label after column 1. (left_d)
+000156                00190         left_d:
+000156 0E02           00191             movlw  d'2'
+000158 6E??           00192             movwf  column_ball
+00015A 6A84           00193             clrf   PORTE
+00015C A0D6           00194             btfss  TMR0L, 0
+00015E EF?? F???      00195             goto   d_first_bit_0
+000162 A2D6           00196             btfss  TMR0L, 1
+000164 EF?? F???      00197             goto   d_bit_01
+000168 EF?? F???      00198             goto   d_bit_00_11
+                      00199 
+Warning[207]: Found label after column 1. (d_first_bit_0)
+00016C                00200             d_first_bit_0:
+00016C A2D6           00201                 btfss TMR0L, 1
+00016E EF?? F???      00202                 goto  d_bit_00_11
+000172 EF?? F???      00203                 goto  d_bit_10
+                      00204 
+Warning[207]: Found label after column 1. (d_bit_00_11)
+000176                00205             d_bit_00_11:
+000176 C??? FF83      00206                 movff row, PORTD
+                      00207 
+Warning[207]: Found label after column 1. (d_bit_01)
+00017A                00208             d_bit_01:
+00017A 42??           00209                 rrncf row
+00017C B0??           00210                 btfsc row,0
+00017E C??? FF83      00211                 movff row, PORTD
+000182 0E01           00212                 movlw d'1'
+000184 6E83           00213                 movwf PORTD
+000186 EF?? F???      00214                 goto  left_end
+                      00215 
+Warning[207]: Found label after column 1. (d_bit_10)
+00018A                00216             d_bit_10:
+00018A 46??           00217                 rlncf row
+00018C BC??           00218                 btfsc row, 6   ; ; TEST IF BALL AT THE LOWER-BORDER
+00018E C??? FF83      00219                 movff row,PORTD
+000192 0E20           00220                 movlw d'32' ; TURN ON BOTTOM LED
+000194 C??? FF83      00221                 movff row, PORTD
+000198 EF?? F???      00222                 goto  left_end
+                      00223 
+Warning[207]: Found label after column 1. (left_e)
+00019C                00224         left_e:
+00019C 0E03           00225             movlw  d'3'
+00019E 6E??           00226             movwf  column_ball
+0001A0 6A85           00227             clrf   PORTF
+0001A2 A0D6           00228             btfss  TMR0L, 0
+0001A4 EF?? F???      00229             goto   e_first_bit_0
+0001A8 A2D6           00230             btfss  TMR0L, 1
+0001AA EF?? F???      00231             goto   e_bit_01
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0001AE EF?? F???      00232             goto   e_bit_00_11
+                      00233 
+Warning[207]: Found label after column 1. (e_first_bit_0)
+0001B2                00234             e_first_bit_0:
+0001B2 A2D6           00235                 btfss TMR0L, 1
+0001B4 EF?? F???      00236                 goto  e_bit_00_11
+0001B8 EF?? F???      00237                 goto  e_bit_10
+                      00238 
+Warning[207]: Found label after column 1. (e_bit_00_11)
+0001BC                00239             e_bit_00_11:
+0001BC C??? FF84      00240                 movff row, PORTE
+                      00241 
+Warning[207]: Found label after column 1. (e_bit_01)
+0001C0                00242             e_bit_01:
+0001C0 42??           00243                 rrncf row
+0001C2 B0??           00244                 btfsc row,0
+0001C4 C??? FF84      00245                 movff row, PORTE
+0001C8 0E01           00246                 movlw d'1'
+0001CA 6E84           00247                 movwf PORTE
+0001CC EF?? F???      00248                 goto  left_end
+                      00249 
+Warning[207]: Found label after column 1. (e_bit_10)
+0001D0                00250             e_bit_10:
+0001D0 46??           00251                 rlncf row
+0001D2 BC??           00252                 btfsc row, 6   ; ; TEST IF BALL AT THE LOWER-BORDER
+0001D4 C??? FF84      00253                 movff row,PORTE
+0001D8 0E20           00254                 movlw d'32' ; TURN ON BOTTOM LED
+0001DA C??? FF84      00255                 movff row, PORTE
+0001DE EF?? F???      00256                 goto  left_end
+                      00257 
+                      00258 
+Warning[207]: Found label after column 1. (moving_to_right)
+0001E2                00259     moving_to_right:
+0001E2 50??           00260         movf  column_ball, w
+0001E4 0A00           00261         xorlw 0 ; BALL AT PORT A
+0001E6 B4D8           00262         btfsc STATUS, 2
+0001E8 EF?? F???      00263         goto  right_b ; BALL MOVES FROM PORTA TO PORTB
+0001EC 0A01           00264         xorlw 1^0 ; 1 ; BALL AT PORTC;
+0001EE B4D8           00265         btfsc STATUS, 2
+0001F0 EF?? F???      00266         goto  right_c ; BALL MOVES FROM PORTB TO PORTC
+0001F4 0A03           00267         xorlw 2^1 ;   ; BALL AT PORTD;
+0001F6 B4D8           00268         btfsc STATUS, 2
+0001F8 EF?? F???      00269         goto  right_d ; BALL MOVES FROM PORTC TO PORTD
+0001FC 0A01           00270         xorlw 3^2     ; BALL AT PORTE;
+0001FE B4D8           00271         btfsc STATUS, 2
+000200 EF?? F???      00272         goto  right_e ; BALL MOVES FROM PORTD TO PORTE
+000204 0A07           00273         xorlw 4^3     ; BALL AT PORTF;
+000206 B4D8           00274         btfsc STATUS, 2
+000208 EF?? F???      00275         goto  right_f ; BALL MOVES FROM PORTE TO PORTF
+                      00276 
+Warning[207]: Found label after column 1. (right_b)
+00020C                00277         right_b:      ; BALL MOVES FROM PORTA TO PORTB
+00020C 0E01           00278             movlw  d'1'
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00020E 6E??           00279             movwf  column_ball
+000210 A0D6           00280             btfss  TMR0L, 0
+000212 EF?? F???      00281             goto   rb_first_bit_0
+000216 A2D6           00282             btfss  TMR0L, 1
+000218 EF?? F???      00283             goto   rb_bit_01
+00021C EF?? F???      00284             goto   rb_bit_00_11
+                      00285 
+Warning[207]: Found label after column 1. (rb_first_bit_0)
+000220                00286             rb_first_bit_0:
+000220 A2D6           00287                 btfss TMR0L, 1
+000222 EF?? F???      00288                 goto  rb_bit_00_11
+000226 EF?? F???      00289                 goto  rb_bit_10
+                      00290 
+Warning[207]: Found label after column 1. (rb_bit_00_11)
+00022A                00291             rb_bit_00_11:
+00022A C??? FF81      00292                 movff row, PORTB
+                      00293 
+Warning[207]: Found label after column 1. (rb_bit_01)
+00022E                00294             rb_bit_01:
+00022E 42??           00295                 rrncf row
+000230 B0??           00296                 btfsc row,0
+000232 C??? FF81      00297                 movff row, PORTB
+000236 0E01           00298                 movlw d'1'
+000238 6E81           00299                 movwf PORTB
+00023A EF?? F???      00300                 goto  left_end
+                      00301 
+Warning[207]: Found label after column 1. (rb_bit_10)
+00023E                00302             rb_bit_10:
+00023E 46??           00303                 rlncf row
+000240 BC??           00304                 btfsc row, 6   ; ; TEST IF BALL AT THE LOWER-BORDER
+000242 C??? FF81      00305                 movff row,PORTB
+000246 0E20           00306                 movlw d'32' ; TURN ON BOTTOM LED
+000248 C??? FF81      00307                 movff row, PORTB
+00024C EF?? F???      00308                 goto  left_end
+                      00309 
+Warning[207]: Found label after column 1. (right_c)
+000250                00310         right_c:      ; BALL MOVES FROM PORTB TO PORTC
+000250 0E02           00311             movlw  d'2'
+000252 6E??           00312             movwf  column_ball
+000254 A0D6           00313             btfss  TMR0L, 0
+000256 EF?? F???      00314             goto   rc_first_bit_0
+00025A A2D6           00315             btfss  TMR0L, 1
+00025C EF?? F???      00316             goto   rc_bit_01
+000260 EF?? F???      00317             goto   rc_bit_00_11
+                      00318 
+Warning[207]: Found label after column 1. (rc_first_bit_0)
+000264                00319             rc_first_bit_0:
+000264 A2D6           00320                 btfss TMR0L, 1
+000266 EF?? F???      00321                 goto  rc_bit_00_11
+00026A EF?? F???      00322                 goto  rc_bit_10
+                      00323 
+Warning[207]: Found label after column 1. (rc_bit_00_11)
+00026E                00324             rc_bit_00_11:
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00026E C??? FF82      00325                 movff row, PORTC
+                      00326 
+Warning[207]: Found label after column 1. (rc_bit_01)
+000272                00327             rc_bit_01:
+000272 42??           00328                 rrncf row
+000274 B0??           00329                 btfsc row,0
+000276 C??? FF82      00330                 movff row, PORTC
+00027A 0E01           00331                 movlw d'1'
+00027C 6E82           00332                 movwf PORTC
+00027E EF?? F???      00333                 goto  left_end
+                      00334 
+Warning[207]: Found label after column 1. (rc_bit_10)
+000282                00335             rc_bit_10:
+000282 46??           00336                 rlncf row
+000284 BC??           00337                 btfsc row, 6   ; ; TEST IF BALL AT THE LOWER-BORDER
+000286 C??? FF82      00338                 movff row,PORTC
+00028A 0E20           00339                 movlw d'32' ; TURN ON BOTTOM LED
+00028C C??? FF82      00340                 movff row, PORTC
+000290 EF?? F???      00341                 goto  left_end
+                      00342 
+Warning[207]: Found label after column 1. (right_d)
+000294                00343         right_d:      ; BALL MOVES FROM PORTC TO PORTD
+000294 0E03           00344             movlw  d'3'
+000296 6E??           00345             movwf  column_ball
+000298 A0D6           00346             btfss  TMR0L, 0
+00029A EF?? F???      00347             goto   rd_first_bit_0
+00029E A2D6           00348             btfss  TMR0L, 1
+0002A0 EF?? F???      00349             goto   rd_bit_01
+0002A4 EF?? F???      00350             goto   rd_bit_00_11
+                      00351 
+Warning[207]: Found label after column 1. (rd_first_bit_0)
+0002A8                00352             rd_first_bit_0:
+0002A8 A2D6           00353                 btfss TMR0L, 1
+0002AA EF?? F???      00354                 goto  rd_bit_00_11
+0002AE EF?? F???      00355                 goto  rd_bit_10
+                      00356 
+Warning[207]: Found label after column 1. (rd_bit_00_11)
+0002B2                00357             rd_bit_00_11:
+0002B2 C??? FF83      00358                 movff row, PORTD
+                      00359 
+Warning[207]: Found label after column 1. (rd_bit_01)
+0002B6                00360             rd_bit_01:
+0002B6 42??           00361                 rrncf row
+0002B8 B0??           00362                 btfsc row,0
+0002BA C??? FF83      00363                 movff row, PORTD
+0002BE 0E01           00364                 movlw d'1'
+0002C0 6E83           00365                 movwf PORTD
+0002C2 EF?? F???      00366                 goto  left_end
+                      00367 
+Warning[207]: Found label after column 1. (rd_bit_10)
+0002C6                00368             rd_bit_10:
+0002C6 46??           00369                 rlncf row
+0002C8 BC??           00370                 btfsc row, 6   ; ; TEST IF BALL AT THE LOWER-BORDER
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0002CA C??? FF83      00371                 movff row,PORTD
+0002CE 0E20           00372                 movlw d'32' ; TURN ON BOTTOM LED
+0002D0 C??? FF83      00373                 movff row, PORTD
+0002D4 EF?? F???      00374                 goto  left_end
+                      00375 
+Warning[207]: Found label after column 1. (right_e)
+0002D8                00376         right_e:      ; BALL MOVES FROM PORTD TO PORTE
+0002D8 0E04           00377             movlw  d'4'
+0002DA 6E??           00378             movwf  column_ball
+0002DC A0D6           00379             btfss  TMR0L, 0
+0002DE EF?? F???      00380             goto   re_first_bit_0
+0002E2 A2D6           00381             btfss  TMR0L, 1
+0002E4 EF?? F???      00382             goto   re_bit_01
+0002E8 EF?? F???      00383             goto   re_bit_00_11
+                      00384 
+Warning[207]: Found label after column 1. (re_first_bit_0)
+0002EC                00385             re_first_bit_0:
+0002EC A2D6           00386                 btfss TMR0L, 1
+0002EE EF?? F???      00387                 goto  re_bit_00_11
+0002F2 EF?? F???      00388                 goto  re_bit_10
+                      00389 
+Warning[207]: Found label after column 1. (re_bit_00_11)
+0002F6                00390             re_bit_00_11:
+0002F6 C??? FF84      00391                 movff row, PORTE
+                      00392 
+Warning[207]: Found label after column 1. (re_bit_01)
+0002FA                00393             re_bit_01:
+0002FA 42??           00394                 rrncf row
+0002FC B0??           00395                 btfsc row,0
+0002FE C??? FF84      00396                 movff row, PORTE
+000302 0E01           00397                 movlw d'1'
+000304 6E84           00398                 movwf PORTE
+000306 EF?? F???      00399                 goto  left_end
+                      00400 
+Warning[207]: Found label after column 1. (re_bit_10)
+00030A                00401             re_bit_10:
+00030A 46??           00402                 rlncf row
+00030C BC??           00403                 btfsc row, 6   ; ; TEST IF BALL AT THE LOWER-BORDER
+00030E C??? FF84      00404                 movff row,PORTE
+000312 0E20           00405                 movlw d'32' ; TURN ON BOTTOM LED
+000314 C??? FF84      00406                 movff row, PORTE
+000318 EF?? F???      00407                 goto  left_end
+                      00408 
+Warning[207]: Found label after column 1. (right_f)
+00031C                00409         right_f:      ; BALL MOVES FROM PORTE TO PORTF
+00031C 0E05           00410             movlw  d'5'
+00031E 6E??           00411             movwf  column_ball
+000320 A0D6           00412             btfss  TMR0L, 0
+000322 EF?? F???      00413             goto   rf_first_bit_0
+000326 A2D6           00414             btfss  TMR0L, 1
+000328 EF?? F???      00415             goto   rf_bit_01
+00032C EF?? F???      00416             goto   rf_bit_00_11
+                      00417 
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[207]: Found label after column 1. (rf_first_bit_0)
+000330                00418             rf_first_bit_0:
+000330 A2D6           00419                 btfss TMR0L, 1
+000332 EF?? F???      00420                 goto  rf_bit_00_11
+000336 EF?? F???      00421                 goto  rf_bit_10
+                      00422 
+Warning[207]: Found label after column 1. (rf_bit_00_11)
+00033A                00423             rf_bit_00_11:
+00033A 50??           00424                 movf   row, w
+00033C 1485           00425                 andwf  PORTF, w
+00033E B4D8           00426                 btfsc  STATUS, 2
+000340 EF?? F???      00427                 goto   left_scored
+000344 70??           00428                 btg    direction,0
+000346 EF?? F???      00429                 goto   left_e
+                      00430 
+Warning[207]: Found label after column 1. (rf_bit_01)
+00034A                00431             rf_bit_01:
+00034A 42??           00432                 rrncf row
+00034C B0??           00433                 btfsc row,0
+00034E 2A??           00434                 incf  row
+000350 50??           00435                 movf  row, w
+000352 1485           00436                 andwf PORTF, w
+000354 B4D8           00437                 btfsc STATUS, 2
+000356 EF?? F???      00438                 goto  left_scored
+00035A 70??           00439                 btg   direction, 0
+00035C EF?? F???      00440                 goto  left_e
+                      00441 
+Warning[207]: Found label after column 1. (rf_bit_10)
+000360                00442             rf_bit_10:
+000360 46??           00443                 rlncf row
+000362 0E20           00444                 movlw d'32'
+000364 BC??           00445                 btfsc row, 6   ; TEST IF BALL AT THE LOWER-BORDER
+000366 6E??           00446                 movwf row
+000368 50??           00447                 movf  row, w
+00036A 1485           00448                 andwf PORTF, w
+00036C B4D8           00449                 btfsc STATUS, 2
+00036E EF?? F???      00450                 goto  left_scored
+000372 70??           00451                 btg   direction,0
+000374 EF?? F???      00452                 goto  left_e
+                      00453 
+Warning[207]: Found label after column 1. (left_end)
+000378                00454     left_end
+                      00455 
+000378 0012           00456     return
+00037A                00457 display:
+                      00458 
+                      00459 
+                      00460 ; CHECK WHETHER THE BUTTONS RG1 AND RG0 IS PRESSED    
+00037A                00461 paddle_1: 
+                      00462     ;CHECK RG1 IS PRESSED
+00037A B0??           00463     btfsc s_1_up,0
+00037C D???           00464     bra RG1_pressed
 Warning[207]: Found label after column 1. (RG1_released)
-00002E                00075     RG1_released: ; IT WAS NOT PRESSED
-00002E A286           00076         btfss PORTG,1 ; IT IS NOW PRESSED ?
-000030 D???           00077         bra RG1_end
-000032 80??           00078         bsf move_up_1,0
-000034 80??           00079         bsf s_1_up,0
-000036 D???           00080         bra RG1_end
-                      00081     
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00037E                00465     RG1_released: ; IT WAS NOT PRESSED
+00037E A286           00466         btfss PORTG,1 ; IT IS NOW PRESSED ?
+000380 D???           00467         bra RG1_end
+000382 80??           00468         bsf move_up_1,0
+000384 80??           00469         bsf s_1_up,0
+000386 D???           00470         bra RG1_end
+                      00471     
 Warning[207]: Found label after column 1. (RG1_pressed)
-000038                00082     RG1_pressed: ; IT WAS PRESSED
-000038 B286           00083         btfsc PORTG,1 ; IT IS NOW RELEASED ?
-00003A D???           00084         bra RG1_end
-00003C 90??           00085         bcf s_1_up,0
-                      00086         
+000388                00472     RG1_pressed: ; IT WAS PRESSED
+000388 B286           00473         btfsc PORTG,1 ; IT IS NOW RELEASED ?
+00038A D???           00474         bra RG1_end
+00038C 90??           00475         bcf s_1_up,0
+                      00476         
 Warning[207]: Found label after column 1. (RG1_end)
-00003E                00087     RG1_end:
-                      00088     ;CHECK RG0 IS PRESSED
-00003E B0??           00089     btfsc s_1_down,0
-000040 D???           00090     bra RG0_pressed
-                      00091     
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE  3
-
-
-LOC  OBJECT CODE     LINE SOURCE TEXT
-  VALUE
-
+00038E                00477     RG1_end:
+                      00478     ;CHECK RG0 IS PRESSED
+00038E B0??           00479     btfsc s_1_down,0
+000390 D???           00480     bra RG0_pressed
+                      00481     
 Warning[207]: Found label after column 1. (RG0_released)
-000042                00092     RG0_released: ; IN THE PREVIOUS STATE RG0 IS NOT PRESSED
-000042 A086           00093         btfss PORTG,0
-000044 D???           00094         bra RGA_end
-000046 80??           00095         bsf move_down_1,0
-000048 80??           00096         bsf s_1_down,0
-00004A D???           00097         bra RGA_end
-                      00098     
+000392                00482     RG0_released: ; IN THE PREVIOUS STATE RG0 IS NOT PRESSED
+000392 A086           00483         btfss PORTG,0
+000394 D???           00484         bra RGA_end
+000396 80??           00485         bsf move_down_1,0
+000398 80??           00486         bsf s_1_down,0
+00039A D???           00487         bra RGA_end
+                      00488     
 Warning[207]: Found label after column 1. (RG0_pressed)
-00004C                00099     RG0_pressed:  ; IN THE PREVIOUS STATE RG0 IS  PRESSED
-00004C B086           00100         btfsc PORTG,0
-00004E D???           00101         bra RGA_end
-000050 90??           00102         bcf s_1_down,0
-                      00103         
+00039C                00489     RG0_pressed:  ; IN THE PREVIOUS STATE RG0 IS  PRESSED
+00039C B086           00490         btfsc PORTG,0
+00039E D???           00491         bra RGA_end
+0003A0 90??           00492         bcf s_1_down,0
+                      00493         
 Warning[207]: Found label after column 1. (RGA_end)
-000052                00104     RGA_end:
-                      00105     
-000052 EC?? F???      00106     call paddle_1_led_task ; MOVE THE PADDLE UP OR DOWN
-                      00107     
-000056 0012           00108     return 
-                      00109 
+0003A2                00494     RGA_end:
+                      00495     
+0003A2 EC?? F???      00496     call paddle_1_led_task ; MOVE THE PADDLE UP OR DOWN
+                      00497     
+0003A6 0012           00498     return 
+                      00499 
 Warning[207]: Found label after column 1. (paddle_1_led_task)
-000058                00110     paddle_1_led_task:            ;MOVE THE PADDLE1 ACCORDING TO THE FLAGS
-000058 A0??           00111         btfss move_up_1, 0
-00005A EF?? F???      00112         goto  move_paddle1_down   ; MOVE UP FLAG IS NOT SET CHECK THE DOWN
+0003A8                00500     paddle_1_led_task:            ;MOVE THE PADDLE1 ACCORDING TO THE FLAGS
+0003A8 A0??           00501         btfss move_up_1, 0
+0003AA EF?? F???      00502         goto  move_paddle1_down   ; MOVE UP FLAG IS NOT SET CHECK THE DOWN
 Warning[207]: Found label after column 1. (move_paddle1_up)
-00005E                00113         move_paddle1_up:
-00005E B080           00114             btfsc PORTA, 0
-000060 EF?? F???      00115             goto  move_paddle1_end; PADDLE CANNOT MOVE UP FURTHER
-000064 4280           00116             rrncf PORTA           ; MOVE THE PADDLE UP
-000066 EF?? F???      00117             goto  move_paddle1_end
-                      00118             
+0003AE                00503         move_paddle1_up:
+0003AE B080           00504             btfsc PORTA, 0
+0003B0 EF?? F???      00505             goto  move_paddle1_end; PADDLE CANNOT MOVE UP FURTHER
+0003B4 4280           00506             rrncf PORTA           ; MOVE THE PADDLE UP
+0003B6 EF?? F???      00507             goto  move_paddle1_end
+                      00508             
 Warning[207]: Found label after column 1. (move_paddle1_down)
-00006A                00119         move_paddle1_down:
-00006A A0??           00120             btfss move_down_1,0  ; CHECK WHETHER THE DOWN FLAG IS SET
-00006C EF?? F???      00121             goto  move_paddle1_end
-000070 BA80           00122             btfsc PORTA, 5       ; PADDLE1 CANNOT MOVE DOWN FURTHER
-000072 EF?? F???      00123             goto  move_paddle1_end
-000076 4680           00124             rlncf PORTA          ; MOVE THE PADDLE DOWN
-                      00125 
+0003BA                00509         move_paddle1_down:
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0003BA A0??           00510             btfss move_down_1,0  ; CHECK WHETHER THE DOWN FLAG IS SET
+0003BC EF?? F???      00511             goto  move_paddle1_end
+0003C0 BA80           00512             btfsc PORTA, 5       ; PADDLE1 CANNOT MOVE DOWN FURTHER
+0003C2 EF?? F???      00513             goto  move_paddle1_end
+0003C6 4680           00514             rlncf PORTA          ; MOVE THE PADDLE DOWN
+                      00515 
 Warning[207]: Found label after column 1. (move_paddle1_end)
-000078                00126         move_paddle1_end:
-000078 90??           00127             bcf   move_down_1, 0 ; WE CLEAR UP_DOWN FLAGS SO THAT WE WILL WAIT ANOTHER PRESS TO MOVE UP 
+0003C8                00516         move_paddle1_end:
+0003C8 90??           00517             bcf   move_down_1, 0 ; WE CLEAR UP_DOWN FLAGS SO THAT WE WILL WAIT ANOTHER PRESS TO MOVE UP 
                             OR DOWN
-00007A 90??           00128             bcf   move_up_1, 0   ; WE WILL IGNORE THE PREVIOUS RG1(UP) PRESS
-00007C 0012           00129             return
-                      00130             
-                      00131 ; CHECK WHETHER THE BUTTONS RG3 AND RG2 IS PRESSED      
-00007E                00132 paddle_2:
-                      00133     ;CHECK RG3 IS PRESSED
-00007E B0??           00134     btfsc s_2_up,0
-000080 D???           00135     bra RG3_pressed
+0003CA 90??           00518             bcf   move_up_1, 0   ; WE WILL IGNORE THE PREVIOUS RG1(UP) PRESS
+0003CC 0012           00519             return
+                      00520             
+                      00521 ; CHECK WHETHER THE BUTTONS RG3 AND RG2 IS PRESSED      
+0003CE                00522 paddle_2:
+                      00523     ;CHECK RG3 IS PRESSED
+0003CE B0??           00524     btfsc s_2_up,0
+0003D0 D???           00525     bra RG3_pressed
 Warning[207]: Found label after column 1. (RG3_released)
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE  4
-
-
-LOC  OBJECT CODE     LINE SOURCE TEXT
-  VALUE
-
-000082                00136     RG3_released:
-000082 A686           00137         btfss PORTG,3
-000084 D???           00138         bra RG3_end
-000086 80??           00139         bsf move_up_2,0
-000088 80??           00140         bsf s_2_up,0
-00008A D???           00141         bra RG3_end
-                      00142     
+0003D2                00526     RG3_released:
+0003D2 A686           00527         btfss PORTG,3
+0003D4 D???           00528         bra RG3_end
+0003D6 80??           00529         bsf move_up_2,0
+0003D8 80??           00530         bsf s_2_up,0
+0003DA D???           00531         bra RG3_end
+                      00532     
 Warning[207]: Found label after column 1. (RG3_pressed)
-00008C                00143     RG3_pressed:
-00008C B686           00144         btfsc PORTG,3
-00008E D???           00145         bra RG3_end
-000090 90??           00146         bcf s_2_up,0 ; RG3 IS RELEASED SO STATE FOR RG3 = 0
-                      00147         
+0003DC                00533     RG3_pressed:
+0003DC B686           00534         btfsc PORTG,3
+0003DE D???           00535         bra RG3_end
+0003E0 90??           00536         bcf s_2_up,0 ; RG3 IS RELEASED SO STATE FOR RG3 = 0
+                      00537         
 Warning[207]: Found label after column 1. (RG3_end)
-000092                00148     RG3_end:
-                      00149     ;CHECK RG2 IS PRESSED
-000092 B0??           00150     btfsc s_2_down,0
-000094 D???           00151     bra RG2_pressed
-                      00152     
+0003E2                00538     RG3_end:        ;   CHECK RG2 IS PRESSED
+0003E2 B0??           00539         btfsc s_2_down,0
+0003E4 D???           00540         bra RG2_pressed
+                      00541     
 Warning[207]: Found label after column 1. (RG2_released)
-000096                00153     RG2_released: ; IN THE PREVIOUS STATE RG2 IS NOT PRESSED
-000096 A486           00154         btfss PORTG,2
-000098 D???           00155         bra RGF_end
-00009A 80??           00156         bsf move_down_2,0
-00009C 80??           00157         bsf s_2_down,0
-00009E D???           00158         bra RGF_end
-                      00159     
+0003E6                00542     RG2_released: ; IN THE PREVIOUS STATE RG2 IS NOT PRESSED
+0003E6 A486           00543         btfss PORTG,2
+0003E8 D???           00544         bra RGF_end
+0003EA 80??           00545         bsf move_down_2,0
+0003EC 80??           00546         bsf s_2_down,0
+0003EE D???           00547         bra RGF_end
+                      00548     
 Warning[207]: Found label after column 1. (RG2_pressed)
-0000A0                00160     RG2_pressed:  ; IN THE PREVIOUS STATE RG2 IS  PRESSED
-0000A0 B486           00161         btfsc PORTG,2
-0000A2 D???           00162         bra RGF_end
-0000A4 90??           00163         bcf s_2_down,0 ; RG2 IS RELEASED SO STATE=0
-                      00164         
+0003F0                00549     RG2_pressed:  ; IN THE PREVIOUS STATE RG2 IS  PRESSED
+0003F0 B486           00550         btfsc PORTG,2
+0003F2 D???           00551         bra RGF_end
+0003F4 90??           00552         bcf s_2_down,0 ; RG2 IS RELEASED SO STATE=0
+                      00553         
 Warning[207]: Found label after column 1. (RGF_end)
-0000A6                00165     RGF_end:
-                      00166     
-0000A6 EC?? F???      00167     call paddle_2_led_task ; MOVE THE PADDLE UP OR DOWN
-                      00168     
-0000AA 0012           00169     return 
-                      00170 
-Warning[207]: Found label after column 1. (paddle_2_led_task)
-0000AC                00171     paddle_2_led_task: ;MOVE THE PADDLE2 ACCORDING TO THE FLAGS
-0000AC A0??           00172         btfss move_up_2, 0
-0000AE EF?? F???      00173         goto  move_paddle2_down ; MOVE UP FLAG IS NOT SET, CHECK THE DOWN
-Warning[207]: Found label after column 1. (move_paddle2_up)
-0000B2                00174         move_paddle2_up:
-0000B2 B085           00175             btfsc PORTF, 0
-0000B4 EF?? F???      00176             goto  move_paddle2_end;  PADDLE CANNOT MOVE UP FURTHER
-0000B8 4285           00177             rrncf PORTF ; MOVE THE PADDLE UP
-0000BA EF?? F???      00178             goto  move_paddle2_end
-                      00179             
-Warning[207]: Found label after column 1. (move_paddle2_down)
-0000BE                00180         move_paddle2_down:
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE  5
+0003F6                00554     RGF_end:
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 13
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0000BE A0??           00181             btfss move_down_2,0 ; CHECK WHETHER THE DOWN FLAG IS SET
-0000C0 EF?? F???      00182             goto  move_paddle2_end
-0000C4 BA85           00183             btfsc PORTF, 5       ; PADDLE CANNOT MOVE DOWN FURTHER
-0000C6 EF?? F???      00184             goto  move_paddle2_end
-0000CA 4685           00185             rlncf PORTF         ; MOVE THE PADDLE DOWN
-                      00186             
+                      00555     
+0003F6 EC?? F???      00556     call paddle_2_led_task ; MOVE THE PADDLE UP OR DOWN
+                      00557     
+0003FA 0012           00558     return 
+                      00559 
+Warning[207]: Found label after column 1. (paddle_2_led_task)
+0003FC                00560     paddle_2_led_task: ;MOVE THE PADDLE2 ACCORDING TO THE FLAGS
+0003FC A0??           00561         btfss move_up_2, 0
+0003FE EF?? F???      00562         goto  move_paddle2_down ; MOVE UP FLAG IS NOT SET, CHECK THE DOWN
+Warning[207]: Found label after column 1. (move_paddle2_up)
+000402                00563         move_paddle2_up:
+000402 B085           00564             btfsc PORTF, 0
+000404 EF?? F???      00565             goto  move_paddle2_end;  PADDLE CANNOT MOVE UP FURTHER
+000408 4285           00566             rrncf PORTF ; MOVE THE PADDLE UP
+00040A EF?? F???      00567             goto  move_paddle2_end
+                      00568             
+Warning[207]: Found label after column 1. (move_paddle2_down)
+00040E                00569         move_paddle2_down:
+00040E A0??           00570             btfss move_down_2,0 ; CHECK WHETHER THE DOWN FLAG IS SET
+000410 EF?? F???      00571             goto  move_paddle2_end
+000414 BA85           00572             btfsc PORTF, 5       ; PADDLE CANNOT MOVE DOWN FURTHER
+000416 EF?? F???      00573             goto  move_paddle2_end
+00041A 4685           00574             rlncf PORTF         ; MOVE THE PADDLE DOWN
+                      00575             
 Warning[207]: Found label after column 1. (move_paddle2_end)
-0000CC                00187         move_paddle2_end:
-0000CC 90??           00188             bcf   move_up_2, 0   ; WE CLEAR UP_DOWN FLAGS SO THAT WE WILL WAIT ANOTHER PRESS TO MOVE UP 
+00041C                00576         move_paddle2_end:
+00041C 90??           00577             bcf   move_up_2, 0   ; WE CLEAR UP_DOWN FLAGS SO THAT WE WILL WAIT ANOTHER PRESS TO MOVE UP 
                             OR DOWN
-0000CE 90??           00189             bcf   move_down_2, 0 ; WE WILL IGNORE THE PREVIOUS RG2 PRESS
-0000D0 0012           00190             return
-                      00191             
-0000D2                00192 INIT
-0000D2 0E0F           00193     MOVLW   b'00001111'
-0000D4 6E98           00194     MOVWF   TRISG ; MAKE RG0-RG1-RG2-RG3 PORTS(PINS) INPUT
-0000D6 6A92           00195     CLRF    TRISA  ; MAKE PORTA AS OUTPUT
-0000D8 6A97           00196     CLRF    TRISF  ; MAKE PORTF AS OUTPUT
-                      00197 
-0000DA 0E0F           00198     MOVLW   0X0F
-0000DC 6EC1           00199     MOVWF   ADCON1 ; MAKE PORTA DIGITAL OUTPUT
-0000DE 0E1C           00200     MOVLW   b'00011100' ; TURN ON THE FIRST LEDS
-0000E0 6E80           00201     MOVWF   PORTA
-0000E2 6E85           00202     MOVWF   PORTF
-0000E4 6A??           00203     CLRF    s_1_up   
-0000E6 6A??           00204     CLRF    s_2_up   
-0000E8 6A??           00205     CLRF    s_1_down 
-0000EA 6A??           00206     CLRF    s_2_down
-0000EC 6A??           00207     CLRF    move_up_1
-0000EE 6A??           00208     CLRF    move_down_1
-0000F0 6A??           00209     CLRF    move_up_2
-0000F2 6A??           00210     CLRF    move_down_2
-0000F4 0E2E           00211     MOVLW   d'46'
-0000F6 6E??           00212     MOVWF   Yok_olan46
-0000F8 6AF2           00213     CLRF    INTCON ;
-0000FA 0EC7           00214     MOVLW   b'11000111'
-0000FC 6ED5           00215     MOVWF   T0CON
-0000FE 8AF2           00216     BSF     INTCON, 5
-000100 8EF2           00217     BSF     INTCON, 7; ENABLE INTERRUPTS
-000102 0012           00218     return
-                      00219     
-                      00220     END
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE  6
+00041E 90??           00578             bcf   move_down_2, 0 ; WE WILL IGNORE THE PREVIOUS RG2 PRESS
+000420 0012           00579             return
+                      00580 
+                      00581 
+000422                00582 right_scored:
+                      00583 
+000422                00584 left_scored:
+                      00585             
+000422                00586 INIT
+000422 0E0F           00587     MOVLW   b'00001111'
+000424 6E98           00588     MOVWF   TRISG ; MAKE RG0-RG1-RG2-RG3 PORTS(PINS) INPUT
+000426 6A92           00589     CLRF    TRISA  ; MAKE PORTA AS OUTPUT
+000428 6A97           00590     CLRF    TRISF  ; MAKE PORTF AS OUTPUT
+                      00591 
+00042A 0E0F           00592     MOVLW   0X0F
+00042C 6EC1           00593     MOVWF   ADCON1 ; MAKE PORTA DIGITAL OUTPUT
+00042E 0E1C           00594     MOVLW   b'00011100' ; TURN ON THE FIRST LEDS
+000430 6E80           00595     MOVWF   PORTA
+000432 6E85           00596     MOVWF   PORTF
+000434 6A??           00597     CLRF    move_ball_flag
+000436 6A??           00598     CLRF    s_1_up
+000438 6A??           00599     CLRF    s_2_up   
+00043A 6A??           00600     CLRF    s_1_down 
+00043C 6A??           00601     CLRF    s_2_down
+00043E 6A??           00602     CLRF    move_up_1
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000440 6A??           00603     CLRF    move_down_1
+000442 6A??           00604     CLRF    move_up_2
+000444 6A??           00605     CLRF    move_down_2
+000446 6A??           00606     CLRF    left_score
+000448 6A??           00607     CLRF    right_score
+00044A 0E2E           00608     MOVLW   d'46'
+00044C 6E??           00609     MOVWF   Yok_olan46
+00044E 6AF2           00610     CLRF    INTCON ;
+000450 0EC7           00611     MOVLW   b'11000111'
+000452 6ED5           00612     MOVWF   T0CON
+000454 8AF2           00613     BSF     INTCON, 5
+000456 8EF2           00614     BSF     INTCON, 7; ENABLE INTERRUPTS
+000458 0012           00615     return
+                      00616     
+                      00617     END
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 15
 
 
 SYMBOL TABLE
@@ -341,7 +845,7 @@ ADIP                              00000006
 ADON                              00000000
 ADRES                             00000FC3
 ADRESH                            00000FC4
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE  7
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 16
 
 
 SYMBOL TABLE
@@ -400,7 +904,7 @@ C2OUT_PORTF                       00000001
 CCP1                              00000002
 CCP1CON                           00000FBD
 CCP1IE                            00000002
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE  8
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 17
 
 
 SYMBOL TABLE
@@ -459,7 +963,7 @@ CCP5M3                            00000003
 CCPR1                             00000FBE
 CCPR1H                            00000FBF
 CCPR1L                            00000FBE
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE  9
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 18
 
 
 SYMBOL TABLE
@@ -518,7 +1022,7 @@ CVRSS                             00000004
 D                                 00000005
 DA2                               00000005
 DATA_ADDRESS                      00000005
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 10
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 19
 
 
 SYMBOL TABLE
@@ -577,7 +1081,7 @@ ECCP3AS                           00000F6A
 ECCP3AS0                          00000004
 ECCP3AS1                          00000005
 ECCP3AS2                          00000006
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 11
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 20
 
 
 SYMBOL TABLE
@@ -636,7 +1140,7 @@ HLVDL1                            00000001
 HLVDL2                            00000002
 HLVDL3                            00000003
 I2C_DAT                           00000005
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 12
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 21
 
 
 SYMBOL TABLE
@@ -651,7 +1155,7 @@ IDLEN                             00000007
 INDF0                             00000FEF
 INDF1                             00000FE7
 INDF2                             00000FDF
-INIT                              000000D2
+INIT                              00000422
 INT0                              00000000
 INT0E                             00000004
 INT0F                             00000001
@@ -695,7 +1199,7 @@ IRCF0                             00000004
 IRCF1                             00000005
 IRCF2                             00000006
 IRVST                             00000005
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 13
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 22
 
 
 SYMBOL TABLE
@@ -754,7 +1258,7 @@ LATE7                             00000007
 LATF                              00000F8E
 LATF0                             00000000
 LATF1                             00000001
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 14
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 23
 
 
 SYMBOL TABLE
@@ -813,7 +1317,7 @@ NOT_A                             00000005
 NOT_ADDRESS                       00000005
 NOT_BOR                           00000000
 NOT_CE                            00000005
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 15
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 24
 
 
 SYMBOL TABLE
@@ -872,7 +1376,7 @@ P1M0                              00000006
 P1M1                              00000007
 P1RSEN                            00000007
 P2A_PORTB                         00000003
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 16
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 25
 
 
 SYMBOL TABLE
@@ -931,7 +1435,7 @@ PEN                               00000002
 PEN2                              00000002
 PIE1                              00000F9D
 PIE2                              00000FA0
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 17
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 26
 
 
 SYMBOL TABLE
@@ -990,7 +1494,7 @@ PSS1BD0                           00000000
 PSS1BD1                           00000001
 PSS2AC0                           00000002
 PSS2AC1                           00000003
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 18
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 27
 
 
 SYMBOL TABLE
@@ -1049,7 +1553,7 @@ RCEN2                             00000003
 RCIDL                             00000006
 RCIDL1                            00000006
 RCIDL2                            00000006
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 19
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 28
 
 
 SYMBOL TABLE
@@ -1094,29 +1598,29 @@ RF5                               00000005
 RF6                               00000006
 RF7                               00000007
 RG0                               00000000
-RG0_pressed                       0000004C
-RG0_released                      00000042
+RG0_pressed                       0000039C
+RG0_released                      00000392
 RG1                               00000001
-RG1_end                           0000003E
-RG1_pressed                       00000038
-RG1_released                      0000002E
+RG1_end                           0000038E
+RG1_pressed                       00000388
+RG1_released                      0000037E
 RG2                               00000002
-RG2_pressed                       000000A0
-RG2_released                      00000096
+RG2_pressed                       000003F0
+RG2_released                      000003E6
 RG3                               00000003
-RG3_end                           00000092
-RG3_pressed                       0000008C
-RG3_released                      00000082
+RG3_end                           000003E2
+RG3_pressed                       000003DC
+RG3_released                      000003D2
 RG4                               00000004
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 20
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 29
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
 RG5                               00000005
-RGA_end                           00000052
-RGF_end                           000000A6
+RGA_end                           000003A2
+RGF_end                           000003F6
 RH0                               00000000
 RH1                               00000001
 RH2                               00000002
@@ -1167,7 +1671,7 @@ SDA2                              00000005
 SDI                               00000004
 SDI1                              00000004
 SDI2                              00000005
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 21
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 30
 
 
 SYMBOL TABLE
@@ -1226,7 +1730,7 @@ SSPEN                             00000005
 SSPEN2                            00000005
 SSPIE                             00000003
 SSPIF                             00000003
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 22
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 31
 
 
 SYMBOL TABLE
@@ -1244,7 +1748,7 @@ SSPM32                            00000003
 SSPOV                             00000006
 SSPOV2                            00000006
 SSPSTAT                           00000FC7
-START                             0000001A
+START                             0000001C
 START2                            00000003
 STATUS                            00000FD8
 STKFUL                            00000007
@@ -1285,7 +1789,7 @@ T1OSO                             00000000
 T1RUN                             00000006
 T1SYNC                            00000002
 T2CKPS0                           00000000
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 23
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 32
 
 
 SYMBOL TABLE
@@ -1344,7 +1848,7 @@ TMR3IF                            00000001
 TMR3IP                            00000001
 TMR3L                             00000FB2
 TMR3ON                            00000000
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 24
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 33
 
 
 SYMBOL TABLE
@@ -1403,7 +1907,7 @@ TRISE2                            00000002
 TRISE3                            00000003
 TRISE4                            00000004
 TRISE5                            00000005
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 25
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 34
 
 
 SYMBOL TABLE
@@ -1462,7 +1966,7 @@ TX2IE                             00000004
 TX2IF                             00000004
 TX2IP                             00000004
 TX8_9                             00000006
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 26
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 35
 
 
 SYMBOL TABLE
@@ -1521,7 +2025,7 @@ _ADDRBW_ADDR8BIT_3L               000000CF
 _BBSIZ_BB2K_4L                    000000CF
 _BBSIZ_BB4K_4L                    000000DF
 _BBSIZ_BB8K_4L                    000000EF
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 27
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 36
 
 
 SYMBOL TABLE
@@ -1580,7 +2084,7 @@ _EBTR0_ON_7L                      000000FE
 _EBTR1_OFF_7L                     000000FF
 _EBTR1_ON_7L                      000000FD
 _EBTR2_OFF_7L                     000000FF
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 28
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 37
 
 
 SYMBOL TABLE
@@ -1639,7 +2143,7 @@ _STVREN_OFF_4L                    000000FE
 _STVREN_ON_4L                     000000FF
 _WAIT_OFF_3L                      000000FF
 _WAIT_ON_3L                       0000007F
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 29
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 38
 
 
 SYMBOL TABLE
@@ -1688,35 +2192,104 @@ _WRTD_ON_6H                       0000007F
 _XINST_OFF_4L                     000000BF
 _XINST_ON_4L                      000000FF
 __18F8722                         00000001
-counter                           00000008
-main                              0000001E
-move_down_1                       00000005
-move_down_2                       00000007
-move_paddle1_down                 0000006A
-move_paddle1_end                  00000078
-move_paddle1_up                   0000005E
-move_paddle2_down                 000000BE
-move_paddle2_end                  000000CC
-move_paddle2_up                   000000B2
-MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   3-31-2018  17:53:14         PAGE 30
+a_bit_00_11                       00000088
+a_bit_01                          00000098
+a_bit_10                          000000AC
+a_first_bit_0                     0000007E
+b_bit_00_11                       000000E2
+b_bit_01                          000000EA
+b_bit_10                          000000FA
+b_first_bit_0                     000000D8
+c_bit_00_11                       0000012C
+c_bit_01                          00000134
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 39
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+c_bit_10                          00000144
+c_first_bit_0                     00000122
+column_ball                       0000000C
+counter                           00000008
+d_bit_00_11                       00000176
+d_bit_01                          0000017A
+d_bit_10                          0000018A
+d_first_bit_0                     0000016C
+direction                         0000000B
+display                           0000037A
+e_bit_00_11                       000001BC
+e_bit_01                          000001C0
+e_bit_10                          000001D0
+e_first_bit_0                     000001B2
+left_a                            0000006A
+left_b                            000000C4
+left_c                            0000010C
+left_d                            00000156
+left_e                            0000019C
+left_end                          00000378
+left_score                        0000000E
+left_scored                       00000422
+main                              00000020
+move_ball                         00000034
+move_ball_flag                    0000000A
+move_down_1                       00000005
+move_down_2                       00000007
+move_paddle1_down                 000003BA
+move_paddle1_end                  000003C8
+move_paddle1_up                   000003AE
+move_paddle2_down                 0000040E
+move_paddle2_end                  0000041C
+move_paddle2_up                   00000402
 move_up_1                         00000004
 move_up_2                         00000006
-paddle_1                          0000002A
-paddle_1_led_task                 00000058
-paddle_2                          0000007E
-paddle_2_led_task                 000000AC
+moving_to_left                    00000040
+moving_to_right                   000001E2
+paddle_1                          0000037A
+paddle_1_led_task                 000003A8
+paddle_2                          000003CE
+paddle_2_led_task                 000003FC
+rb_bit_00_11                      0000022A
+rb_bit_01                         0000022E
+rb_bit_10                         0000023E
+rb_first_bit_0                    00000220
+rc_bit_00_11                      0000026E
+rc_bit_01                         00000272
+rc_bit_10                         00000282
+rc_first_bit_0                    00000264
+rd_bit_00_11                      000002B2
+rd_bit_01                         000002B6
+rd_bit_10                         000002C6
+rd_first_bit_0                    000002A8
+MPASM 5.61  /HOME/BS06/E2099018/DESKTOP/3-2/   4-6-2018  15:03:59         PAGE 40
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+re_bit_00_11                      000002F6
+re_bit_01                         000002FA
+re_bit_10                         0000030A
+re_first_bit_0                    000002EC
+rf_bit_00_11                      0000033A
+rf_bit_01                         0000034A
+rf_bit_10                         00000360
+rf_first_bit_0                    00000330
+right_b                           0000020C
+right_c                           00000250
+right_d                           00000294
+right_e                           000002D8
+right_f                           0000031C
+right_score                       0000000F
+right_scored                      00000422
+row                               0000000D
 s_1_down                          00000001
 s_1_up                            00000000
 s_2_down                          00000003
 s_2_up                            00000002
 
 Errors   :     0
-Warnings :    22 reported,     0 suppressed
+Warnings :    75 reported,     0 suppressed
 Messages :     0 reported,     0 suppressed
 
 

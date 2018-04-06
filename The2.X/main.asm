@@ -1,31 +1,4 @@
 #include "p18f8722.inc"
-; CONFIG1H
-  CONFIG  OSC = HSPLL, FCMEN = OFF, IESO = OFF
-; CONFIG2L
-  CONFIG  PWRT = OFF, BOREN = OFF, BORV = 3
-; CONFIG2H
-  CONFIG  WDT = OFF, WDTPS = 32768
-; CONFIG3L
-  CONFIG  MODE = MC, ADDRBW = ADDR20BIT, DATABW = DATA16BIT, WAIT = OFF
-; CONFIG3H
-  CONFIG  CCP2MX = PORTC, ECCPMX = PORTE, LPT1OSC = OFF, MCLRE = ON
-; CONFIG4L
-  CONFIG  STVREN = ON, LVP = OFF, BBSIZ = BB2K, XINST = OFF
-; CONFIG5L
-  CONFIG  CP0 = OFF, CP1 = OFF, CP2 = OFF, CP3 = OFF, CP4 = OFF, CP5 = OFF
-  CONFIG  CP6 = OFF, CP7 = OFF
-; CONFIG5H
-  CONFIG  CPB = OFF, CPD = OFF
-; CONFIG6L
-  CONFIG  WRT0 = OFF, WRT1 = OFF, WRT2 = OFF, WRT3 = OFF, WRT4 = OFF
-  CONFIG  WRT5 = OFF, WRT6 = OFF, WRT7 = OFF
-; CONFIG6H
-  CONFIG  WRTC = OFF, WRTB = OFF, WRTD = OFF
-; CONFIG7L
-  CONFIG  EBTR0 = OFF, EBTR1 = OFF, EBTR2 = OFF, EBTR3 = OFF, EBTR4 = OFF
-  CONFIG  EBTR5 = OFF, EBTR6 = OFF, EBTR7 = OFF
-; CONFIG7H
-  CONFIG  EBTRB = OFF
 
 ; TODO INSERT ISR HERE
 UDATA_ACS   
@@ -41,6 +14,10 @@ counter res 1;     ; Counter for 300 ms (It will count up to 46)
 Yok_olan46 res 1;
 move_ball_flag res 1;
 direction res 1    ; IN WHICH DIRECTION THE BALL IS MOVING LEFT=1, RIGHT=0
+column_ball res 1  ; the column of the ball   COLUMN=0-> PORTA , COLUMN=1 -> PORTB
+row res 1     ; the row of the ball
+left_score res 1   ; Holds the score of the left one
+right_score res 1   ; Holds the score of the right one
 
 RES_VECT  CODE    0x0000            ; processor reset vector
     GOTO    START                   ; go to beginning of program
@@ -73,39 +50,408 @@ main:
     goto main
 
 move_ball:
-    btfss move_ball_flag,0
+    btfss move_ball_flag,0 
     return
-    clrf  move_ball_flag
+    clrf  move_ball_flag ; CLEAR FLAG SO THAT BALL GET INTO THIS FUNCTION ONLY AFTER 300MS
     btfss direction, 0
     goto  moving_to_right
 
-    moving_to_left:
-        movf  where_is_ball, w
-        xorlw 0
-        btfsc STATUS, z
-        goto  left_a
-        xorlw 1^0 ; 1
-        btfsc STATUS, z
+    moving_to_left:  ;  SWICH CASES
+        movf  column_ball, w
+        xorlw 1 ; BALL AT PORT B
+        btfsc STATUS, Z
+        goto  left_a  ; BALL MOVES FROM PORTB TO PORTA
+        xorlw 2^1 ; 1 ; BALL AT PORTC;
+        btfsc STATUS, 2
         goto  left_b
-        xorlw 2^1 ;
-        btfsc STATUS, z
+        xorlw 3^2 ;   ; BALL AT PORTD;
+        btfsc STATUS, 2
         goto  left_c
-        xorlw 3^2
-        btfsc STATUS, z
+        xorlw 4^3     ; BALL AT PORTE;
+        btfsc STATUS, 2
         goto  left_d
-        xorlw 4^3
-        btfsc STATUS, z
+        xorlw 5^4   ; BALL AT PORTF;
+        btfsc STATUS, 2
         goto  left_e
-        xorlw 5^4
-        btfsc STATUS, z
-        goto  left_f
 
-        left_a:
-            
+        left_a: ;  BALL MOVES FROM PORTB TO PORTA
+            clrf   column_ball
+            clrf   PORTB
+            btfss  TMR0L, 0
+            goto   a_first_bit_0
+            btfss  TMR0L, 1
+            goto   a_bit_01
+            goto   a_bit_00_11
 
+            a_first_bit_0:
+                btfss TMR0L, 1
+                goto a_bit_00_11
+                goto a_bit_10
+
+            a_bit_00_11: ; MOVE AT THE SAME LINE
+                movf  row, w
+                andwf PORTA, w
+                btfsc STATUS, 2
+                goto right_scored
+                btg  direction, 0   
+                goto right_b  ;      BALL HITS THE PEDAL AND CHANGES DIRECTION
+
+            a_bit_01: ; MOVE UP
+                rrncf row
+                btfss row,0     ; TEST IF BALL AT THE UPPER-BORDER
+                incf  row
+                movf  row,w
+                andwf PORTA, w
+                btfsc STATUS, 2
+                goto  right_scored    
+                goto  right_b  ;      BALL HITS THE PEDAL AND MOVES
+
+            a_bit_10: ; MOVE DOWN
+                rlncf row
+                movlw d'32'
+                btfsc row, 6   ; TEST IF BALL AT THE LOWER-BORDER
+                movlw d'32'    ; TURN ON BOTTOM LED
+                movf  row, w   ;
+                andwf PORTA, w ;
+                btfsc STATUS, 2;
+                goto right_scored
+                btg  direction, 0
+                goto right_b  ;      BALL HITS THE PEDAL AND CHANGES DIRECTION
+
+        left_b:
+            clrf   column_ball
+            clrf   PORTC
+            btfss  TMR0L, 0
+            goto   b_first_bit_0
+            btfss  TMR0L, 1
+            goto   b_bit_01
+            goto   b_bit_00_11
+
+            b_first_bit_0:
+                btfss TMR0L, 1
+                goto b_bit_00_11
+                goto b_bit_10
+
+            b_bit_00_11: ; MOVE AT THE SAME LINE
+                movff row, PORTB
+                goto  left_end
+
+            b_bit_01: ; MOVE UP
+                rrncf row
+                btfsc row,0     ; TEST IF BALL AT THE UPPER-BORDER
+                movff row, PORTB
+                movlw d'1'      ; TURN ON UPPER MOST LED
+                movwf PORTB
+                goto  left_end
+
+            b_bit_10: ; MOVE DOWN
+                rlncf row
+                btfsc row, 6   ; ; TEST IF BALL AT THE LOWER-BORDER
+                movff row,PORTB
+                movlw d'32' ; TURN ON BOTTOM LED
+                movff row, PORTB
+                goto  left_end
+
+        left_c:
+            movlw  d'1'
+            movwf  column_ball
+            clrf   PORTD
+            btfss  TMR0L, 0
+            goto   c_first_bit_0
+            btfss  TMR0L, 1
+            goto   c_bit_01
+            goto   c_bit_00_11
+
+            c_first_bit_0:
+                btfss TMR0L, 1
+                goto c_bit_00_11
+                goto c_bit_10
+
+            c_bit_00_11:
+                movff row, PORTC
+                goto  left_end
+
+            c_bit_01:
+                rrncf row
+                btfsc row,0
+                movff row, PORTC
+                movlw d'1'
+                movwf PORTC
+                goto  left_end
+
+            c_bit_10:
+                rlncf row
+                btfsc row, 6   ; ; TEST IF BALL AT THE LOWER-BORDER
+                movff row,PORTC
+                movlw d'32' ; TURN ON BOTTOM LED
+                movff row, PORTC
+                goto  left_end
+
+        left_d:
+            movlw  d'2'
+            movwf  column_ball
+            clrf   PORTE
+            btfss  TMR0L, 0
+            goto   d_first_bit_0
+            btfss  TMR0L, 1
+            goto   d_bit_01
+            goto   d_bit_00_11
+
+            d_first_bit_0:
+                btfss TMR0L, 1
+                goto  d_bit_00_11
+                goto  d_bit_10
+
+            d_bit_00_11:
+                movff row, PORTD
+
+            d_bit_01:
+                rrncf row
+                btfsc row,0
+                movff row, PORTD
+                movlw d'1'
+                movwf PORTD
+                goto  left_end
+
+            d_bit_10:
+                rlncf row
+                btfsc row, 6   ; ; TEST IF BALL AT THE LOWER-BORDER
+                movff row,PORTD
+                movlw d'32' ; TURN ON BOTTOM LED
+                movff row, PORTD
+                goto  left_end
+
+        left_e:
+            movlw  d'3'
+            movwf  column_ball
+            clrf   PORTF
+            btfss  TMR0L, 0
+            goto   e_first_bit_0
+            btfss  TMR0L, 1
+            goto   e_bit_01
+            goto   e_bit_00_11
+
+            e_first_bit_0:
+                btfss TMR0L, 1
+                goto  e_bit_00_11
+                goto  e_bit_10
+
+            e_bit_00_11:
+                movff row, PORTE
+
+            e_bit_01:
+                rrncf row
+                btfsc row,0
+                movff row, PORTE
+                movlw d'1'
+                movwf PORTE
+                goto  left_end
+
+            e_bit_10:
+                rlncf row
+                btfsc row, 6   ; ; TEST IF BALL AT THE LOWER-BORDER
+                movff row,PORTE
+                movlw d'32' ; TURN ON BOTTOM LED
+                movff row, PORTE
+                goto  left_end
 
 
     moving_to_right:
+        movf  column_ball, w
+        xorlw 0 ; BALL AT PORT A
+        btfsc STATUS, 2
+        goto  right_b ; BALL MOVES FROM PORTA TO PORTB
+        xorlw 1^0 ; 1 ; BALL AT PORTC;
+        btfsc STATUS, 2
+        goto  right_c ; BALL MOVES FROM PORTB TO PORTC
+        xorlw 2^1 ;   ; BALL AT PORTD;
+        btfsc STATUS, 2
+        goto  right_d ; BALL MOVES FROM PORTC TO PORTD
+        xorlw 3^2     ; BALL AT PORTE;
+        btfsc STATUS, 2
+        goto  right_e ; BALL MOVES FROM PORTD TO PORTE
+        xorlw 4^3     ; BALL AT PORTF;
+        btfsc STATUS, 2
+        goto  right_f ; BALL MOVES FROM PORTE TO PORTF
+
+        right_b:      ; BALL MOVES FROM PORTA TO PORTB
+            movlw  d'1'
+            movwf  column_ball
+            btfss  TMR0L, 0
+            goto   rb_first_bit_0
+            btfss  TMR0L, 1
+            goto   rb_bit_01
+            goto   rb_bit_00_11
+
+            rb_first_bit_0:
+                btfss TMR0L, 1
+                goto  rb_bit_00_11
+                goto  rb_bit_10
+
+            rb_bit_00_11:
+                movff row, PORTB
+
+            rb_bit_01:
+                rrncf row
+                btfsc row,0
+                movff row, PORTB
+                movlw d'1'
+                movwf PORTB
+                goto  left_end
+
+            rb_bit_10:
+                rlncf row
+                btfsc row, 6   ; ; TEST IF BALL AT THE LOWER-BORDER
+                movff row,PORTB
+                movlw d'32' ; TURN ON BOTTOM LED
+                movff row, PORTB
+                goto  left_end
+
+        right_c:      ; BALL MOVES FROM PORTB TO PORTC
+            movlw  d'2'
+            movwf  column_ball
+            btfss  TMR0L, 0
+            goto   rc_first_bit_0
+            btfss  TMR0L, 1
+            goto   rc_bit_01
+            goto   rc_bit_00_11
+
+            rc_first_bit_0:
+                btfss TMR0L, 1
+                goto  rc_bit_00_11
+                goto  rc_bit_10
+
+            rc_bit_00_11:
+                movff row, PORTC
+
+            rc_bit_01:
+                rrncf row
+                btfsc row,0
+                movff row, PORTC
+                movlw d'1'
+                movwf PORTC
+                goto  left_end
+
+            rc_bit_10:
+                rlncf row
+                btfsc row, 6   ; ; TEST IF BALL AT THE LOWER-BORDER
+                movff row,PORTC
+                movlw d'32' ; TURN ON BOTTOM LED
+                movff row, PORTC
+                goto  left_end
+
+        right_d:      ; BALL MOVES FROM PORTC TO PORTD
+            movlw  d'3'
+            movwf  column_ball
+            btfss  TMR0L, 0
+            goto   rd_first_bit_0
+            btfss  TMR0L, 1
+            goto   rd_bit_01
+            goto   rd_bit_00_11
+
+            rd_first_bit_0:
+                btfss TMR0L, 1
+                goto  rd_bit_00_11
+                goto  rd_bit_10
+
+            rd_bit_00_11:
+                movff row, PORTD
+
+            rd_bit_01:
+                rrncf row
+                btfsc row,0
+                movff row, PORTD
+                movlw d'1'
+                movwf PORTD
+                goto  left_end
+
+            rd_bit_10:
+                rlncf row
+                btfsc row, 6   ; ; TEST IF BALL AT THE LOWER-BORDER
+                movff row,PORTD
+                movlw d'32' ; TURN ON BOTTOM LED
+                movff row, PORTD
+                goto  left_end
+
+        right_e:      ; BALL MOVES FROM PORTD TO PORTE
+            movlw  d'4'
+            movwf  column_ball
+            btfss  TMR0L, 0
+            goto   re_first_bit_0
+            btfss  TMR0L, 1
+            goto   re_bit_01
+            goto   re_bit_00_11
+
+            re_first_bit_0:
+                btfss TMR0L, 1
+                goto  re_bit_00_11
+                goto  re_bit_10
+
+            re_bit_00_11:
+                movff row, PORTE
+
+            re_bit_01:
+                rrncf row
+                btfsc row,0
+                movff row, PORTE
+                movlw d'1'
+                movwf PORTE
+                goto  left_end
+
+            re_bit_10:
+                rlncf row
+                btfsc row, 6   ; ; TEST IF BALL AT THE LOWER-BORDER
+                movff row,PORTE
+                movlw d'32' ; TURN ON BOTTOM LED
+                movff row, PORTE
+                goto  left_end
+
+        right_f:      ; BALL MOVES FROM PORTE TO PORTF
+            movlw  d'5'
+            movwf  column_ball
+            btfss  TMR0L, 0
+            goto   rf_first_bit_0
+            btfss  TMR0L, 1
+            goto   rf_bit_01
+            goto   rf_bit_00_11
+
+            rf_first_bit_0:
+                btfss TMR0L, 1
+                goto  rf_bit_00_11
+                goto  rf_bit_10
+
+            rf_bit_00_11:
+                movf   row, w
+                andwf  PORTF, w
+                btfsc  STATUS, 2
+                goto   left_scored
+                btg    direction,0
+                goto   left_e
+
+            rf_bit_01:
+                rrncf row
+                btfsc row,0
+                incf  row
+                movf  row, w
+                andwf PORTF, w
+                btfsc STATUS, 2
+                goto  left_scored
+                btg   direction, 0
+                goto  left_e
+
+            rf_bit_10:
+                rlncf row
+                movlw d'32'
+                btfsc row, 6   ; TEST IF BALL AT THE LOWER-BORDER
+                movwf row
+                movf  row, w
+                andwf PORTF, w
+                btfsc STATUS, 2
+                goto  left_scored
+                btg   direction,0
+                goto  left_e
+
+    left_end
 
     return
 display:
@@ -178,33 +524,32 @@ paddle_2:
     btfsc s_2_up,0
     bra RG3_pressed
     RG3_released:
-	btfss PORTG,3
-	bra RG3_end
-	bsf move_up_2,0
-	bsf s_2_up,0
-	bra RG3_end
+        btfss PORTG,3
+        bra RG3_end
+        bsf move_up_2,0
+        bsf s_2_up,0
+        bra RG3_end
     
     RG3_pressed:
-	btfsc PORTG,3
-	bra RG3_end
-	bcf s_2_up,0 ; RG3 IS RELEASED SO STATE FOR RG3 = 0
+        btfsc PORTG,3
+        bra RG3_end
+        bcf s_2_up,0 ; RG3 IS RELEASED SO STATE FOR RG3 = 0
 	
-    RG3_end:
-    ;CHECK RG2 IS PRESSED
-    btfsc s_2_down,0
-    bra RG2_pressed
+    RG3_end:        ;   CHECK RG2 IS PRESSED
+        btfsc s_2_down,0
+        bra RG2_pressed
     
     RG2_released: ; IN THE PREVIOUS STATE RG2 IS NOT PRESSED
-	btfss PORTG,2
-	bra RGF_end
-	bsf move_down_2,0
-	bsf s_2_down,0
-	bra RGF_end
+        btfss PORTG,2
+        bra RGF_end
+        bsf move_down_2,0
+        bsf s_2_down,0
+        bra RGF_end
     
     RG2_pressed:  ; IN THE PREVIOUS STATE RG2 IS  PRESSED
-	btfsc PORTG,2
-	bra RGF_end
-	bcf s_2_down,0 ; RG2 IS RELEASED SO STATE=0
+        btfsc PORTG,2
+        bra RGF_end
+        bcf s_2_down,0 ; RG2 IS RELEASED SO STATE=0
 	
     RGF_end:
     
@@ -213,8 +558,8 @@ paddle_2:
     return 
 
     paddle_2_led_task: ;MOVE THE PADDLE2 ACCORDING TO THE FLAGS
-	btfss move_up_2, 0
-	goto  move_paddle2_down ; MOVE UP FLAG IS NOT SET, CHECK THE DOWN
+    	btfss move_up_2, 0
+        goto  move_paddle2_down ; MOVE UP FLAG IS NOT SET, CHECK THE DOWN
 	move_paddle2_up:
 	    btfsc PORTF, 0
 	    goto  move_paddle2_end;  PADDLE CANNOT MOVE UP FURTHER
@@ -230,8 +575,13 @@ paddle_2:
 	    
         move_paddle2_end:
     	    bcf   move_up_2, 0   ; WE CLEAR UP_DOWN FLAGS SO THAT WE WILL WAIT ANOTHER PRESS TO MOVE UP OR DOWN
-	    bcf	  move_down_2, 0 ; WE WILL IGNORE THE PREVIOUS RG2 PRESS
-	    return
+            bcf	  move_down_2, 0 ; WE WILL IGNORE THE PREVIOUS RG2 PRESS
+            return
+
+
+right_scored:
+
+left_scored:
 	    
 INIT
     MOVLW   b'00001111'
@@ -253,6 +603,8 @@ INIT
     CLRF    move_down_1
     CLRF    move_up_2
     CLRF    move_down_2
+    CLRF    left_score
+    CLRF    right_score
     MOVLW   d'46'
     MOVWF   Yok_olan46
     CLRF    INTCON ;
