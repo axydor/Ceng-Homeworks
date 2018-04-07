@@ -1,5 +1,4 @@
 #include "p18f8722.inc"
-CONFIG  WDT = OFF
 ; TODO INSERT ISR HERE
 UDATA_ACS   
 s_1_up res 1 	   	  ; button_state_for_player_1 up
@@ -20,12 +19,17 @@ left_score res 1      ; Holds the score of the left one
 left_score_flag res 1 ;
 right_score res 1     ; Holds the score of the right one
 right_score_flag res 1
+table_wreg res 1
 
 RES_VECT  CODE    0x0000            ; processor reset vector
     GOTO    START                   ; go to beginning of program
 
-ORG 0X008
+ORG 0X0008
     GOTO HIGH_ISR
+
+ORG 0X0018
+    nop
+    retfie
     
 ;*******************************************************************************
 ; MAIN PROGRAM
@@ -75,6 +79,7 @@ move_ball:
         xorlw 5^4   ; BALL AT PORTF;
         btfsc STATUS, 2
         goto  left_e
+        goto  no_where
 
         left_a: ;  BALL MOVES FROM PORTB TO PORTA
             clrf   column_ball
@@ -140,15 +145,15 @@ move_ball:
 
             b_bit_01: ; MOVE UP
                 rrncf row
-		movlw 0
+                movlw 0
                 cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
                 incf   row     ; IF ROW=0, INCREMENT
-		movff  row, PORTB
+                movff  row, PORTB
                 goto  _end
 
             b_bit_10: ; MOVE DOWN
                 rlncf  row
-		movlw  d'64'
+                movlw  d'64'
                 cpfslt row   ; IF (ROW == 64), DIVIDE BY 2 -> TURN ON PORTX,5TH LED
                 rrncf  row
                 movff row, PORTB
@@ -175,15 +180,15 @@ move_ball:
 
             c_bit_01:
                 rrncf row
-		movlw 0
+                movlw 0
                 cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
                 incf   row     ; IF ROW=0, INCREMENT
-		movff  row, PORTC
+                movff  row, PORTC
                 goto  _end
 
             c_bit_10:
                 rlncf  row
-		movlw  d'64'
+                movlw  d'64'
                 cpfslt row   ; IF (ROW == 64), DIVIDE BY 2 -> TURN ON PORTX,5TH LED
                 rrncf  row
                 movff row, PORTC
@@ -243,15 +248,15 @@ move_ball:
 
             e_bit_01:
                 rrncf row
-		movlw 0
+                movlw 0
                 cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
                 incf   row     ; IF ROW=0, INCREMENT
-		movff  row, PORTE
+                movff  row, PORTE
                 goto  _end
 
             e_bit_10:
                 rlncf  row
-		movlw  d'64'
+                movlw  d'64'
                 cpfslt row   ; IF (ROW == 64), DIVIDE BY 2 -> TURN ON PORTX,5TH LED
                 rrncf  row
                 movff row, PORTE
@@ -275,6 +280,7 @@ move_ball:
         xorlw 4^3     ; BALL AT PORTF;
         btfsc STATUS, 2
         goto  right_f ; BALL MOVES FROM PORTE TO PORTF
+        goto  no_where
 
         right_b:      ; BALL MOVES FROM PORTA TO PORTB
             movlw  d'1'
@@ -292,7 +298,7 @@ move_ball:
 
             rb_bit_00_11:
                 movff row, PORTB
-		goto  _end
+		        goto  _end
 		
             rb_bit_01:
                 rrncf row
@@ -304,14 +310,14 @@ move_ball:
 
             rb_bit_10:
                 rlncf  row
-		movlw  d'64'
+                movlw  d'64'
                 cpfslt row   ; IF (ROW == 64), DIVIDE BY 2 -> TURN ON PORTX,5TH LED
                 rrncf  row
                 movff row, PORTB
                 goto  _end
 
         right_c:      ; BALL MOVES FROM PORTB TO PORTC
-	    clrf   PORTB
+            clrf   PORTB
             movlw  d'2'
             movwf  column_ball
             btfss  TMR1L, 0
@@ -327,26 +333,26 @@ move_ball:
 
             rc_bit_00_11:
                 movff row, PORTC
-		goto  _end
+                goto  _end
 
             rc_bit_01:
                 rrncf row
-		movlw 0
+                movlw 0
                 cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
                 incf   row     ; IF ROW=0, INCREMENT
-		movff  row, PORTC
+                movff  row, PORTC
                 goto  _end
 
             rc_bit_10:
                 rlncf  row
-		movlw  d'64'
+                movlw  d'64'
                 cpfslt row   ; IF (ROW == 64), DIVIDE BY 2 -> TURN ON PORTX,5TH LED
                 rrncf  row
                 movff  row, PORTC
                 goto  _end
 
         right_d:      ; BALL MOVES FROM PORTC TO PORTD
-	    clrf   PORTC
+            clrf   PORTC
             movlw  d'3'
             movwf  column_ball
             btfss  TMR1L, 0
@@ -362,26 +368,26 @@ move_ball:
 
             rd_bit_00_11:
                 movff row, PORTD
-		goto  _end
+                goto  _end
 
             rd_bit_01:
                 rrncf row
-		movlw 0
+                movlw 0
                 cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
                 incf   row     ; IF ROW=0, INCREMENT
-		movff  row, PORTD
+                movff  row, PORTD
                 goto  _end
 		
             rd_bit_10:
                 rlncf  row
-		movlw  d'64'
+                movlw  d'64'
                 cpfslt row   ; IF (ROW == 64), DIVIDE BY 2 -> TURN ON PORTX,5TH LED
                 rrncf  row
                 movff  row, PORTC
                 goto  _end
 
         right_e:      ; BALL MOVES FROM PORTD TO PORTE
-	    clrf   PORTD
+            clrf   PORTD
             movlw  d'4'
             movwf  column_ball
             btfss  TMR1L, 0
@@ -397,19 +403,19 @@ move_ball:
 
             re_bit_00_11:
                 movff row, PORTE
-		goto  _end
-
-            re_bit_01:
-                rrncf row
-		movlw 0
-                cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
-                incf   row     ; IF ROW=0, INCREMENT
-		movff  row, PORTE
                 goto  _end
 
-            re_bit_10:
+            re_bit_01:
+                rrncf  row
+                movlw  0
+                cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
+                incf   row     ; IF ROW=0, INCREMENT
+                movff  row, PORTE
+                goto  _end
+
+            re_bit_10:   ; MOVE UPWARD
                 rlncf  row
-		movlw  d'64'
+                movlw  d'64'
                 cpfslt row   ; IF (ROW == 64), DIVIDE BY 2 -> TURN ON PORTX,5TH LED
                 rrncf  row
                 movff  row, PORTE
@@ -463,7 +469,12 @@ move_ball:
 
     _end
 
-    return   ; return of the move_ball 
+    return   ; return of the move_ball
+
+    no_where:
+        nop
+        nop
+
 
 ; CHECK WHETHER THE BUTTONS RG1 AND RG0 IS PRESSED    
 paddle_1:;CHECK RG1 IS PRESSED
@@ -565,23 +576,24 @@ paddle_2:
     paddle_2_led_task: ;MOVE THE PADDLE2 ACCORDING TO THE FLAGS
     	btfss move_up_2, 0
         goto  move_paddle2_down ; MOVE UP FLAG IS NOT SET, CHECK THE DOWN
-	move_paddle2_up:
-	    btfsc PORTF, 0
-	    goto  move_paddle2_end;  PADDLE CANNOT MOVE UP FURTHER
-	    rrncf PORTF ; MOVE THE PADDLE UP
-	    goto  move_paddle2_end
+
+        move_paddle2_up:
+            btfsc PORTF, 0
+            goto  move_paddle2_end;  PADDLE CANNOT MOVE UP FURTHER
+            rrncf PORTF ; MOVE THE PADDLE UP
+            goto  move_paddle2_end
 	    
-	move_paddle2_down:
-	    btfss move_down_2,0 ; CHECK WHETHER THE DOWN FLAG IS SET
-	    goto  move_paddle2_end
-	    btfsc PORTF, 5       ; PADDLE CANNOT MOVE DOWN FURTHER
-	    goto  move_paddle2_end
-	    rlncf PORTF         ; MOVE THE PADDLE DOWN
+        move_paddle2_down:
+    	    btfss move_down_2,0 ; CHECK WHETHER THE DOWN FLAG IS SET
+            goto  move_paddle2_end
+            btfsc PORTF, 5       ; PADDLE CANNOT MOVE DOWN FURTHER
+            goto  move_paddle2_end
+            rlncf PORTF         ; MOVE THE PADDLE DOWN
 	    
         move_paddle2_end:
     	    bcf   move_up_2, 0   ; WE CLEAR UP_DOWN FLAGS SO THAT WE WILL WAIT ANOTHER PRESS TO MOVE UP OR DOWN
             bcf	  move_down_2, 0 ; WE WILL IGNORE THE PREVIOUS RG2 PRESS
-            return
+       return
 
 right_scored:
     btg right_score_flag, 0; right one made a goal
@@ -593,22 +605,22 @@ left_scored:
 
 display:
     right_goals:
-	btfsc right_score_flag, 0; CHECK WHETHER THE RIGHT ONE SCORED
-	incf  right_score        ; IF YES INCREMENT SCORE OF THE RIGHT
+        btfsc right_score_flag, 0; CHECK WHETHER THE RIGHT ONE SCORED
+        incf  right_score        ; IF YES INCREMENT SCORE OF THE RIGHT
         clrf  right_score_flag   ; CLEAR FLAG, IT WILL NOT INCREMENT CONTINUOUSLY
         clrf  PORTH              ; BELOW PART IS FOR SETTING THE LEDS
         bsf   PORTH, 1
-        movf  right_score, w
+        movff  right_score, table_wreg
         call  TABLE
         movwf PORTJ
 
     left_goals:
         btfsc left_score_flag, 0
-	incf  left_score
-	clrf  left_score_flag ;
+        incf  left_score
+        clrf  left_score_flag ;
         clrf  PORTH
         bsf   PORTH, 3
-        movf  left_score, w
+        movff  left_score, table_wreg
         call  TABLE
         movwf PORTJ
 
@@ -631,11 +643,12 @@ INIT
     MOVLW   b'00011100' ; TURN ON THE FIRST LEDS
     MOVWF   PORTA
     MOVWF   PORTF
-    MOVLW   b'00001000'
+    MOVLW   b'00001000' ; TURN ON THE BALL
     MOVWF   PORTD
     MOVWF   row
     MOVLW   d'3'
     MOVWF   column_ball
+    CLRF    counter
     CLRF    direction  ; INITIALLY MOVING RIGHT
     CLRF    move_ball_flag
     CLRF    s_1_up
@@ -650,20 +663,27 @@ INIT
     CLRF    right_score
     CLRF    left_score_flag
     CLRF    right_score_flag
+    CLRF    table_wreg
+    ;CLRF    PIE1 ; DONT USE TIMER1 AS AN INTERRUPT SOURCE
+    ;CLRF    PIE1
     MOVLW   d'46'
     MOVWF   Yok_olan46
     CLRF    INTCON ;
     MOVLW   b'11000111'
     MOVWF   T0CON
-    MOVLW   b'00001001'
-    MOVWF   T1CON
+    ;MOVLW   b'10000001' ; T1 ENABLE
+    ;MOVWF   T1CON
+
     BSF     INTCON, 5
     BSF	    INTCON, 7; ENABLE INTERRUPTS
     return
-    
+
+
     TABLE
     MOVF    PCL, F  ; A simple read of PCL will update PCLATH, PCLATU
-    RLNCF   WREG, W ; multiply index X2
+
+    RLNCF   table_wreg ; multiply index X2
+    MOVF    table_wreg, w
     ADDWF   PCL, F  ; modify program counter
     RETLW b'00111111' ;0 representation in 7-seg. disp. portJ
     RETLW b'00000110' ;1 representation in 7-seg. disp. portJ
