@@ -1,4 +1,3 @@
 build/default/production/main.o:  \
-	/home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm  \
-	/opt/microchip/mplabx/mpasmx/p18f8722.inc  \
+	/home/egemen/MPLABXProjects/The2.X/main.asm  \
 
