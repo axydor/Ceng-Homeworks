@@ -1,12 +1,13 @@
 MPLINK 5.08, LINKER
-Linker Map File - Created Sat Apr  7 08:07:33 2018
+Linker Map File - Created Sat Apr  7 08:22:57 2018
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
                 ---------  ---------  ---------  ---------  ---------
                  RES_VECT       code   0x000000    program   0x000004
                    .cinit    romdata   0x000004    program   0x000002
-                   .org_0       code   0x000008    program   0x0004c2
+                   .org_0       code   0x000008    program   0x0004c6
+.config_300003_BUILD/DEFAULT/DEBUG/MAIN.O    romdata   0x300003    program   0x000001
                .udata_acs      udata   0x000000       data   0x000012
 
 
@@ -15,8 +16,9 @@ Linker Map File - Created Sat Apr  7 08:07:33 2018
                                Start         End      
                            ---------   ---------      
                             0x000000    0x000005      
-                            0x000008    0x0004c9      
-            1224 out of 132120 program addresses used, program memory utilization is 0%
+                            0x000008    0x0004cd      
+                            0x300003    0x300003      
+            1229 out of 132120 program addresses used, program memory utilization is 0%
 
 
 
@@ -38,7 +40,7 @@ Linker Map File - Created Sat Apr  7 08:07:33 2018
                   RGA_end   0x0003aa    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
                   RGF_end   0x0003fe    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
                     START   0x00001c    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
-                    TABLE   0x0004b0    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                    TABLE   0x0004b4    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
                      _end   0x000380    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
               a_bit_00_11   0x000088    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
                  a_bit_01   0x000098    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
@@ -220,7 +222,7 @@ Linker Map File - Created Sat Apr  7 08:07:33 2018
                left_goals   0x000448    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
               display_end   0x00045a    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
                      INIT   0x00045c    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
-                    TABLE   0x0004b0    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
+                    TABLE   0x0004b4    program     static /home/egemen/MPLABXProjects/The2.X/main.asm
                    s_1_up   0x000000       data     static /home/egemen/MPLABXProjects/The2.X/main.asm
                  s_1_down   0x000001       data     static /home/egemen/MPLABXProjects/The2.X/main.asm
                    s_2_up   0x000002       data     static /home/egemen/MPLABXProjects/The2.X/main.asm

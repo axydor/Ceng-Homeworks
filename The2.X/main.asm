@@ -1,5 +1,5 @@
 #include "p18f8722.inc"
-
+CONFIG  WDT = OFF
 ; TODO INSERT ISR HERE
 UDATA_ACS   
 s_1_up res 1 	   	  ; button_state_for_player_1 up
@@ -52,7 +52,7 @@ main:
     goto main
 
 move_ball: 
-    btfss move_ball_flag,0 ; CHECK WHETHER IT IS GOOD TIME TO ROCKET THE BALL
+    btfss move_ball_flag, 0 ; CHECK WHETHER IT IS GOOD TIME TO ROCKET THE BALL
     return
     clrf  move_ball_flag   ; CLEAR FLAG SO THAT BALL GET INTO THIS FUNCTION ONLY AFTER 300MS
     btfss direction, 0     ; "DON'T STOP ME NOW"
@@ -140,17 +140,17 @@ move_ball:
 
             b_bit_01: ; MOVE UP
                 rrncf row
-                tstfsz row     ; TEST IF BALL AT THE UPPER-BORDER
-                movff row, PORTB
-                movlw d'1'      ; TURN ON UPPER MOST LED
-                movwf PORTB
+		movlw 0
+                cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
+                incf   row     ; IF ROW=0, INCREMENT
+		movff  row, PORTB
                 goto  _end
 
             b_bit_10: ; MOVE DOWN
-                rlncf row
-                tstfsz row   ; ; TEST IF BALL AT THE LOWER-BORDER
-                movff row,PORTB
-                movlw d'32' ; TURN ON BOTTOM LED
+                rlncf  row
+		movlw  d'64'
+                cpfslt row   ; IF (ROW == 64), DIVIDE BY 2 -> TURN ON PORTX,5TH LED
+                rrncf  row
                 movff row, PORTB
                 goto  _end
 
@@ -175,17 +175,17 @@ move_ball:
 
             c_bit_01:
                 rrncf row
-                tstfsz row
-                movff row, PORTC
-                movlw d'1'
-                movwf PORTC
+		movlw 0
+                cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
+                incf   row     ; IF ROW=0, INCREMENT
+		movff  row, PORTC
                 goto  _end
 
             c_bit_10:
-                rlncf row
-                tstfsz row   ; ; TEST IF BALL AT THE LOWER-BORDER
-                movff row,PORTC
-                movlw d'32' ; TURN ON BOTTOM LED
+                rlncf  row
+		movlw  d'64'
+                cpfslt row   ; IF (ROW == 64), DIVIDE BY 2 -> TURN ON PORTX,5TH LED
+                rrncf  row
                 movff row, PORTC
                 goto  _end
 
@@ -209,17 +209,17 @@ move_ball:
 
             d_bit_01:
                 rrncf row
-                tstfsz row
-                movff row, PORTD
-                movlw d'1'
-                movwf PORTD
+		movlw 0
+                cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
+                incf   row     ; IF ROW=0, INCREMENT
+		movff  row, PORTD
                 goto  _end
 
             d_bit_10:
-                rlncf row
-                tstfsz row   ; ; TEST IF BALL AT THE LOWER-BORDER
-                movff row,PORTD
-                movlw d'32' ; TURN ON BOTTOM LED
+                rlncf  row
+		movlw  d'64'
+                cpfslt row   ; IF (ROW == 64), DIVIDE BY 2 -> TURN ON PORTX,5TH LED
+                rrncf  row
                 movff row, PORTD
                 goto  _end
 
@@ -243,17 +243,17 @@ move_ball:
 
             e_bit_01:
                 rrncf row
-                tstfsz row
-                movff row, PORTE
-                movlw d'1'
-                movwf PORTE
+		movlw 0
+                cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
+                incf   row     ; IF ROW=0, INCREMENT
+		movff  row, PORTE
                 goto  _end
 
             e_bit_10:
-                rlncf row
-                tstfsz row   ; ; TEST IF BALL AT THE LOWER-BORDER
-                movff row,PORTE
-                movlw d'32' ; TURN ON BOTTOM LED
+                rlncf  row
+		movlw  d'64'
+                cpfslt row   ; IF (ROW == 64), DIVIDE BY 2 -> TURN ON PORTX,5TH LED
+                rrncf  row
                 movff row, PORTE
                 goto  _end
 
@@ -295,18 +295,18 @@ move_ball:
 		goto  _end
 		
             rb_bit_01:
-                rrncf	row    ; MOVE UP SO SHIFT ROW RIGHT
-		movf	row, w ;
-                tstfsz	row    ; IF IT IS OUT OF BORDER
-                movlw	d'1'   ; MAKE IT IN BORDER
-                movwf	PORTB  ; LOAD THE NEW VALUE TO THE PORTB
-                goto	_end
+                rrncf row
+		movlw 0
+                cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
+                incf   row     ; IF ROW=0, INCREMENT
+		movff  row, PORTB
+                goto  _end
 
             rb_bit_10:
-                rlncf row
-                tstfsz row   ; ; TEST IF BALL AT THE LOWER-BORDER
-                movff row,PORTB
-                movlw d'32' ; TURN ON BOTTOM LED
+                rlncf  row
+		movlw  d'64'
+                cpfslt row   ; IF (ROW == 64), DIVIDE BY 2 -> TURN ON PORTX,5TH LED
+                rrncf  row
                 movff row, PORTB
                 goto  _end
 
@@ -330,19 +330,19 @@ move_ball:
 		goto  _end
 
             rc_bit_01:
-                rrncf	row
-		movf	row, w
-                tstfsz	row
-                movlw	d'1'
-                movwf	PORTC
-                goto	_end
+                rrncf row
+		movlw 0
+                cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
+                incf   row     ; IF ROW=0, INCREMENT
+		movff  row, PORTC
+                goto  _end
 
             rc_bit_10:
-                rlncf row
-                tstfsz row   ; ; TEST IF BALL AT THE LOWER-BORDER
-                movff row,PORTC
-                movlw d'32' ; TURN ON BOTTOM LED
-                movff row, PORTC
+                rlncf  row
+		movlw  d'64'
+                cpfslt row   ; IF (ROW == 64), DIVIDE BY 2 -> TURN ON PORTX,5TH LED
+                rrncf  row
+                movff  row, PORTC
                 goto  _end
 
         right_d:      ; BALL MOVES FROM PORTC TO PORTD
@@ -365,19 +365,19 @@ move_ball:
 		goto  _end
 
             rd_bit_01:
-                rrncf	row
-		movf	row, w
-                tstfsz	row
-                movlw	d'1'
-                movwf	PORTD
-                goto	_end
+                rrncf row
+		movlw 0
+                cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
+                incf   row     ; IF ROW=0, INCREMENT
+		movff  row, PORTD
+                goto  _end
 		
             rd_bit_10:
-                rlncf row
-                tstfsz row   ; ; TEST IF BALL AT THE LOWER-BORDER
-                movff row,PORTD
-                movlw d'32' ; TURN ON BOTTOM LED
-                movff row, PORTD
+                rlncf  row
+		movlw  d'64'
+                cpfslt row   ; IF (ROW == 64), DIVIDE BY 2 -> TURN ON PORTX,5TH LED
+                rrncf  row
+                movff  row, PORTC
                 goto  _end
 
         right_e:      ; BALL MOVES FROM PORTD TO PORTE
@@ -400,19 +400,19 @@ move_ball:
 		goto  _end
 
             re_bit_01:
-                rrncf	row
-		movf	row, w
-                tstfsz	row
-                movlw	d'1'
-                movwf	PORTE
-                goto	_end
+                rrncf row
+		movlw 0
+                cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
+                incf   row     ; IF ROW=0, INCREMENT
+		movff  row, PORTE
+                goto  _end
 
             re_bit_10:
-                rlncf row
-                tstfsz row    ; TEST IF BALL AT THE LOWER-BORDER
-                movff row,PORTE
-                movlw d'32' ; TURN ON BOTTOM LED
-                movff row, PORTE
+                rlncf  row
+		movlw  d'64'
+                cpfslt row   ; IF (ROW == 64), DIVIDE BY 2 -> TURN ON PORTX,5TH LED
+                rrncf  row
+                movff  row, PORTE
                 goto  _end
 
         right_f:      ; BALL MOVES FROM PORTE TO PORTF
@@ -598,38 +598,23 @@ display:
         clrf  right_score_flag   ; CLEAR FLAG, IT WILL NOT INCREMENT CONTINUOUSLY
         clrf  PORTH              ; BELOW PART IS FOR SETTING THE LEDS
         bsf   PORTH, 1
-        movlw right_score
+        movf  right_score, w
         call  TABLE
         movwf PORTJ
 
     left_goals:
-        btfss left_score_flag, 0
+        btfsc left_score_flag, 0
 	incf  left_score
 	clrf  left_score_flag ;
         clrf  PORTH
         bsf   PORTH, 3
-        movlw left_score
+        movf  left_score, w
         call  TABLE
         movwf PORTJ
 
    display_end:
         return 
-
-TABLE
-    MOVF    PCL, F  ; A simple read of PCL will update PCLATH, PCLATU
-    RLNCF   WREG, W ; multiply index X2
-    ADDWF   PCL, F  ; modify program counter
-    RETLW b'00111111' ;0 representation in 7-seg. disp. portJ
-    RETLW b'00000110' ;1 representation in 7-seg. disp. portJ
-    RETLW b'01011011' ;2 representation in 7-seg. disp. portJ
-    RETLW b'01001111' ;3 representation in 7-seg. disp. portJ
-    RETLW b'01100110' ;4 representation in 7-seg. disp. portJ
-    RETLW b'01101101' ;5 representation in 7-seg. disp. portJ
-    RETLW b'01111101' ;6 representation in 7-seg. disp. portJ
-    RETLW b'00000111' ;7 representation in 7-seg. disp. portJ
-    RETLW b'01111111' ;8 representation in 7-seg. disp. portJ
-    RETLW b'01100111' ;9 representation in 7-seg. disp. portJ
-
+	
 INIT
     MOVLW   b'00001111'
     MOVWF   TRISG  ; MAKE RG0-RG1-RG2-RG3 PORTS(PINS) INPUT
@@ -639,6 +624,8 @@ INIT
     CLRF    TRISD  ; MAKE PORTD AS OUTPUT
     CLRF    TRISE  ; MAKE PORTE AS OUTPUT
     CLRF    TRISF  ; MAKE PORTF AS OUTPUT
+    CLRF    TRISH  ; MAKE PORTF AS OUTPUT
+    CLRF    TRISJ  ; MAKE PORTF AS OUTPUT
     MOVLW   0X0F
     MOVWF   ADCON1 ; MAKE PORTA DIGITAL OUTPUT
     MOVLW   b'00011100' ; TURN ON THE FIRST LEDS
@@ -672,7 +659,21 @@ INIT
     MOVWF   T1CON
     BSF     INTCON, 5
     BSF	    INTCON, 7; ENABLE INTERRUPTS
-    
     return
     
-    END
+    TABLE
+    MOVF    PCL, F  ; A simple read of PCL will update PCLATH, PCLATU
+    RLNCF   WREG, W ; multiply index X2
+    ADDWF   PCL, F  ; modify program counter
+    RETLW b'00111111' ;0 representation in 7-seg. disp. portJ
+    RETLW b'00000110' ;1 representation in 7-seg. disp. portJ
+    RETLW b'01011011' ;2 representation in 7-seg. disp. portJ
+    RETLW b'01001111' ;3 representation in 7-seg. disp. portJ
+    RETLW b'01100110' ;4 representation in 7-seg. disp. portJ
+    RETLW b'01101101' ;5 representation in 7-seg. disp. portJ
+    RETLW b'01111101' ;6 representation in 7-seg. disp. portJ
+    RETLW b'00000111' ;7 representation in 7-seg. disp. portJ
+    RETLW b'01111111' ;8 representation in 7-seg. disp. portJ
+    RETLW b'01100111' ;9 representation in 7-seg. disp. portJ
+
+END

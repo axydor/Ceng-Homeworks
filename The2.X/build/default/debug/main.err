@@ -1,3 +1,4 @@
+Warning[205] /home/egemen/MPLABXProjects/The2.X/main.asm 2 : Found directive in column 1. (CONFIG)
 Warning[205] /home/egemen/MPLABXProjects/The2.X/main.asm 4 : Found directive in column 1. (UDATA_ACS)
 Warning[205] /home/egemen/MPLABXProjects/The2.X/main.asm 27 : Found directive in column 1. (ORG)
 Warning[207] /home/egemen/MPLABXProjects/The2.X/main.asm 61 : Found label after column 1. (moving_to_left)
@@ -76,4 +77,5 @@ Warning[207] /home/egemen/MPLABXProjects/The2.X/main.asm 581 : Found label after
 Warning[207] /home/egemen/MPLABXProjects/The2.X/main.asm 595 : Found label after column 1. (right_goals)
 Warning[207] /home/egemen/MPLABXProjects/The2.X/main.asm 605 : Found label after column 1. (left_goals)
 Warning[207] /home/egemen/MPLABXProjects/The2.X/main.asm 615 : Found label after column 1. (display_end)
-Warning[207] /home/egemen/MPLABXProjects/The2.X/main.asm 662 : Found label after column 1. (TABLE)
+Warning[207] /home/egemen/MPLABXProjects/The2.X/main.asm 664 : Found label after column 1. (TABLE)
+Warning[205] /home/egemen/MPLABXProjects/The2.X/main.asm 679 : Found directive in column 1. (END)
