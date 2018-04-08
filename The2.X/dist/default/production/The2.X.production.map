@@ -1,5 +1,5 @@
 MPLINK 5.07, LINKER
-Linker Map File - Created Sun Apr  8 15:03:32 2018
+Linker Map File - Created Sun Apr  8 16:06:21 2018
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
@@ -7,7 +7,7 @@ Linker Map File - Created Sun Apr  8 15:03:32 2018
                  RES_VECT       code   0x000000    program   0x000004
                    .cinit    romdata   0x000004    program   0x000002
                    .org_0       code   0x000008    program   0x000004
-                   .org_1       code   0x000018    program   0x00051a
+                   .org_1       code   0x000018    program   0x0004e6
 .config_300001_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x300001    program   0x000001
 .config_300002_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x300002    program   0x000001
 .config_300003_BUILD/DEFAULT/PRODUCTION/MAIN.O    romdata   0x300003    program   0x000001
@@ -29,105 +29,101 @@ Linker Map File - Created Sun Apr  8 15:03:32 2018
                            ---------   ---------      
                             0x000000    0x000005      
                             0x000008    0x00000b      
-                            0x000018    0x000531      
+                            0x000018    0x0004fd      
                             0x300001    0x300006      
                             0x300008    0x30000d      
-            1328 out of 132120 program addresses used, program memory utilization is 1%
+            1276 out of 132120 program addresses used, program memory utilization is 0%
 
 
 
                               Symbols - Sorted by Name
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
-                    DELAY   0x0004ba    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                    DELAY   0x000484    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
                  HIGH_ISR   0x000036    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                     INIT   0x0004c6    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              RG0_pressed   0x0003b4    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             RG0_released   0x0003aa    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  RG1_end   0x0003a6    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              RG1_pressed   0x0003a0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             RG1_released   0x000396    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              RG2_pressed   0x000408    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             RG2_released   0x0003fe    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  RG3_end   0x0003fa    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              RG3_pressed   0x0003f4    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             RG3_released   0x0003ea    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  RGA_end   0x0003ba    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  RGF_end   0x00040e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                     INIT   0x000490    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              RG0_pressed   0x00037c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+             RG0_released   0x000372    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  RG1_end   0x00036e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              RG1_pressed   0x000368    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+             RG1_released   0x00035e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              RG2_pressed   0x0003d0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+             RG2_released   0x0003c6    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  RG3_end   0x0003c2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              RG3_pressed   0x0003bc    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+             RG3_released   0x0003b2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  RGA_end   0x000382    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  RGF_end   0x0003d6    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
                     START   0x00004a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
                     TABLE   0x00001c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                     _end   0x00038c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                     _end   0x000354    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
               a_bit_00_11   0x0000ba    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
                  a_bit_01   0x0000ca    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 a_bit_10   0x0000e0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 a_bit_10   0x0000e2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
             a_first_bit_0   0x0000b0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              b_bit_00_11   0x000118    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 b_bit_01   0x000120    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 b_bit_10   0x000130    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-            b_first_bit_0   0x00010e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              c_bit_00_11   0x000160    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 c_bit_01   0x000168    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 c_bit_10   0x000178    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-            c_first_bit_0   0x000156    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              d_bit_00_11   0x0001a8    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 d_bit_01   0x0001b0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 d_bit_10   0x0001c0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-            d_first_bit_0   0x00019e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  display   0x000474    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              display_end   0x000494    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                game_over   0x000496    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                     goal   0x00045e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+               after_goal   0x000426    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              b_bit_00_11   0x00011a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 b_bit_01   0x000122    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 b_bit_10   0x000132    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+            b_first_bit_0   0x000110    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              c_bit_00_11   0x000162    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 c_bit_01   0x00016a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 c_bit_10   0x00017a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+            c_first_bit_0   0x000158    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              d_bit_00_11   0x0001aa    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 d_bit_01   0x0001b2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 d_bit_10   0x0001c2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+            d_first_bit_0   0x0001a0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  display   0x00043e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              display_end   0x00045e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                game_over   0x000460    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
                  high_end   0x000046    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
                    left_a   0x00009c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                   left_b   0x0000f8    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                   left_c   0x000140    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                   left_d   0x000188    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                   left_e   0x0001d0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-               left_goals   0x000484    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              left_scored   0x00044c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                     loop   0x0004be    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                   left_b   0x0000fa    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                   left_c   0x000142    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                   left_d   0x00018a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                   left_e   0x0001d2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+               left_goals   0x00044e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              left_scored   0x000414    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                     loop   0x000488    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
                      main   0x00004e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
                 move_ball   0x000062    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-        move_paddle1_down   0x0003d2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-         move_paddle1_end   0x0003e0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-          move_paddle1_up   0x0003c6    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-        move_paddle2_down   0x000426    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-         move_paddle2_end   0x000434    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-          move_paddle2_up   0x00041a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+        move_paddle1_down   0x00039a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+         move_paddle1_end   0x0003a8    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+          move_paddle1_up   0x00038e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+        move_paddle2_down   0x0003ee    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+         move_paddle2_end   0x0003fc    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+          move_paddle2_up   0x0003e2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
            moving_to_left   0x00006e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-          moving_to_right   0x0001e0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 no_where   0x00038e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 paddle_1   0x000392    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-        paddle_1_led_task   0x0003c0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 paddle_2   0x0003e6    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-        paddle_2_led_task   0x000414    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             rb_bit_00_11   0x00022c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                rb_bit_01   0x000234    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                rb_bit_10   0x000244    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-           rb_first_bit_0   0x000222    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             rc_bit_00_11   0x000274    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                rc_bit_01   0x00027c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                rc_bit_10   0x00028c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-           rc_first_bit_0   0x00026a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             rd_bit_00_11   0x0002bc    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                rd_bit_01   0x0002c4    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                rd_bit_10   0x0002d4    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-           rd_first_bit_0   0x0002b2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             re_bit_00_11   0x000304    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                re_bit_01   0x00030c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                re_bit_10   0x00031c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-           re_first_bit_0   0x0002fa    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             rf_bit_00_11   0x00034c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                rf_bit_01   0x00035c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                rf_bit_10   0x000374    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-           rf_first_bit_0   0x000342    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  right_b   0x00020e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  right_c   0x000254    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  right_d   0x00029c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  right_e   0x0002e4    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  right_f   0x00032c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              right_goals   0x000474    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             right_scored   0x00043a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+          moving_to_right   0x0001e2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 no_where   0x000356    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 paddle_1   0x00035a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+        paddle_1_led_task   0x000388    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 paddle_2   0x0003ae    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+        paddle_2_led_task   0x0003dc    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+             rc_bit_00_11   0x00023c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                rc_bit_01   0x000244    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                rc_bit_10   0x000254    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+           rc_first_bit_0   0x000232    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+             rd_bit_00_11   0x000284    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                rd_bit_01   0x00028c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                rd_bit_10   0x00029c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+           rd_first_bit_0   0x00027a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+             re_bit_00_11   0x0002cc    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                re_bit_01   0x0002d4    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                re_bit_10   0x0002e4    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+           re_first_bit_0   0x0002c2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+             rf_bit_00_11   0x000314    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                rf_bit_01   0x000324    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                rf_bit_10   0x00033c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+           rf_first_bit_0   0x00030a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  right_b   0x000210    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  right_c   0x00021c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  right_d   0x000264    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  right_e   0x0002ac    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  right_f   0x0002f4    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              right_goals   0x00043e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+             right_scored   0x000402    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
                Yok_olan46   0x000009       data     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
               column_ball   0x00000c       data     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
                   counter   0x000008       data     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
@@ -167,84 +163,80 @@ Linker Map File - Created Sun Apr  8 15:03:32 2018
             a_first_bit_0   0x0000b0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
               a_bit_00_11   0x0000ba    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
                  a_bit_01   0x0000ca    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 a_bit_10   0x0000e0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                   left_b   0x0000f8    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-            b_first_bit_0   0x00010e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              b_bit_00_11   0x000118    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 b_bit_01   0x000120    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 b_bit_10   0x000130    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                   left_c   0x000140    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-            c_first_bit_0   0x000156    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              c_bit_00_11   0x000160    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 c_bit_01   0x000168    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 c_bit_10   0x000178    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                   left_d   0x000188    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-            d_first_bit_0   0x00019e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              d_bit_00_11   0x0001a8    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 d_bit_01   0x0001b0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 d_bit_10   0x0001c0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                   left_e   0x0001d0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-          moving_to_right   0x0001e0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  right_b   0x00020e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-           rb_first_bit_0   0x000222    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             rb_bit_00_11   0x00022c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                rb_bit_01   0x000234    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                rb_bit_10   0x000244    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  right_c   0x000254    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-           rc_first_bit_0   0x00026a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             rc_bit_00_11   0x000274    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                rc_bit_01   0x00027c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                rc_bit_10   0x00028c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  right_d   0x00029c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-           rd_first_bit_0   0x0002b2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             rd_bit_00_11   0x0002bc    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                rd_bit_01   0x0002c4    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                rd_bit_10   0x0002d4    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  right_e   0x0002e4    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-           re_first_bit_0   0x0002fa    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             re_bit_00_11   0x000304    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                re_bit_01   0x00030c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                re_bit_10   0x00031c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  right_f   0x00032c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-           rf_first_bit_0   0x000342    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             rf_bit_00_11   0x00034c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                rf_bit_01   0x00035c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                rf_bit_10   0x000374    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                     _end   0x00038c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 no_where   0x00038e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 paddle_1   0x000392    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             RG1_released   0x000396    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              RG1_pressed   0x0003a0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  RG1_end   0x0003a6    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             RG0_released   0x0003aa    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              RG0_pressed   0x0003b4    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  RGA_end   0x0003ba    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-        paddle_1_led_task   0x0003c0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-          move_paddle1_up   0x0003c6    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-        move_paddle1_down   0x0003d2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-         move_paddle1_end   0x0003e0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                 paddle_2   0x0003e6    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             RG3_released   0x0003ea    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              RG3_pressed   0x0003f4    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  RG3_end   0x0003fa    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             RG2_released   0x0003fe    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              RG2_pressed   0x000408    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  RGF_end   0x00040e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-        paddle_2_led_task   0x000414    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-          move_paddle2_up   0x00041a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-        move_paddle2_down   0x000426    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-         move_paddle2_end   0x000434    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-             right_scored   0x00043a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              left_scored   0x00044c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                     goal   0x00045e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              right_goals   0x000474    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                  display   0x000474    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-               left_goals   0x000484    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-              display_end   0x000494    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                game_over   0x000496    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                    DELAY   0x0004ba    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                     loop   0x0004be    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
-                     INIT   0x0004c6    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 a_bit_10   0x0000e2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                   left_b   0x0000fa    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+            b_first_bit_0   0x000110    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              b_bit_00_11   0x00011a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 b_bit_01   0x000122    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 b_bit_10   0x000132    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                   left_c   0x000142    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+            c_first_bit_0   0x000158    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              c_bit_00_11   0x000162    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 c_bit_01   0x00016a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 c_bit_10   0x00017a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                   left_d   0x00018a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+            d_first_bit_0   0x0001a0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              d_bit_00_11   0x0001aa    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 d_bit_01   0x0001b2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 d_bit_10   0x0001c2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                   left_e   0x0001d2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+          moving_to_right   0x0001e2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  right_b   0x000210    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  right_c   0x00021c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+           rc_first_bit_0   0x000232    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+             rc_bit_00_11   0x00023c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                rc_bit_01   0x000244    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                rc_bit_10   0x000254    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  right_d   0x000264    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+           rd_first_bit_0   0x00027a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+             rd_bit_00_11   0x000284    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                rd_bit_01   0x00028c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                rd_bit_10   0x00029c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  right_e   0x0002ac    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+           re_first_bit_0   0x0002c2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+             re_bit_00_11   0x0002cc    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                re_bit_01   0x0002d4    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                re_bit_10   0x0002e4    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  right_f   0x0002f4    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+           rf_first_bit_0   0x00030a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+             rf_bit_00_11   0x000314    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                rf_bit_01   0x000324    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                rf_bit_10   0x00033c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                     _end   0x000354    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 no_where   0x000356    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 paddle_1   0x00035a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+             RG1_released   0x00035e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              RG1_pressed   0x000368    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  RG1_end   0x00036e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+             RG0_released   0x000372    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              RG0_pressed   0x00037c    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  RGA_end   0x000382    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+        paddle_1_led_task   0x000388    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+          move_paddle1_up   0x00038e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+        move_paddle1_down   0x00039a    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+         move_paddle1_end   0x0003a8    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                 paddle_2   0x0003ae    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+             RG3_released   0x0003b2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              RG3_pressed   0x0003bc    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  RG3_end   0x0003c2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+             RG2_released   0x0003c6    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              RG2_pressed   0x0003d0    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  RGF_end   0x0003d6    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+        paddle_2_led_task   0x0003dc    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+          move_paddle2_up   0x0003e2    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+        move_paddle2_down   0x0003ee    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+         move_paddle2_end   0x0003fc    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+             right_scored   0x000402    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              left_scored   0x000414    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+               after_goal   0x000426    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                  display   0x00043e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              right_goals   0x00043e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+               left_goals   0x00044e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+              display_end   0x00045e    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                game_over   0x000460    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                    DELAY   0x000484    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                     loop   0x000488    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
+                     INIT   0x000490    program     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
                    s_1_up   0x000000       data     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
                  s_1_down   0x000001       data     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm
                    s_2_up   0x000002       data     static /home/bs06/e2099018/Desktop/3-2/336/Introduction-to-the-Embedded-Systems/The2.X/main.asm

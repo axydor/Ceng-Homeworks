@@ -156,13 +156,14 @@ move_ball:
 
             a_bit_01: ; MOVE UP
                 rrncf  row
-		movlw  0     ; TEST IF BALL AT THE UPPER-BORDER
+                movlw  0     ; TEST IF BALL AT THE UPPER-BORDER
                 cpfsgt row  ; IF ( ROW == 0) { INCREMENT ROW BY 1}
                 incf   row
                 movf   row,w
                 andwf  PORTA, w
                 btfsc  STATUS, 2
                 goto   right_scored    
+                btg    direction,0
                 goto   right_b  ;      BALL HITS THE PEDAL AND MOVES
 
             a_bit_10: ; MOVE DOWN
@@ -178,7 +179,7 @@ move_ball:
                 goto   right_b  ;      BALL HITS THE PEDAL AND CHANGES DIRECTION
 
         left_b:
-	    movlw  d'1'       ; WE WILL GO TO THE PORT B SO SET COLUMN=1 -> PORTB
+	        movlw  d'1'       ; WE WILL GO TO THE PORT B SO SET COLUMN=1 -> PORTB
             movwf  column_ball
             clrf   PORTC
             btfss  TMR1L, 0
@@ -232,8 +233,8 @@ move_ball:
                 goto  _end
 
             c_bit_01:
-                rrncf row
-                movlw 0
+                rrncf  row
+                movlw  0
                 cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
                 incf   row     ; IF ROW=0, INCREMENT
                 movff  row, PORTC
@@ -285,12 +286,8 @@ move_ball:
         left_e:  ; WE ALREADY CHANGE THE PATH IN RIGHT_F SO HERE JUST MOVE LEFT
             movlw  d'4'
             movwf  column_ball
-
-                movff row, PORTE
-                goto _end
-
-                goto  _end
-
+            movff  row, PORTE
+            goto   _end
 
     moving_to_right:
         movf  column_ball, w
@@ -314,36 +311,8 @@ move_ball:
         right_b:      ; BALL MOVES FROM PORTA TO PORTB
             movlw  d'1'  ; WE WILL GO TO THE PORTB SO SET COLUMN=1 -> PORTB
             movwf  column_ball
-            btfss  TMR1L, 0
-            goto   rb_first_bit_0
-            btfss  TMR1L, 1
-            goto   rb_bit_01
-            goto   rb_bit_00_11
-
-            rb_first_bit_0:
-                btfss TMR1L, 1
-                goto  rb_bit_00_11
-                goto  rb_bit_10
-
-            rb_bit_00_11:
-                movff row, PORTB
-                goto  _end
-		
-            rb_bit_01:         ;  BALL MOVES UP
-                rrncf  row
-                movlw  0
-                cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
-                incf   row     ; IF ROW=0, INCREMENT
-                movff  row, PORTB
-                goto  _end
-
-            rb_bit_10:
-                rlncf  row
-                movlw  d'64'
-                cpfslt row   ; IF (ROW == 64), DIVIDE BY 2 -> TURN ON PORTX,5TH LED
-                rrncf  row
-                movff  row, PORTB
-                goto   _end
+            movff row, PORTB   ;  WE DONT CHANGE PATH IT WAS ALREADY CHANGED
+            goto  _end
 
         right_c:      ; BALL MOVES FROM PORTB TO PORTC
             clrf   PORTB
@@ -365,8 +334,8 @@ move_ball:
                 goto  _end
 
             rc_bit_01:
-                rrncf row
-                movlw 0
+                rrncf  row
+                movlw  0
                 cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
                 incf   row     ; IF ROW=0, INCREMENT
                 movff  row, PORTC
@@ -412,7 +381,7 @@ move_ball:
                 movlw  d'64'
                 cpfslt row   ; IF (ROW == 64), DIVIDE BY 2 -> TURN ON PORTX,5TH LED
                 rrncf  row
-                movff  row, PORTC
+                movff  row, PORTD
                 goto  _end
 
         right_e:      ; BALL MOVES FROM PORTD TO PORTE
@@ -475,7 +444,7 @@ move_ball:
 
             rf_bit_01:   ; BALL MOVES UPWARD
                 rrncf  row
-		movlw  0 
+                movlw  0
                 cpfsgt row   ; IF IT IS OUT OF BORDER
                 incf   row   ; MAKE IT IN BORDER BY TURNING ON 1'ST LED
                 movf   row, w
@@ -487,7 +456,7 @@ move_ball:
 
             rf_bit_10:   ; BALL MOVES DOWNWARD
                 rlncf  row
-		movlw  d'64' 
+                movlw  d'64'
                 cpfslt row   ; IF IT IS OUT OF BORDER
                 rrncf  row   ; MAKE IT IN BORDER BY TURNING ON 5'TH LED
                 movf   row, w
@@ -497,7 +466,7 @@ move_ball:
                 btg    direction, 0 ; GOAL KEEPER SAVED
                 goto   left_e
 
-    _end
+    _end         
 
     return   ; return of the move_ball
 
@@ -511,11 +480,11 @@ paddle_1:;CHECK RG1 IS PRESSED
     btfsc s_1_up,0
     bra RG1_pressed
     RG1_released: ; IT WAS NOT PRESSED
-	btfss PORTG,1 ; IT IS NOW PRESSED ?
-	bra RG1_end
-	bsf move_up_1,0
-	bsf s_1_up,0
-	bra RG1_end
+        btfss PORTG,1 ; IT IS NOW PRESSED ?
+        bra RG1_end
+        bsf move_up_1,0
+        bsf s_1_up,0
+        bra RG1_end
     
     RG1_pressed: ; IT WAS PRESSED
         btfsc PORTG,1 ; IT IS NOW RELEASED ?
@@ -548,17 +517,17 @@ paddle_1:;CHECK RG1 IS PRESSED
         btfss move_up_1, 0
         goto  move_paddle1_down   ; MOVE UP FLAG IS NOT SET CHECK THE DOWN
 	move_paddle1_up:
-	    btfsc PORTA, 0
+	    btfsc PORTF, 0
 	    goto  move_paddle1_end; PADDLE CANNOT MOVE UP FURTHER
-	    rrncf PORTA           ; MOVE THE PADDLE UP
+	    rrncf PORTF           ; MOVE THE PADDLE UP
 	    goto  move_paddle1_end
 	    
 	move_paddle1_down:
 	    btfss move_down_1,0  ; CHECK WHETHER THE DOWN FLAG IS SET
 	    goto  move_paddle1_end
-	    btfsc PORTA, 5       ; PADDLE1 CANNOT MOVE DOWN FURTHER
+	    btfsc PORTF, 5       ; PADDLE1 CANNOT MOVE DOWN FURTHER
 	    goto  move_paddle1_end
-	    rlncf PORTA          ; MOVE THE PADDLE DOWN
+	    rlncf PORTF          ; MOVE THE PADDLE DOWN
 
         move_paddle1_end:
 	    bcf   move_down_1, 0 ; WE CLEAR UP_DOWN FLAGS SO THAT WE WILL WAIT ANOTHER PRESS TO MOVE UP OR DOWN
@@ -608,17 +577,17 @@ paddle_2:
         goto  move_paddle2_down ; MOVE UP FLAG IS NOT SET, CHECK THE DOWN
 
         move_paddle2_up:
-            btfsc PORTF, 0
+            btfsc PORTA, 0
             goto  move_paddle2_end;  PADDLE CANNOT MOVE UP FURTHER
-            rrncf PORTF ; MOVE THE PADDLE UP
+            rrncf PORTA ; MOVE THE PADDLE UP
             goto  move_paddle2_end
 	    
         move_paddle2_down:
     	    btfss move_down_2,0 ; CHECK WHETHER THE DOWN FLAG IS SET
             goto  move_paddle2_end
-            btfsc PORTF, 5       ; PADDLE CANNOT MOVE DOWN FURTHER
+            btfsc PORTA, 5       ; PADDLE CANNOT MOVE DOWN FURTHER
             goto  move_paddle2_end
-            rlncf PORTF         ; MOVE THE PADDLE DOWN
+            rlncf PORTA         ; MOVE THE PADDLE DOWN
 	    
         move_paddle2_end:
     	    bcf   move_up_2, 0   ; WE CLEAR UP_DOWN FLAGS SO THAT WE WILL WAIT ANOTHER PRESS TO MOVE UP OR DOWN
@@ -642,7 +611,8 @@ left_scored:
     goto   after_goal
     
 after_goal:
-    clrf    direction
+    movlw   d'1'
+    movwf   direction
     MOVLW   b'00011100' ; MAKE THE PADDLES IN INITIAL CONDITION
     MOVWF   PORTA
     MOVWF   PORTF
