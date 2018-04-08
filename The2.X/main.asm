@@ -60,10 +60,27 @@ ORG 0X0008
 ORG 0X0018
     nop
     retfie
-    
+
+
 ;*******************************************************************************
 ; MAIN PROGRAM
 ;*******************************************************************************         
+
+    TABLE
+    MOVF    PCL, F  ; A simple read of PCL will update PCLATH, PCLATU
+    RLNCF   WREG, W ; multiply index X2
+    ADDWF   PCL, F  ; modify program counter
+    RETLW b'00111111' ;0 representation in 7-seg. disp. portJ
+    RETLW b'00000110' ;1 representation in 7-seg. disp. portJ
+    RETLW b'01011011' ;2 representation in 7-seg. disp. portJ
+    RETLW b'01001111' ;3 representation in 7-seg. disp. portJ
+    RETLW b'01100110' ;4 representation in 7-seg. disp. portJ
+    RETLW b'01101101' ;5 representation in 7-seg. disp. portJ
+    RETLW b'01111101' ;6 representation in 7-seg. disp. portJ
+    RETLW b'00000111' ;7 representation in 7-seg. disp. portJ
+    RETLW b'01111111' ;8 representation in 7-seg. disp. portJ
+    RETLW b'01100111' ;9 representation in 7-seg. disp. portJ
+
 
 HIGH_ISR:
     bcf    INTCON, 2   ; CLEAR INTERRUPT FLAG
@@ -80,7 +97,7 @@ HIGH_ISR:
     retfie
     
 START
-    call INIT    
+    call INIT
 
 main:
     call paddle_1
@@ -265,38 +282,13 @@ move_ball:
                 movff row, PORTD
                 goto  _end
 
-        left_e:  
+        left_e:  ; WE ALREADY CHANGE THE PATH IN RIGHT_F SO HERE JUST MOVE LEFT
             movlw  d'4'
             movwf  column_ball
-            btfss  TMR1L, 0
-            goto   e_first_bit_0
-            btfss  TMR1L, 1
-            goto   e_bit_01
-            goto   e_bit_00_11
 
-            e_first_bit_0:
-                btfss TMR1L, 1
-                goto  e_bit_00_11
-                goto  e_bit_10
-
-            e_bit_00_11:
                 movff row, PORTE
-		goto _end
+                goto _end
 
-            e_bit_01:
-                rrncf row
-                movlw 0
-                cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
-                incf   row     ; IF ROW=0, INCREMENT
-                movff  row, PORTE
-                goto  _end
-
-            e_bit_10:
-                rlncf  row
-                movlw  d'64'
-                cpfslt row   ; IF (ROW == 64), DIVIDE BY 2 -> TURN ON PORTX,5TH LED
-                rrncf  row
-                movff row, PORTE
                 goto  _end
 
 
@@ -335,14 +327,14 @@ move_ball:
 
             rb_bit_00_11:
                 movff row, PORTB
-		goto  _end
+                goto  _end
 		
-            rb_bit_01:
+            rb_bit_01:         ;  BALL MOVES UP
                 rrncf  row
-		movlw  0
+                movlw  0
                 cpfsgt row     ; TEST IF BALL AT THE UPPER-BORDER
                 incf   row     ; IF ROW=0, INCREMENT
-		movff  row, PORTB
+                movff  row, PORTB
                 goto  _end
 
             rb_bit_10:
@@ -350,8 +342,8 @@ move_ball:
                 movlw  d'64'
                 cpfslt row   ; IF (ROW == 64), DIVIDE BY 2 -> TURN ON PORTX,5TH LED
                 rrncf  row
-                movff row, PORTB
-                goto  _end
+                movff  row, PORTB
+                goto   _end
 
         right_c:      ; BALL MOVES FROM PORTB TO PORTC
             clrf   PORTB
@@ -634,22 +626,22 @@ paddle_2:
        return
 
 right_scored:
-    bsf    right_score_flag, 0; right one made a goal
+    incf   right_score
     movlw  d'5'
     cpfslt right_score
     goto   game_over
     call   display
-    goto   goal
+    goto   after_goal
     
 left_scored:
-    bsf    left_score_flag, 0 ; left one made a goal
+    incf   left_score
     movlw  d'5'
     cpfslt left_score
     goto   game_over    
     call   display
-    goto   goal
+    goto   after_goal
     
-goal:
+after_goal:
     clrf    direction
     MOVLW   b'00011100' ; MAKE THE PADDLES IN INITIAL CONDITION
     MOVWF   PORTA
@@ -663,62 +655,48 @@ goal:
 
 display:
     right_goals:
-        btfsc  right_score_flag, 0; CHECK WHETHER THE RIGHT ONE SCORED
-        incf   right_score        ; IF YES INCREMENT SCORE OF THE RIGHT
-        clrf   right_score_flag   ; CLEAR FLAG, IT WILL NOT INCREMENT CONTINUOUSLY
-	;clrf   PORTH              ; BELOW PART IS FOR SETTING THE LEDS
-        bsf    PORTH, 1
-	bcf    PORTH, 3
-	movf   right_score, w
+    	clrf   PORTH              ; BELOW PART IS FOR SETTING THE LEDS
+        bsf    PORTH, 3
+    	movf   right_score, w
         call   TABLE
         movwf  PORTJ
-	;call   DELAY
+    	call   DELAY
 	
     left_goals:
-        btfsc  left_score_flag, 0
-        incf   left_score
-        clrf   left_score_flag ;
-        bsf    PORTH, 3
-	bcf    PORTH, 1
-	movf   left_score, w
+        clrf   PORTH
+    	bsf    PORTH, 1
+    	movf   left_score, w
         call   TABLE
         movwf  PORTJ
-	;call   DELAY
+        call   DELAY
 
    display_end:
         return 
 	
 game_over:
-    clrf  PORTH
-    bsf   PORTH,1
-    movlw 0
+    clrf  LATH
+    bsf   LATH,3
+    movf  right_score, w
     call  TABLE
-    ;call  DELAY
-    
-    clrf  PORTH
-    bsf   PORTH,3
-    movlw 0
+    movwf LATJ
+    call  DELAY
+
+    clrf  LATH
+    bsf   LATH,1
+    movf  left_score, w
     call  TABLE
-    ;call  DELAY
+    movwf LATJ
+    call  DELAY
+
     goto  game_over
     
 DELAY	; Time Delay Routine with 3 nested loops
-    MOVLW 0x10	; Copy desired value to W
-    MOVWF t3	; Copy W into t3
-    xloop3:
-	MOVLW 0x10  ; Copy desired value to W
-	MOVWF t2    ; Copy W into t2
-	xloop2:
-	    MOVLW 0x9A	; Copy desired value to W
-	    MOVWF t1	; Copy W into t1
-	    xloop1:
-		decfsz t1,F ; Decrement t1. If 0 Skip next instruction
-		GOTO xloop1 ; ELSE Keep counting down
-		decfsz t2,F ; Decrement t2. If 0 Skip next instruction
-		GOTO xloop2 ; ELSE Keep counting down
-		decfsz t3,F ; Decrement t3. If 0 Skip next instruction
-		GOTO xloop3 ; ELSE Keep counting down
-		return
+	movlw  0xff
+    movwf  t1
+    loop:
+    decfsz t1,F ; Decrement t1. If 0 Skip next instruction
+	GOTO   loop; ELSE Keep counting down
+	return
 	
 INIT
     MOVLW   b'00001111'
@@ -754,7 +732,6 @@ INIT
     MOVLW   d'3'
     MOVWF   column_ball
     CLRF    counter
-    CLRF    direction  ; INITIALLY MOVING RIGHT
     CLRF    move_ball_flag
     CLRF    s_1_up
     CLRF    s_2_up   
@@ -768,7 +745,10 @@ INIT
     CLRF    right_score
     CLRF    left_score_flag
     CLRF    right_score_flag
-    CLRF    table_wreg
+    CLRF    table_wreg,
+
+    MOVLW    d'1'
+    MOVWF    direction   ; INITIALLY BALL MOVES LEFT
     ;CLRF    PIE1 ; DONT USE TIMER1 AS AN INTERRUPT SOURCE
     ;CLRF    PIE1
     MOVLW   d'46'
@@ -784,19 +764,5 @@ INIT
     BSF	    INTCON, 7; ENABLE INTERRUPTS
     return
 
-    TABLE
-    MOVF    PCL, F  ; A simple read of PCL will update PCLATH, PCLATU
-    RLNCF   WREG, W ; multiply index X2
-    ADDWF   PCL, F  ; modify program counter
-    RETLW b'00111111' ;0 representation in 7-seg. disp. portJ
-    RETLW b'00000110' ;1 representation in 7-seg. disp. portJ
-    RETLW b'01011011' ;2 representation in 7-seg. disp. portJ
-    RETLW b'01001111' ;3 representation in 7-seg. disp. portJ
-    RETLW b'01100110' ;4 representation in 7-seg. disp. portJ
-    RETLW b'01101101' ;5 representation in 7-seg. disp. portJ
-    RETLW b'01111101' ;6 representation in 7-seg. disp. portJ
-    RETLW b'00000111' ;7 representation in 7-seg. disp. portJ
-    RETLW b'01111111' ;8 representation in 7-seg. disp. portJ
-    RETLW b'01100111' ;9 representation in 7-seg. disp. portJ
 
 END
