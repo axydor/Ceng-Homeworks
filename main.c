@@ -2,59 +2,349 @@
 #include <pthread.h>
 #include <semaphore.h>
     
-    static pthread_mutex_t wakeup_mut = PTHREAD_MUTEX_INITIALIZER;
-    static pthread_cond_t wakeup_cond = PTHREAD_COND_INITIALIZER;
+static pthread_mutex_t wakeup_mut = PTHREAD_MUTEX_INITIALIZER; // Mutex for WakeUp Condition variable
+static pthread_cond_t wakeup_cond = PTHREAD_COND_INITIALIZER;  // Condition Variable for Setting the Number Of Sleeping Ants
+static pthread_mutex_t draw_mut   = PTHREAD_MUTEX_INITIALIZER; // Mutex for drawWindow() call
 
-    struct A{
-    	int id;
-        int x;
-        int y;   
-        pthread_mutex_t* draw_mut;
-        };
- 
-void *Ant(void* y)
+struct Ant {
+   	int id; // Id of the Ant
+    int x;  // X coordinate of the Ant 
+    int y;  // Y coordinate of the Ant
+    char state;
+    };
+
+void withoutFood(void* Y, int a, int b)
 {
-    struct A* x= (struct A*)y;
-    char state = '1';
+    struct Ant* Ant = (struct Ant*) Y;
+    if( Ant-> state == '1' )
+    {   
+        putCharTo( Ant->x, Ant->y, '-' );
+        putCharTo ( a, b, 'P' );
+        Ant->state = 'P';    
+    }
+    if( Ant->state == 'P' )
+    {
+        putCharTo( Ant->x, Ant->y, 'o' );
+        putCharTo ( a, b, '1' );                
+        Ant->state = '1';        
+    }
+    Ant->x = a;
+    Ant->y = b;
+}
+
+void search( void* Y )
+{
+    struct Ant* Ant = (struct Ant*) Y;
+    char destination;
+    if( Ant-> state == '1' )
+    {   
+        destination == 'o';
+    }
+    if( Ant->state == 'P' )
+    {
+        destination == '-';
+    }
+    if( Ant->x == 0 && Ant->y == 0 ) // Ant is at the Top-Left Corner
+    {
+        if( lookCharAt( Ant->x, Ant->y+1 ) == destination ) // Ant looks at Right
+        {
+            withoutFood( Ant, Ant->x, Ant->y+1 );
+        }
+        else if( lookCharAt( Ant->x+1, Ant->y ) == destination )
+        {
+            withoutFood( Ant, Ant->x+1, Ant->y );
+        }
+        else if( lookCharAt( Ant->x+1, Ant->y+1 ) == destination )
+        {
+            withoutFood( Ant, Ant->x+1, Ant->y+1 );
+        }
+        pthread_mutex_lock( &draw_mut );
+        drawWindow();
+        pthread_mutex_unlock( &draw_mut );
+        usleep(getDelay() * 1000 + (rand() % 5000));  // Should I use mutex for DELAY?
+    }
+    else if( Ant->x == 0 && 0 < Ant->y < GRIDSIZE-1 ) // Ant is at the Top border POS: 2
+    {
+        if( lookCharAt( Ant->x, Ant->y+1 ) == destination ) // Ant looks at Right
+        {
+            withoutFood( Ant, Ant->x, Ant->y+1 );
+        }
+        else if( lookCharAt( Ant->x, Ant->y-1 ) == destination )
+        {
+            withoutFood( Ant, Ant->x, Ant->y-1 );
+        }                
+        else if( lookCharAt( Ant->x+1, Ant->y-1 ) == destination ) // looks at Down
+        {
+            withoutFood( Ant, Ant->x+1, Ant->y-1 );
+        }
+        else if( lookCharAt( Ant->x+1, Ant->y ) == destination ) // looks at down right
+        {
+            withoutFood( Ant, Ant->x+1, Ant->y );
+        }
+        else if( lookCharAt( Ant->x+1, Ant->y+1 ) == destination )
+        {
+            withoutFood( Ant, Ant->x+1, Ant->y+1 );
+        }                              
+        pthread_mutex_lock( &draw_mut );
+        drawWindow();
+        pthread_mutex_unlock( &draw_mut );
+        usleep(getDelay() * 1000 + (rand() % 5000));  // Should I use mutex for DELAY?               
+    } 
+    else if( Ant->x == 0 && Ant->y == GRIDSIZE-1 ) // POS: 3
+    {
+        if( lookCharAt( Ant->x, Ant->y-1 ) == destination ) // Ant looks at Left
+        {
+            withoutFood( Ant, Ant->x, Ant->y-1 );
+        }
+        else if( lookCharAt( Ant->x+1, Ant->y-1 ) == destination )
+        {
+            withoutFood( Ant, Ant->x+1, Ant->y-1 );
+        }                
+        else if( lookCharAt( Ant->x+1, Ant->y ) == destination ) // looks at Down
+        {
+            withoutFood( Ant, Ant->x+1, Ant->y );
+        }
+        pthread_mutex_lock( &draw_mut );
+        drawWindow();
+        pthread_mutex_unlock( &draw_mut );
+        usleep(getDelay() * 1000 + (rand() % 5000));  // Should I use mutex for DELAY?                  ;
+    }
+    else if( 0 < Ant->x < GRIDSIZE-1 && Ant->y == 0 )  // POS: 4
+    {
+        if( lookCharAt( Ant->x-1, Ant->y ) == destination ) // UP
+        {
+            withoutFood( Ant, Ant->x-1, Ant->y );
+        }
+
+        else if( lookCharAt( Ant->x-1, Ant->y+1 ) == destination ) // UP-RIGHT
+        {
+            withoutFood( Ant, Ant->x-1, Ant->y+1 );
+        }  
+
+        else if( lookCharAt( Ant->x, Ant->y+1 ) == destination ) // RIGHT
+        {
+            withoutFood( Ant, Ant->x+1, Ant->y-1 );
+        }
+        
+        else if( lookCharAt( Ant->x+1, Ant->y+1 ) == destination ) // DOWN-RIGHT
+        {
+            withoutFood( Ant, Ant->x+1, Ant->y+1 );
+        }
+
+        else if( lookCharAt( Ant->x+1, Ant->y ) == destination ) // DOWN
+        {
+            withoutFood( Ant, Ant->x+1, Ant->y );
+        }
+
+
+        pthread_mutex_lock( &draw_mut );
+        drawWindow();
+        pthread_mutex_unlock( &draw_mut );
+        usleep(getDelay() * 1000 + (rand() % 5000));  // Should I use mutex for DELAY?                     
+    }
+    else if( 0 < Ant->x < GRIDSIZE-1 && 0 < Ant->y < GRIDSIZE-1 )  // POS: 5
+    {
+        if( lookCharAt( Ant->x-1, Ant->y ) == destination ) // UP
+        {
+            withoutFood( Ant, Ant->x-1, Ant->y );
+        }
+
+        else if( lookCharAt( Ant->x-1, Ant->y+1 ) == destination ) // UP-RIGHT
+        {
+            withoutFood( Ant, Ant->x-1, Ant->y+1 );
+        }  
+
+        else if( lookCharAt( Ant->x, Ant->y+1 ) == destination ) // RIGHT
+        {
+            withoutFood( Ant, Ant->x, Ant->y+1 );
+        }
+
+        else if( lookCharAt( Ant->x+1, Ant->y+1 ) == destination ) // DOWN-RIGHT
+        {
+            withoutFood( Ant, Ant->x+1, Ant->y+1 );
+        }
+        
+        else if( lookCharAt( Ant->x+1, Ant->y ) == destination ) // DOWN
+        {
+            withoutFood( Ant, Ant->x+1, Ant->y );
+        }
+
+        else if( lookCharAt( Ant->x+1, Ant->y-1 ) == destination ) // DOWN-LEFT
+        {
+            withoutFood( Ant, Ant->x+1, Ant->y-1 );
+        }
+
+        else if( lookCharAt( Ant->x, Ant->y-1 ) == destination ) // LEFT
+        {
+            withoutFood( Ant, Ant->x, Ant->y-1 );
+        }
+
+        else if( lookCharAt( Ant->x-1, Ant->y-1 ) == destination ) // UP-LEFT
+        {
+            withoutFood( Ant, Ant->x-1, Ant->y-1 );
+        }
+        pthread_mutex_lock( &draw_mut );
+        drawWindow();
+        pthread_mutex_unlock( &draw_mut );
+        usleep(getDelay() * 1000 + (rand() % 5000));  // Should I use mutex for DELAY?                     
+    }
+
+    else if( 0 < Ant->x < GRIDSIZE-1 &&  Ant->y == GRIDSIZE-1 )  // POS: 6
+    {
+        if( lookCharAt( Ant->x-1, Ant->y ) == destination ) // UP
+        {
+            withoutFood( Ant, Ant->x-1, Ant->y );
+        }
+
+        else if( lookCharAt( Ant->x+1, Ant->y ) == destination ) // DOWN
+        {
+            withoutFood( Ant, Ant->x+1, Ant->y );
+        }
+
+        else if( lookCharAt( Ant->x+1, Ant->y-1 ) == destination ) // DOWN-LEFT
+        {
+            withoutFood( Ant, Ant->x+1, Ant->y-1 );
+        }
+
+        else if( lookCharAt( Ant->x, Ant->y-1 ) == destination ) // LEFT
+        {
+            withoutFood( Ant, Ant->x, Ant->y-1 );
+        }
+
+        else if( lookCharAt( Ant->x-1, Ant->y-1 ) == destination ) // UP-LEFT
+        {
+            withoutFood( Ant, Ant->x-1, Ant->y-1 );
+        }
+        pthread_mutex_lock( &draw_mut );
+        drawWindow();
+        pthread_mutex_unlock( &draw_mut );
+        usleep(getDelay() * 1000 + (rand() % 5000));  // Should I use mutex for DELAY?                     
+    }            
+
+    else if(  Ant->x == GRIDSIZE-1 &&  Ant->y ==0 )  // POS: 7
+    {
+        if( lookCharAt( Ant->x-1, Ant->y ) == destination ) // UP
+        {
+            withoutFood( Ant, Ant->x-1, Ant->y );
+        }
+
+        else if( lookCharAt( Ant->x-1, Ant->y+1 ) == destination ) // UP-RIGHT
+        {
+            withoutFood( Ant, Ant->x-1, Ant->y+1 );
+        }  
+
+        else if( lookCharAt( Ant->x, Ant->y+1 ) == destination ) // RIGHT
+        {
+            withoutFood( Ant, Ant->x, Ant->y+1 );
+        }
+        pthread_mutex_lock( &draw_mut );
+        drawWindow();
+        pthread_mutex_unlock( &draw_mut );
+        usleep(getDelay() * 1000 + (rand() % 5000));  // Should I use mutex for DELAY?                     
+    }
+
+    else if( Ant->x == GRIDSIZE-1 && 0 < Ant->y < GRIDSIZE-1 )  // POS: 8
+    {
+        if( lookCharAt( Ant->x-1, Ant->y ) == destination ) // UP
+        {
+            withoutFood( Ant, Ant->x-1, Ant->y );
+        }
+
+        else if( lookCharAt( Ant->x-1, Ant->y+1 ) == destination ) // UP-RIGHT
+        {
+            withoutFood( Ant, Ant->x-1, Ant->y+1 );
+        }  
+
+        else if( lookCharAt( Ant->x, Ant->y+1 ) == destination ) // RIGHT
+        {
+            withoutFood( Ant, Ant->x, Ant->y+1 );
+        }
+
+        else if( lookCharAt( Ant->x, Ant->y-1 ) == destination ) // LEFT
+        {
+            withoutFood( Ant, Ant->x, Ant->y-1 );
+        }
+
+        else if( lookCharAt( Ant->x-1, Ant->y-1 ) == destination ) // UP-LEFT
+        {
+            withoutFood( Ant, Ant->x-1, Ant->y-1 );
+        }
+        pthread_mutex_lock( &draw_mut );
+        drawWindow();
+        pthread_mutex_unlock( &draw_mut );
+        usleep(getDelay() * 1000 + (rand() % 5000));  // Should I use mutex for DELAY?                     
+    }   
+
+    else if(  Ant->x == GRIDSIZE-1 &&  Ant->y == GRIDSIZE-1 )  // POS: 9
+    {
+        if( lookCharAt( Ant->x-1, Ant->y ) == destination ) // UP
+        {
+            withoutFood( Ant, Ant->x-1, Ant->y );
+        }
+
+        else if( lookCharAt( Ant->x, Ant->y-1 ) == destination ) // LEFT
+        {
+            withoutFood( Ant, Ant->x, Ant->y-1 );
+        }
+
+        else if( lookCharAt( Ant->x-1, Ant->y-1 ) == destination ) // UP-LEFT
+        {
+            withoutFood( Ant, Ant->x-1, Ant->y-1 );
+        }
+        pthread_mutex_lock( &draw_mut );
+        drawWindow();
+        pthread_mutex_unlock( &draw_mut );
+        usleep(getDelay() * 1000 + (rand() % 5000));  // Should I use mutex for DELAY?                     
+    }                     
+
+    pthread_mutex_lock( &wakeup_mut );
+    while( Ant->id < getSleeperN() )
+    {
+        pthread_cond_wait( &wakeup_cond, &wakeup_mut );
+    }
+    pthread_mutex_unlock( &wakeup_mut );
+
+}
+
+//  _____
+// |1 2 3|
+// |4 5 6|
+// |7 8 9|
+// 
+                                                            /////////////////////////////////////
+                                                    // SHOULD I DRAW EVEN IF ANT DO NOT MOVES ?
+                                                            /////////////////////////////////////
+
+void *Atom(void* y)
+{
+    struct Ant* Ant = (struct Ant*)y;
+    Ant->state = '1';
     while(1)
     {
-        if( pthread_mutex_lock( x->draw_mut ) == 0);
+        if( Ant->state == '1' ) // Ant is searching for the food 
         {
-        if( state == '1' ) // Ant is w.o food
+            search(Ant);
+        }
+        else if( Ant->state == 'P') // Ant is with food :)
         {
-            putCharTo(x->x, x->y, 'o');
-            x->x++;
-            x->y++;
-        }
-        drawWindow();
-        usleep(getDelay() * 1000 + (rand() % 5000));
-        pthread_mutex_unlock( x->draw_mut );
-        if( x->x == 25 )
-            break;
-        }
 
-        pthread_mutex_lock( &wakeup_mut );
-        while( x->id < getSleeperN() )
-        {
-        	pthread_cond_wait( &wakeup_cond, &wakeup_mut );
         }
-        pthread_mutex_unlock( &wakeup_mut );
+        else if( Ant->state == 'T' ) // Ant is tired(?)
+        {
 
+        }    
     }
-    while(1);
+    while(1);  // MAKE SURE THREAD DOES NOT EXECUT EXIT
 }
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
-    struct A* A=malloc(sizeof(struct A));
+    struct Ant* A=malloc(sizeof(struct Ant));
     A->id = 0;
-    A->x = 0;
-    A->y = 0;
+    A->x = 4;
+    A->y = 4;
     int n_ants, n_foods, n_time;
     pthread_t thread1;
-    pthread_mutex_t draw_mut;
-    pthread_mutex_init( &draw_mut, NULL);
-    A->draw_mut = &draw_mut;
 /*    
     n_ants  = atoi( argv[1] );
     n_foods = atoi( argv[2] );
@@ -81,7 +371,8 @@ int main(int argc, char *argv[]) {
             putCharTo(i, j, '-');
         }
     }
-    pthread_create( &thread1, NULL, Ant,(void *) A);
+    putCharTo( 4, 5, 'o');
+    pthread_create( &thread1, NULL, Atom, (void *) A);
     /*
     int a,b;
     for (i = 0; i < 5; i++) {
@@ -130,7 +421,7 @@ int main(int argc, char *argv[]) {
     // have to ensure that.
     char c;
     pthread_mutex_lock( &wakeup_mut );
-    setSleeperN(1);
+    //*setSleeperN(1);
     int sleepers = getSleeperN();
     pthread_mutex_unlock( &wakeup_mut );
     while (TRUE) {
