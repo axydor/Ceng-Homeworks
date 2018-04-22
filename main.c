@@ -3,9 +3,11 @@
 #include <semaphore.h>
     
 static pthread_mutex_t mutexes[ GRIDSIZE ][ GRIDSIZE ];
-static pthread_mutex_t wakeup_mut = PTHREAD_MUTEX_INITIALIZER; // Mutex for WakeUp Condition variable
+static pthread_mutex_t wakeup_mut  = PTHREAD_MUTEX_INITIALIZER; // Mutex for WakeUp Condition variable
 static pthread_cond_t  wakeup_cond = PTHREAD_COND_INITIALIZER;  // Condition Variable for Setting the Number Of Sleeping Ants
-static pthread_mutex_t draw_mut   = PTHREAD_MUTEX_INITIALIZER; // Mutex for drawWindow() call
+static pthread_mutex_t start_mut   = PTHREAD_MUTEX_INITIALIZER; // Mutex for Start Condition variable
+static pthread_cond_t  start_cond  = PTHREAD_COND_INITIALIZER;  // Condition Variable for Starting Each Thread at the same time.
+static pthread_mutex_t draw_mut    = PTHREAD_MUTEX_INITIALIZER; // Mutex for drawWindow() call
 
 struct Ant {
     int id; // Id of the Ant
@@ -20,6 +22,7 @@ struct Ant {
 void antMoves(void* Y, int a, int b)
 {
     struct Ant* Ant = (struct Ant*) Y;
+    pthread_mutex_lock( &mutexes[Ant->x][Ant->y] ); // LOCK THIS CELL
     if( Ant-> state == '1' )  // WITHOUT FOOD
     {   
         putCharTo( Ant->x, Ant->y, '-' );
@@ -40,6 +43,8 @@ void antMoves(void* Y, int a, int b)
     }
     Ant->x = a;
     Ant->y = b;
+    pthread_mutex_unlock( &mutexes[Ant->x][Ant->y] ); // LOCK THIS CELL
+
 }
 //   POS
 // |1 2 3|
@@ -51,7 +56,6 @@ void search( void* Y )
     struct Ant* Ant = (struct Ant*) Y;
     int x = Ant->x;
     int y = Ant->y;
-    pthread_mutex_lock( &mutexes[x][y] ); // LOCK THIS CELL
     char destination;
     int pos;
 
@@ -68,9 +72,9 @@ void search( void* Y )
         pos = 3;
     else if( ( (0 < x) && x < GRIDSIZE-1) && (y == 0) )  // POS: 4
         pos = 4;
-    else if( ( (0 < x) && (x < GRIDSIZE-1) ) && ( (0 < y) && ( y < GRIDSIZE-1) ) )  // POS: 5
+    else if( ( (0 < x) && ( x < GRIDSIZE-1) ) && ( (0 < y) && ( y < GRIDSIZE-1) ) )  // POS: 5
         pos = 5;
-    else if( (0 < x < GRIDSIZE-1) &&  (y == GRIDSIZE-1) )  // POS: 6
+    else if( ( (0 < x) && ( x< GRIDSIZE-1) )&&  (y == GRIDSIZE-1) )  // POS: 6
         pos = 6;
     else if(  (x == GRIDSIZE-1) &&  (y == 0) )  // POS: 7
         pos = 7;
@@ -80,7 +84,6 @@ void search( void* Y )
         pos = 9;
     else
         printf("SOME * THING HAPPENED \n");
-    pthread_mutex_unlock( &mutexes[x][y] );
 
     int counter;
     if(pos == 1 || pos == 3 || pos == 7 || pos == 9)
@@ -213,6 +216,12 @@ void search( void* Y )
 void *Atom(void* y)
 {
     struct Ant* Ant = (struct Ant*) y;
+
+    // EACH ANT WAITS TO START
+    pthread_mutex_lock( &start_mut );           
+    pthread_cond_wait( &start_cond, &start_mut );
+    pthread_mutex_unlock( &start_mut );        
+
     while(1)
     {
         search(Ant);
@@ -299,11 +308,16 @@ int main(int argc, char *argv[]) {
         Ants[i].state = '1';
         pthread_create( &threads[i], NULL, Atom, (void *) &Ants[i] );
     }
+
+    pthread_mutex_lock( &start_mut );
+    pthread_cond_broadcast( &start_cond );
+    pthread_mutex_unlock( &start_mut );
+
+
     while (TRUE) {
-        pthread_mutex_lock( &draw_mut );
+
         drawWindow();
         usleep(DRAWDELAY);
-        pthread_mutex_unlock( &draw_mut );        
 
         pthread_mutex_lock( &wakeup_mut );
         while( sleepers > getSleeperN())
