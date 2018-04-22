@@ -5,9 +5,8 @@
 static pthread_mutex_t mutexes[ GRIDSIZE ][ GRIDSIZE ];
 static pthread_mutex_t wakeup_mut  = PTHREAD_MUTEX_INITIALIZER; // Mutex for WakeUp Condition variable
 static pthread_cond_t  wakeup_cond = PTHREAD_COND_INITIALIZER;  // Condition Variable for Setting the Number Of Sleeping Ants
-static pthread_mutex_t start_mut   = PTHREAD_MUTEX_INITIALIZER; // Mutex for Start Condition variable
-static pthread_cond_t  start_cond  = PTHREAD_COND_INITIALIZER;  // Condition Variable for Starting Each Thread at the same time.
-static pthread_mutex_t draw_mut    = PTHREAD_MUTEX_INITIALIZER; // Mutex for drawWindow() call
+//static pthread_mutex_t start_mut   = PTHREAD_MUTEX_INITIALIZER; // Mutex for Start Condition variable
+//static pthread_cond_t  start_cond  = PTHREAD_COND_INITIALIZER;  // Condition Variable for Starting Each Thread at the same time.
 
 struct Ant {
     int id; // Id of the Ant
@@ -19,31 +18,36 @@ struct Ant {
 // STATES 
 // 'P': WITH FOOD, '1': WITHOUT FOOD, 'T': TIRED, 'S': SLEEPING, '$': SLEEPING WITH FOOD
 
+void safe_putCharTo(int a, int b, char c)
+{
+    pthread_mutex_lock( &mutexes[a][b] ); // LOCK THIS CELL
+    putCharTo( a, b, c );
+    pthread_mutex_unlock( &mutexes[a][b] ); // UNLOCK THIS CELL    
+}
+
 void antMoves(void* Y, int a, int b)
 {
     struct Ant* Ant = (struct Ant*) Y;
-    pthread_mutex_lock( &mutexes[Ant->x][Ant->y] ); // LOCK THIS CELL
     if( Ant-> state == '1' )  // WITHOUT FOOD
     {   
-        putCharTo( Ant->x, Ant->y, '-' );
+        safe_putCharTo( Ant->x, Ant->y, '-' );
         putCharTo ( a, b, 'P' );
         Ant->state = 'P';    
     }
     else if( Ant->state == 'P' ) // WITH FOOD
     {
-        putCharTo( Ant->x, Ant->y, 'o' );
+        safe_putCharTo( Ant->x, Ant->y, 'o' );
         putCharTo ( a, b, '1' );                
         Ant->state = 'T';        
     }
     else if( Ant->state == 'T' ) // TIRED
     {
-        putCharTo( Ant->x, Ant->y, '-' );
+        safe_putCharTo( Ant->x, Ant->y, '-' );
         putCharTo ( a, b, '1' );                
         Ant->state = '1';               
     }
     Ant->x = a;
     Ant->y = b;
-    pthread_mutex_unlock( &mutexes[Ant->x][Ant->y] ); // LOCK THIS CELL
 
 }
 //   POS
@@ -74,7 +78,7 @@ void search( void* Y )
         pos = 4;
     else if( ( (0 < x) && ( x < GRIDSIZE-1) ) && ( (0 < y) && ( y < GRIDSIZE-1) ) )  // POS: 5
         pos = 5;
-    else if( ( (0 < x) && ( x< GRIDSIZE-1) )&&  (y == GRIDSIZE-1) )  // POS: 6
+    else if( ( (0 < x) && ( x < GRIDSIZE-1) )&&  (y == GRIDSIZE-1) )  // POS: 6
         pos = 6;
     else if(  (x == GRIDSIZE-1) &&  (y == 0) )  // POS: 7
         pos = 7;
@@ -217,36 +221,28 @@ void *Atom(void* y)
 {
     struct Ant* Ant = (struct Ant*) y;
 
-    // EACH ANT WAITS TO START
-    pthread_mutex_lock( &start_mut );           
-    pthread_cond_wait( &start_cond, &start_mut );
-    pthread_mutex_unlock( &start_mut );        
 
     while(1)
     {
         search(Ant);
-        usleep(getDelay() * 1000 + (rand() % 5000));  // Should I use mutex for DELAY?                         
+        usleep(getDelay() * 1000 + (rand() % 5000));  // Should I use mutex for DELAY?  
         pthread_mutex_lock( &wakeup_mut );
         while( Ant->id < getSleeperN() )
         {
             // LOCK THE CELL AND PUTCHAR 'S'
-            pthread_mutex_lock( &mutexes[Ant->x][Ant->y] );
             if( Ant->state == '1' || Ant->state == 'T' ) // WITHOUT FOOD 
-                putCharTo( Ant->x, Ant->y, 'S' );
+                safe_putCharTo( Ant->x, Ant->y, 'S' );
             else
-                putCharTo( Ant->x, Ant->y, '$' );
-            pthread_mutex_unlock( &mutexes[Ant->x][Ant->y] ); 
+                safe_putCharTo( Ant->x, Ant->y, '$' );
 
             pthread_cond_wait( &wakeup_cond, &wakeup_mut );
             // woke up
 
         }
-            pthread_mutex_lock( &mutexes[Ant->x][Ant->y] );
             if( Ant->state == '1' || Ant->state == 'T' ) // WITHOUT FOOD 
-                putCharTo( Ant->x, Ant->y, '1' );
+                safe_putCharTo( Ant->x, Ant->y, '1' );
             else
-                putCharTo( Ant->x, Ant->y, 'P' );                
-            pthread_mutex_unlock( &mutexes[Ant->x][Ant->y] );
+                safe_putCharTo( Ant->x, Ant->y, 'P' );                
         pthread_mutex_unlock( &wakeup_mut );
     }
 }
@@ -282,19 +278,8 @@ int main(int argc, char *argv[]) {
         }while (lookCharAt(a,b) != '-'  );
         putCharTo(a, b, 'o');
     }
-    startCurses();
-    // you have to have following command to initialize ncurses.
-    //startCurses();
-    // You can use following loop in your program. But pay attention to 
-    // the function calls, they do not have any access control, you 
-    // have to ensure that.
     char c;
-       
-    pthread_mutex_lock( &wakeup_mut );
-    int sleepers = getSleeperN();
-    pthread_mutex_unlock( &wakeup_mut );
 
-    setDelay(900);
     for(i=0; i < n_ants; i++)
     {
         do {
@@ -309,15 +294,47 @@ int main(int argc, char *argv[]) {
         pthread_create( &threads[i], NULL, Atom, (void *) &Ants[i] );
     }
 
-    pthread_mutex_lock( &start_mut );
-    pthread_cond_broadcast( &start_cond );
-    pthread_mutex_unlock( &start_mut );
+    pthread_mutex_lock( &wakeup_mut );
+    int sleepers = getSleeperN();
+    pthread_mutex_unlock( &wakeup_mut );
 
 
+    struct timespec start, stop, initial;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    clock_gettime(CLOCK_MONOTONIC, &initial);
+    
+    startCurses();
     while (TRUE) {
 
-        drawWindow();
-        usleep(DRAWDELAY);
+        // TIME TO KILL ANTS
+        clock_gettime(CLOCK_MONOTONIC, &stop);
+        if( (stop.tv_sec - initial.tv_sec ) == n_time ) 
+        {
+            break;
+        }
+        // IT'S TIME TO CALL DRAW
+        //printf("%lf\n", (stop.tv_nsec - start.tv_nsec) / 1.0e3 );
+        //usleep(100000);
+        if( (stop.tv_sec - start.tv_sec) * 1e6 + (stop.tv_nsec - start.tv_nsec) / 1.0e3  >= (DRAWDELAY) )
+        {
+            for(i=0; i < GRIDSIZE; i++)
+            {
+                for(j=0; j < GRIDSIZE; j++)
+                {
+                    pthread_mutex_lock( &mutexes[i][j] );
+                }
+            }
+            clock_gettime(CLOCK_MONOTONIC, &start);
+            drawWindow();
+        
+            for(i=0; i < GRIDSIZE; i++)
+            {
+                for(j=0; j < GRIDSIZE; j++)
+                {
+                    pthread_mutex_unlock( &mutexes[i][j] );
+                }
+            }
+        }
 
         pthread_mutex_lock( &wakeup_mut );
         while( sleepers > getSleeperN())
