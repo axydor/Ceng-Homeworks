@@ -5,8 +5,9 @@
 static pthread_mutex_t mutexes[ GRIDSIZE ][ GRIDSIZE ];
 static pthread_mutex_t wakeup_mut  = PTHREAD_MUTEX_INITIALIZER; // Mutex for WakeUp Condition variable
 static pthread_cond_t  wakeup_cond = PTHREAD_COND_INITIALIZER;  // Condition Variable for Setting the Number Of Sleeping Ants
-//static pthread_mutex_t start_mut   = PTHREAD_MUTEX_INITIALIZER; // Mutex for Start Condition variable
-//static pthread_cond_t  start_cond  = PTHREAD_COND_INITIALIZER;  // Condition Variable for Starting Each Thread at the same time.
+static pthread_mutex_t start_mut   = PTHREAD_MUTEX_INITIALIZER; // Mutex for Start Condition variable
+static pthread_cond_t  start_cond  = PTHREAD_COND_INITIALIZER;  // Condition Variable for Starting Each Thread at the same time.
+static pthread_mutex_t delay_mut  = PTHREAD_MUTEX_INITIALIZER; // Mutex for WakeUp Condition variable
 
 struct Ant {
     int id; // Id of the Ant
@@ -55,6 +56,17 @@ void antMoves(void* Y, int a, int b)
 // |4 5 6|
 // |7 8 9|
 // 
+void unlock_prelocks(int* toUnlock_x, int* toUnlock_y, int counter)
+{
+    int x,y;
+    while(counter)
+    {
+        counter--;
+        x = toUnlock_x[counter];
+        y = toUnlock_y[counter];
+        pthread_mutex_unlock( &mutexes[x][y] );
+    }
+}
 void search( void* Y )
 {
     struct Ant* Ant = (struct Ant*) Y;
@@ -89,7 +101,8 @@ void search( void* Y )
     else
         printf("SOME * THING HAPPENED \n");
 
-    int counter;
+    int counter, real_counter;
+
     if(pos == 1 || pos == 3 || pos == 7 || pos == 9)
         counter = 3;
     else if(pos == 2 || pos == 4 || pos == 6 || pos == 8)
@@ -97,20 +110,41 @@ void search( void* Y )
     else // pos == 5
         counter = 8;    
 
+    real_counter = counter;
+
+    int* toUnlock_x = malloc(sizeof(int) * counter );
+    int* toUnlock_y = malloc(sizeof(int) * counter );
+
     while(counter)
     {
-        if( 3 < pos )
+        if( pos == 5 || pos == 6 || pos == 8 || pos == 9 )
+        {
+            if( pthread_mutex_trylock( &mutexes[x-1][y-1]) == 0 )
+            {
+                counter--;
+                toUnlock_x[counter] = x-1;
+                toUnlock_y[counter] = y-1;
+            }         
+            else
+            {
+                unlock_prelocks(toUnlock_x, toUnlock_y, counter);
+                counter = real_counter;
+                pthread_yield();
+            }
+        }
+        if( 3 < pos ) // LOOK AT UP
         {
             if( pthread_mutex_trylock( &mutexes[x-1][y]) == 0 )
             {
                 counter--;
-                if( lookCharAt( x-1, y ) == destination ) // looks at Up
-                {
-                    antMoves( Ant, x-1, y );
-                    pthread_mutex_unlock( &mutexes[x-1][y]);
-                    break;            
-                }                
-                pthread_mutex_unlock( &mutexes[x-1][y]);
+                toUnlock_x[counter] = x-1;
+                toUnlock_y[counter] = y;
+            }         
+            else
+            {
+                unlock_prelocks(toUnlock_x, toUnlock_y);
+                counter = real_counter;
+                pthread_yield();
             }
         }
         if( 3 < pos && (pos != 6 ) && (pos != 9) )
@@ -118,69 +152,14 @@ void search( void* Y )
             if( pthread_mutex_trylock( &mutexes[x-1][y+1]) == 0 )
             {
                 counter--;
-                if( lookCharAt( x-1, y+1 ) == destination ) // looks at Up-Right
-                {
-                    antMoves( Ant, x-1, y+1 );
-                    pthread_mutex_unlock( &mutexes[x-1][y+1]);
-                    break;            
-                }                
-                pthread_mutex_unlock( &mutexes[x-1][y+1]);
-            }
-        }
-        if( pos % 3 != 0) // If pos != 3,6,9
-        {
-            if( pthread_mutex_trylock( &mutexes[x][y+1]) == 0 )
+                toUnlock_x[counter] = x-1;
+                toUnlock_y[counter] = y+1;
+            }         
+            else
             {
-                counter--;
-                if( lookCharAt( x, y+1 ) == destination ) // Ant looks at Right
-                {
-                    antMoves( Ant, x, y+1 );
-                    pthread_mutex_unlock( &mutexes[x][y+1]);
-                    break;
-                }
-                pthread_mutex_unlock( &mutexes[x][y+1]);
-            }
-        }
-        if( pos < 6 && (pos != 3) )
-        {
-            if( pthread_mutex_trylock( &mutexes[x+1][y+1]) == 0 )
-            {
-                counter--;
-                if( lookCharAt( x+1, y+1 ) == destination ) // looks at Down-Right
-                {
-                    antMoves( Ant, x+1, y+1 );
-                    pthread_mutex_unlock( &mutexes[x+1][y+1]);
-                    break;            
-                }                
-                pthread_mutex_unlock( &mutexes[x+1][y+1]);
-            }
-        }
-        if( pos < 7 )
-        {
-            if( pthread_mutex_trylock( &mutexes[x+1][y]) == 0 )
-            {
-                counter--;
-                if( lookCharAt( x+1, y ) == destination ) // looks at Down
-                {
-                    antMoves( Ant, x+1, y );
-                    pthread_mutex_unlock( &mutexes[x+1][y]);
-                    break;            
-                }                
-                pthread_mutex_unlock( &mutexes[x+1][y]);
-            }
-        }
-        if( pos == 2 || pos == 3 || pos == 5 || pos == 6 )
-        {
-            if( pthread_mutex_trylock( &mutexes[x+1][y-1]) == 0 )
-            {
-                counter--;
-                if( lookCharAt( x+1, y-1 ) == destination ) // looks at Down-Left
-                {
-                    antMoves( Ant, x+1, y-1 );
-                    pthread_mutex_unlock( &mutexes[x+1][y-1]);
-                    break;            
-                }                
-                pthread_mutex_unlock( &mutexes[x+1][y-1]);
+                unlock_prelocks(toUnlock_x, toUnlock_y, counter);
+                counter = real_counter;
+                pthread_yield();
             }
         }
         if( (pos-1) % 3 != 0 ) // LOOK LEFT WHEN POS IS NOT 1,4,7
@@ -188,30 +167,83 @@ void search( void* Y )
             if( pthread_mutex_trylock( &mutexes[x][y-1]) == 0 )
             {
                 counter--;
-                if( lookCharAt( x, y-1 ) == destination ) // looks at Left
-                {
-                    antMoves( Ant, x, y-1 );
-                    pthread_mutex_unlock( &mutexes[x][y-1]);
-                    break;            
-                }                
-                pthread_mutex_unlock( &mutexes[x][y-1]);
-            }            
+                toUnlock_x[counter] = x;
+                toUnlock_y[counter] = y-1;
+            }         
+            else
+            {
+                unlock_prelocks(toUnlock_x, toUnlock_y, counter);
+                counter = real_counter;
+                pthread_yield();
+            }          
         }
-        if( pos == 5 || pos == 6 || pos == 8 || pos == 9 )
+        if( pos % 3 != 0) // If pos != 3,6,9
         {
-            if( pthread_mutex_trylock( &mutexes[x-1][y-1]) == 0 )
+            if( pthread_mutex_trylock( &mutexes[x][y+1]) == 0 )
             {
                 counter--;
-                if( lookCharAt( x-1, y-1 ) == destination ) // looks at Up-Left
-                {
-                    antMoves( Ant, x-1, y-1 );
-                    pthread_mutex_unlock( &mutexes[x-1][y-1]);
-                    break;            
-                }                
-                pthread_mutex_unlock( &mutexes[x-1][y-1]);
+                toUnlock_x[counter] = x;
+                toUnlock_y[counter] = y+1;
             }         
+            else
+            {
+                unlock_prelocks(toUnlock_x, toUnlock_y, counter);
+                counter = real_counter;
+                pthread_yield();
+            }
         }
-    } 
+        if( pos == 2 || pos == 3 || pos == 5 || pos == 6 )
+        {
+            if( pthread_mutex_trylock( &mutexes[x+1][y-1]) == 0 )
+            {
+                counter--;
+                toUnlock_x[counter] = x+1;
+                toUnlock_y[counter] = y-1;
+            }         
+            else
+            {
+                unlock_prelocks(toUnlock_x, toUnlock_y, counter);
+                counter = real_counter;
+                pthread_yield();
+            }
+        }
+        if( pos < 7 )
+        {
+            if( pthread_mutex_trylock( &mutexes[x+1][y]) == 0 )
+            {
+                counter--;
+                toUnlock_x[counter] = x+1;
+                toUnlock_y[counter] = y;
+            }         
+            else
+            {
+                unlock_prelocks(toUnlock_x, toUnlock_y, counter);
+                counter = real_counter;
+                pthread_yield();
+            }
+        }
+        if( pos < 6 && (pos != 3) )
+        {
+            if( pthread_mutex_trylock( &mutexes[x+1][y+1]) == 0 )
+            {
+                counter--;
+                toUnlock_x[counter] = x+1;
+                toUnlock_y[counter] = y+1;
+            }         
+            else
+            {
+                unlock_prelocks(toUnlock_x, toUnlock_y, counter);
+                counter = real_counter;
+                pthread_yield();
+            }
+        }
+    }
+    // WE LOCKED ALL CELLS AROUND US 
+    int rand = rand() % counter; 
+    if(pos == 1)
+    {
+        
+    }
 }
 
                                                             /////////////////////////////////////
@@ -221,11 +253,17 @@ void *Atom(void* y)
 {
     struct Ant* Ant = (struct Ant*) y;
 
+    pthread_mutex_lock( &start_mut );
+    pthread_cond_wait( &start_cond, &start_mut);
+    pthread_mutex_unlock( &start_mut );
 
     while(1)
     {
         search(Ant);
-        usleep(getDelay() * 1000 + (rand() % 5000));  // Should I use mutex for DELAY?  
+        pthread_mutex_lock( &delay_mut );
+        usleep(getDelay() * 1000 + (rand() % 5000));  
+        pthread_mutex_unlock( &delay_mut );
+        
         pthread_mutex_lock( &wakeup_mut );
         while( Ant->id < getSleeperN() )
         {
@@ -236,13 +274,13 @@ void *Atom(void* y)
                 safe_putCharTo( Ant->x, Ant->y, '$' );
 
             pthread_cond_wait( &wakeup_cond, &wakeup_mut );
-            // woke up
 
         }
-            if( Ant->state == '1' || Ant->state == 'T' ) // WITHOUT FOOD 
-                safe_putCharTo( Ant->x, Ant->y, '1' );
-            else
-                safe_putCharTo( Ant->x, Ant->y, 'P' );                
+            // woke up
+        if( Ant->state == '1' || Ant->state == 'T' ) // WITHOUT FOOD 
+            safe_putCharTo( Ant->x, Ant->y, '1' );
+        else
+            safe_putCharTo( Ant->x, Ant->y, 'P' );                
         pthread_mutex_unlock( &wakeup_mut );
     }
 }
@@ -256,13 +294,7 @@ int main(int argc, char *argv[]) {
 
     struct Ant* Ants = malloc(sizeof(struct Ant) * n_ants );
     pthread_t threads[ n_ants ];
-    //////////////////////////////
-    // Fills the grid randomly to have somthing to draw on screen.
-    // Empty spaces have to be -.
-    // You should get the number of ants and foods from the arguments 
-    // and make sure that a food and an ant does not placed at the same cell.
-    // You must use putCharTo() and lookCharAt() to access/change the grid.
-    // You should be delegating ants to separate threads
+
     int i,j;
     for (i = 0; i < GRIDSIZE; i++) {
         for (j = 0; j < GRIDSIZE; j++) {
@@ -294,36 +326,48 @@ int main(int argc, char *argv[]) {
         pthread_create( &threads[i], NULL, Atom, (void *) &Ants[i] );
     }
 
+    startCurses();
+
+    // Satart Every Thread at the same time
+    pthread_mutex_lock( &start_mut ); 
+    pthread_cond_broadcast( &start_cond );
+    pthread_mutex_unlock( &start_mut ); 
+
     pthread_mutex_lock( &wakeup_mut );
     int sleepers = getSleeperN();
     pthread_mutex_unlock( &wakeup_mut );
 
-
     struct timespec start, stop, initial;
+    struct timespec pre,after;
     clock_gettime(CLOCK_MONOTONIC, &start);
     clock_gettime(CLOCK_MONOTONIC, &initial);
     
-    startCurses();
     while (TRUE) {
-
         // TIME TO KILL ANTS
         clock_gettime(CLOCK_MONOTONIC, &stop);
         if( (stop.tv_sec - initial.tv_sec ) == n_time ) 
         {
             break;
         }
-        // IT'S TIME TO CALL DRAW
         //printf("%lf\n", (stop.tv_nsec - start.tv_nsec) / 1.0e3 );
-        //usleep(100000);
+        // IT'S TIME TO CALL DRAW
         if( (stop.tv_sec - start.tv_sec) * 1e6 + (stop.tv_nsec - start.tv_nsec) / 1.0e3  >= (DRAWDELAY) )
         {
+            //clock_gettime(CLOCK_MONOTONIC, &pre);
             for(i=0; i < GRIDSIZE; i++)
             {
                 for(j=0; j < GRIDSIZE; j++)
                 {
-                    pthread_mutex_lock( &mutexes[i][j] );
+                    while(pthread_mutex_trylock( &mutexes[i][j] ) != 0)
+                    {
+                        ;
+                    }
                 }
             }
+            //clock_gettime(CLOCK_MONOTONIC, &after);
+
+            //printf( "%ld\n",(after.tv_sec - pre.tv_sec) * 1e6 + (after.tv_nsec - pre.tv_nsec) / 1.0e3 );
+
             clock_gettime(CLOCK_MONOTONIC, &start);
             drawWindow();
         
@@ -350,10 +394,14 @@ int main(int argc, char *argv[]) {
 
         if (c == 'q' || c == ESC) break;
         if (c == '+') {
+            pthread_mutex_lock( &delay_mut );
             setDelay(getDelay()+10);
+            pthread_mutex_unlock( &delay_mut );
         }
         if (c == '-') {
+            pthread_mutex_lock( &delay_mut );
             setDelay(getDelay()-10);
+            pthread_mutex_unlock( &delay_mut );
         }
         if (c == '*') {
             pthread_mutex_lock( &wakeup_mut );
@@ -369,6 +417,14 @@ int main(int argc, char *argv[]) {
         //usleep(getDelay() * 1000 + (rand() % 5000));
     }
 
+        
+            for(i=0; i < GRIDSIZE; i++)
+            {
+                for(j=0; j < GRIDSIZE; j++)
+                {
+                    pthread_mutex_destroy( &mutexes[i][j] );
+                }
+            }
     
     // do not forget freeing the resources you get
     endCurses();
