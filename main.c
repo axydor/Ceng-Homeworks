@@ -12,6 +12,18 @@ static pthread_mutex_t end_mut  = PTHREAD_MUTEX_INITIALIZER; // Mutex for WakeUp
 //static pthread_cond_t  start_cond  = PTHREAD_COND_INITIALIZER;  // Condition Variable for Starting Each Thread at the same time.
 int end_flag = 0;
 
+struct coordinate{
+    int x;
+    int y;
+    }
+
+struct Komsu {
+    int n_foods;
+    int n_dash;
+    struct coordinate foods[8];
+    struct coordinate dashes[8];
+    }
+
 struct Ant {
     int id; // Id of the Ant
     int x;  // X coordinate of the Ant 
@@ -19,8 +31,13 @@ struct Ant {
     char state;
     };
 
-// STATES 
-// 'P': WITH FOOD, '1': WITHOUT FOOD, 'T': TIRED, 'S': SLEEPING, '$': SLEEPING WITH FOOD
+void safe_putCharTo(int x, int y, char c)
+{
+    pthread_mutex_lock( &mutexes[x][y] );
+    putCharTo( x, y, c);
+    pthread_mutex_unlock( &mutexes[x][y] );
+}
+
 
 void safe_unlock(int x, int y, int a, int b)
 {
@@ -28,14 +45,25 @@ void safe_unlock(int x, int y, int a, int b)
     pthread_mutex_unlock( &mutexes[a][b] );
 }
 
-void antMoves(void* Y, int a, int b)
+void unlock_all(int* lock_x, int* lock_y, int counter)
+{
+    for(int i=0; i < counter; i++) 
+    {
+        pthread_mutex_unlock( &mutexes[ lock_x[i] ][ lock_y[i] ] );    
+    }
+}
+
+// STATES 
+// 'P': WITH FOOD, '1': WITHOUT FOOD, 'T': TIRED, 'S': SLEEPING, '$': SLEEPING WITH FOOD
+
+void antMoves(void* Y, int a, int b, char dest)
 {
     struct Ant* Ant = (struct Ant*) Y;
-    if( Ant-> state == '1' )  // WITHOUT FOOD
+    if( Ant-> state == '1' )  
     {   
         putCharTo( Ant->x, Ant->y, '-' );
-        putCharTo ( a, b, 'P' );
-        Ant->state = 'P';    
+        putCharTo ( a, b, dest );
+        Ant->state = dest;    
     }
     else if( Ant->state == 'P' ) // WITH FOOD
     {
@@ -58,13 +86,6 @@ void antMoves(void* Y, int a, int b)
 // |4 5 6|
 // |7 8 9|
 // 
-void safe_putCharTo(int x, int y, char c)
-{
-    pthread_mutex_lock( &mutexes[x][y] );
-    putCharTo( x, y, c);
-    pthread_mutex_unlock( &mutexes[x][y] );
-}
-
 void search( void* Y )
 {
     struct Ant* Ant = (struct Ant*) Y;
@@ -99,7 +120,7 @@ void search( void* Y )
     else
         printf("SOME * THING HAPPENED \n");
 
-    int counter;
+    int counter, real_c;
     if(pos == 1 || pos == 3 || pos == 7 || pos == 9)
         counter = 3;
     else if(pos == 2 || pos == 4 || pos == 6 || pos == 8)
@@ -107,142 +128,189 @@ void search( void* Y )
     else // pos == 5
         counter = 8;    
 
+    real_c = counter;
+
+    int* lock_x = malloc(sizeof(int)* (counter + 1));
+    int* lock_y = malloc(sizeof(int)* (counter + 1));
+
     while(counter)
     {
         if( pos == 5 || pos == 6 || pos == 8 || pos == 9 ) // UPLEFT
         {
-            if( pthread_mutex_trylock( &mutexes[x-1][y-1]) == 0 )
+            if( pthread_mutex_trylock( &mutexes[x-1][y-1] ) == 0)
             {
+                lock_x[ real_c - counter ] = x-1;
+                lock_y[ real_c - counter ] = y-1;
                 counter--;
-                if( lookCharAt( x-1, y-1 ) == destination ) // looks at Up-Left
-                {
-                    pthread_mutex_lock( &mutexes[x][y] );
-                    antMoves( Ant, x-1, y-1 );
-                    safe_unlock(x-1, y-1, x, y);
-                    break;            
-                }            
-                pthread_mutex_unlock( &mutexes[x-1][y-1]);
-                pthread_yield();                
-            }         
+            }
+            else
+            {
+                unlock_all(lock_x, lock_y, real_c - counter);
+                counter = real_c;
+                pthread_yield(); 
+            }
         }    
         if( 3 < pos ) // LOOK UP
         {
             if( pthread_mutex_trylock( &mutexes[x-1][y]) == 0 )
             {
+                lock_x[ real_c - counter ] = x-1;
+                lock_y[ real_c - counter ] = y;
                 counter--;
-                if( lookCharAt( x-1, y ) == destination ) // looks at Up
-                {
-                    pthread_mutex_lock( &mutexes[x][y] );
-                    antMoves( Ant, x-1, y );
-                    safe_unlock(x-1, y, x, y);
-                    break;            
-                }                
-                pthread_mutex_unlock( &mutexes[x-1][y]);
-                pthread_yield();                
             }
+            else
+            {
+                unlock_all(lock_x, lock_y, real_c - counter);
+                counter = real_c;
+                pthread_yield(); 
+            }           
         }
         if( 3 < pos && (pos != 6 ) && (pos != 9) ) // UP-RIGHT
         {
             if( pthread_mutex_trylock( &mutexes[x-1][y+1]) == 0 )
             {
+                lock_x[ real_c - counter ] = x-1;
+                lock_y[ real_c - counter ] = y+1;
                 counter--;
-                if( lookCharAt( x-1, y+1 ) == destination ) // looks at Up-Right
-                {
-                    pthread_mutex_lock( &mutexes[x][y] );
-                    antMoves( Ant, x-1, y+1 );
-                    safe_unlock(x-1, y+1, x, y);
-                    break;            
-                }                
-                pthread_mutex_unlock( &mutexes[x-1][y+1]);
-                pthread_yield();                
             }
-        }
-        if( (pos-1) % 3 != 0 ) // LOOK LEFT  // WHEN POS IS NOT 1,4,7
-        {
-            if( pthread_mutex_trylock( &mutexes[x][y-1]) == 0 )
+            else
             {
+                unlock_all(lock_x, lock_y, real_c - counter);
+                counter = real_c;
+                pthread_yield(); 
+            }           
+            
+        }
+        if( (pos-1) % 3 != 0 ) // LEFT  // WHEN POS IS NOT 1,4,7
+        {
+             if( pthread_mutex_trylock( &mutexes[x][y-1]) == 0 )
+            {
+                lock_x[ real_c - counter ] = x;
+                lock_y[ real_c - counter ] = y-1;
                 counter--;
-                if( lookCharAt( x, y-1 ) == destination ) // looks at Left
-                {
-                    pthread_mutex_lock( &mutexes[x][y] );
-                    antMoves( Ant, x, y-1 );
-                    safe_unlock(x, y-1, x, y);
-                    break;            
-                }                
-                pthread_mutex_unlock( &mutexes[x][y-1]);
-                pthread_yield();
-            }            
+            }
+            else
+            {
+                unlock_all(lock_x, lock_y, real_c - counter);
+                counter = real_c;
+                pthread_yield(); 
+            }           
+   
         }        
+        if( pos == 5 ) // LOCK MIDDLE
+        {
+            if( pthread_mutex_trylock( &mutexes[x][y]) == 0 )
+            {
+                lock_x[ real_c - counter ] = x;
+                lock_y[ real_c - counter ] = y;
+                counter--;
+            }
+            else
+            {
+                unlock_all(lock_x, lock_y, real_c - counter);
+                counter = real_c;
+                pthread_yield(); 
+            }           
+            
+            
+        }
         if( pos % 3 != 0) // RIGHT // If pos != 3,6,9
         {
-            pthread_mutex_lock( &mutexes[x][y] );
             if( pthread_mutex_trylock( &mutexes[x][y+1]) == 0 )
             {
+                lock_x[ real_c - counter ] = x;
+                lock_y[ real_c - counter ] = y+1;
                 counter--;
-                if( lookCharAt( x, y+1 ) == destination ) // Ant looks at Right
-                {
-                    antMoves( Ant, x, y+1 );
-                    safe_unlock(x, y, x, y+1);
-                    break;
-                }
-                pthread_mutex_unlock( &mutexes[x][y+1]);
-                pthread_yield();
             }
-            pthread_mutex_unlock( &mutexes[x][y] );
-
+            else
+            {
+                unlock_all(lock_x, lock_y, real_c - counter);
+                counter = real_c;
+                pthread_yield(); 
+            }           
+       
         }
         if( pos == 2 || pos == 3 || pos == 5 || pos == 6 ) // DOWN-LEFT
         {
-            pthread_mutex_lock( &mutexes[x][y] );
             if( pthread_mutex_trylock( &mutexes[x+1][y-1]) == 0 )
             {
+                lock_x[ real_c - counter ] = x+1;
+                lock_y[ real_c - counter ] = y-1;
                 counter--;
-                if( lookCharAt( x+1, y-1 ) == destination ) // looks at Down-Left
-                {
-                    antMoves( Ant, x+1, y-1 );
-                    safe_unlock(x, y, x+1, y-1);
-                    break;            
-                }                
-                pthread_mutex_unlock( &mutexes[x+1][y-1]);
-                pthread_yield();
             }
-            pthread_mutex_unlock( &mutexes[x][y] );
+            else
+            {
+                unlock_all(lock_x, lock_y, real_c - counter);
+                counter = real_c;
+                pthread_yield(); 
+            }           
         }
         if( pos < 7 ) // DOWN
         {
-            pthread_mutex_lock( &mutexes[x][y] );
             if( pthread_mutex_trylock( &mutexes[x+1][y]) == 0 )
             {
+                lock_x[ real_c - counter ] = x+1;
+                lock_y[ real_c - counter ] = y;
                 counter--;
-                if( lookCharAt( x+1, y ) == destination ) // looks at Down
-                {
-                    antMoves( Ant, x+1, y );
-                    safe_unlock(x, y, x+1, y);
-                    break;            
-                }                
-                pthread_mutex_unlock( &mutexes[x+1][y]);
-                pthread_yield();
             }
-            pthread_mutex_unlock( &mutexes[x][y] );
+            else
+            {
+                unlock_all(lock_x, lock_y, real_c - counter);
+                counter = real_c;
+                pthread_yield(); 
+            }           
         }
         if( pos < 6 && (pos != 3) ) // DOWN-RIGHT
         {
-            pthread_mutex_lock( &mutexes[x][y] );
             if( pthread_mutex_trylock( &mutexes[x+1][y+1]) == 0 )
             {
+                lock_x[ real_c - counter ] = x+1;
+                lock_y[ real_c - counter ] = y+1;
                 counter--;
-                if( lookCharAt( x+1, y+1 ) == destination ) // looks at Down-Right
-                {
-                    antMoves( Ant, x+1, y+1 );
-                    safe_unlock(x, y, x+1, y+1);
-                    break;            
-                }                
-                pthread_mutex_unlock( &mutexes[x+1][y+1]);
-                pthread_yield();
             }
-            pthread_mutex_unlock( &mutexes[x][y] );
+            else
+            {
+                unlock_all(lock_x, lock_y, real_c - counter);
+                counter = real_c;
+                pthread_yield(); 
+            }           
         }
-    } 
+    }
+    // GOT ALL THE LOCK
+    counter = real_c;
+    struct Komsu komsu;
+    komsu.n_foods = 0;
+    komsu.n_dash= 0;
+    
+    for(i=0; i < real_c; i++)
+    {
+        if( lookCharAt( lock_x[i], lock_y[i]) == 'o')
+        {
+            komsu.foods[n_foods].x = lock_x[i];
+            komsu.foods[n_foods].y = lock_y[i];
+            komsu.n_foods++    
+            
+        }
+        if( lookCharAt( lock_x[i], lock_y[i]) == '-')
+        {
+            komsu.dashes[n_dash].x = lock_x[i];
+            komsu.dashes[n_dash].y = lock_y[i];
+            komsu.n_dash++;    
+        }
+    }
+    if( komsu.n_foods > 0 )
+    {
+        int f = rand() % n_foods;
+        antMoves( Ant, komsu.foods[f].x, komsu.foods[f].y, 'P' );
+    }
+    else if( komsu.n_dash > 0)
+    {
+        int f = rand() % n_dash;
+        antMoves( Ant, komsu.dashes[f].x, komsu.dashes[f].y, '1' );
+    }
+    free(lock_x);
+    free(lock_y);
+
 }
 void *Atom(void* y)
 {
@@ -272,11 +340,11 @@ void *Atom(void* y)
             // woke up
 
         }
-            if( Ant->state == '1' || Ant->state == 'T' ) // WITHOUT FOOD 
-                safe_putCharTo( Ant->x, Ant->y, '1' );
-            else
-                safe_putCharTo( Ant->x, Ant->y, 'P' );                
         pthread_mutex_unlock( &wakeup_mut );
+        if( Ant->state == '1' || Ant->state == 'T' ) // WITHOUT FOOD 
+            safe_putCharTo( Ant->x, Ant->y, '1' );
+        else
+            safe_putCharTo( Ant->x, Ant->y, 'P' );                
         
         pthread_mutex_lock( &end_mut );
         if( end_flag == 1)
