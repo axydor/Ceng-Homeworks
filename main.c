@@ -10,19 +10,20 @@ static pthread_mutex_t grid_mut  = PTHREAD_MUTEX_INITIALIZER; // Mutex for WakeU
 static pthread_mutex_t end_mut  = PTHREAD_MUTEX_INITIALIZER; // Mutex for WakeUp Condition variable
 //static pthread_mutex_t start_mut   = PTHREAD_MUTEX_INITIALIZER; // Mutex for Start Condition variable
 //static pthread_cond_t  start_cond  = PTHREAD_COND_INITIALIZER;  // Condition Variable for Starting Each Thread at the same time.
-int end_flag = 0;
+int end_flag = 0; // Flag to check whether the simulation is ended
 
 struct coordinate{
     int x;
     int y;
-    }
+    };
 
+// Komsu Holds the information about Ant's neighbourhood 
 struct Komsu {
     int n_foods;
-    int n_dash;
+    int n_dashes;
     struct coordinate foods[8];
     struct coordinate dashes[8];
-    }
+    };
 
 struct Ant {
     int id; // Id of the Ant
@@ -33,18 +34,13 @@ struct Ant {
 
 void safe_putCharTo(int x, int y, char c)
 {
-    pthread_mutex_lock( &mutexes[x][y] );
-    putCharTo( x, y, c);
-    pthread_mutex_unlock( &mutexes[x][y] );
+    pthread_mutex_lock( &mutexes[x][y] );    
+    putCharTo(x, y, c);
+    pthread_mutex_unlock( &mutexes[x][y] );    
+    
 }
 
-
-void safe_unlock(int x, int y, int a, int b)
-{
-    pthread_mutex_unlock( &mutexes[x][y] );
-    pthread_mutex_unlock( &mutexes[a][b] );
-}
-
+// Unlock the previous locks
 void unlock_all(int* lock_x, int* lock_y, int counter)
 {
     for(int i=0; i < counter; i++) 
@@ -52,10 +48,8 @@ void unlock_all(int* lock_x, int* lock_y, int counter)
         pthread_mutex_unlock( &mutexes[ lock_x[i] ][ lock_y[i] ] );    
     }
 }
-
 // STATES 
 // 'P': WITH FOOD, '1': WITHOUT FOOD, 'T': TIRED, 'S': SLEEPING, '$': SLEEPING WITH FOOD
-
 void antMoves(void* Y, int a, int b, char dest)
 {
     struct Ant* Ant = (struct Ant*) Y;
@@ -80,12 +74,11 @@ void antMoves(void* Y, int a, int b, char dest)
     Ant->x = a;
     Ant->y = b;
 
-}
-//   POS
+}//   POS
 // |1 2 3|
 // |4 5 6|
 // |7 8 9|
-// 
+/////////// 
 void search( void* Y )
 {
     struct Ant* Ant = (struct Ant*) Y;
@@ -93,12 +86,7 @@ void search( void* Y )
     int y = Ant->y;
     char destination;
     int pos;
-
-    if( Ant-> state == '1' )
-        destination = 'o'; // SEARCH FOR FOOD
-    if( Ant->state == 'P' || Ant->state == 'T')
-        destination = '-'; // SEARCH FOR EMPTY CELL
-
+ 
     if( (x == 0) && (y == 0) ) // Ant is at the Top-Left Corner POS: 1
         pos = 1;
     else if( (x == 0) && ( (0 < y) && (y < GRIDSIZE-1) ) ) // Ant is at the Top border POS: 2
@@ -122,18 +110,19 @@ void search( void* Y )
 
     int counter, real_c;
     if(pos == 1 || pos == 3 || pos == 7 || pos == 9)
-        counter = 3;
+        counter = 4;
     else if(pos == 2 || pos == 4 || pos == 6 || pos == 8)
-        counter = 5;
+        counter = 6;
     else // pos == 5
-        counter = 8;    
+        counter = 9;    
 
     real_c = counter;
 
-    int* lock_x = malloc(sizeof(int)* (counter + 1));
-    int* lock_y = malloc(sizeof(int)* (counter + 1));
+    // Array to hold locations of the acquired locks
+    int* lock_x = malloc(sizeof(int)* (counter));
+    int* lock_y = malloc(sizeof(int)* (counter));
 
-    while(counter)
+    while( counter )
     {
         if( pos == 5 || pos == 6 || pos == 8 || pos == 9 ) // UPLEFT
         {
@@ -148,6 +137,7 @@ void search( void* Y )
                 unlock_all(lock_x, lock_y, real_c - counter);
                 counter = real_c;
                 pthread_yield(); 
+                continue;
             }
         }    
         if( 3 < pos ) // LOOK UP
@@ -163,6 +153,7 @@ void search( void* Y )
                 unlock_all(lock_x, lock_y, real_c - counter);
                 counter = real_c;
                 pthread_yield(); 
+                continue;
             }           
         }
         if( 3 < pos && (pos != 6 ) && (pos != 9) ) // UP-RIGHT
@@ -178,8 +169,8 @@ void search( void* Y )
                 unlock_all(lock_x, lock_y, real_c - counter);
                 counter = real_c;
                 pthread_yield(); 
+                continue;
             }           
-            
         }
         if( (pos-1) % 3 != 0 ) // LEFT  // WHEN POS IS NOT 1,4,7
         {
@@ -194,10 +185,10 @@ void search( void* Y )
                 unlock_all(lock_x, lock_y, real_c - counter);
                 counter = real_c;
                 pthread_yield(); 
+                continue;
             }           
-   
         }        
-        if( pos == 5 ) // LOCK MIDDLE
+        if( pos ) // LOCK MIDDLE
         {
             if( pthread_mutex_trylock( &mutexes[x][y]) == 0 )
             {
@@ -210,9 +201,8 @@ void search( void* Y )
                 unlock_all(lock_x, lock_y, real_c - counter);
                 counter = real_c;
                 pthread_yield(); 
+                continue;
             }           
-            
-            
         }
         if( pos % 3 != 0) // RIGHT // If pos != 3,6,9
         {
@@ -227,8 +217,8 @@ void search( void* Y )
                 unlock_all(lock_x, lock_y, real_c - counter);
                 counter = real_c;
                 pthread_yield(); 
+                continue;
             }           
-       
         }
         if( pos == 2 || pos == 3 || pos == 5 || pos == 6 ) // DOWN-LEFT
         {
@@ -243,6 +233,7 @@ void search( void* Y )
                 unlock_all(lock_x, lock_y, real_c - counter);
                 counter = real_c;
                 pthread_yield(); 
+                continue;
             }           
         }
         if( pos < 7 ) // DOWN
@@ -258,6 +249,7 @@ void search( void* Y )
                 unlock_all(lock_x, lock_y, real_c - counter);
                 counter = real_c;
                 pthread_yield(); 
+                continue;
             }           
         }
         if( pos < 6 && (pos != 3) ) // DOWN-RIGHT
@@ -273,45 +265,47 @@ void search( void* Y )
                 unlock_all(lock_x, lock_y, real_c - counter);
                 counter = real_c;
                 pthread_yield(); 
-            }           
+                continue;
+            }
         }
     }
     // GOT ALL THE LOCK
     counter = real_c;
     struct Komsu komsu;
     komsu.n_foods = 0;
-    komsu.n_dash= 0;
+    komsu.n_dashes= 0;
     
-    for(i=0; i < real_c; i++)
+    for(int i=0; i < real_c; i++)
     {
         if( lookCharAt( lock_x[i], lock_y[i]) == 'o')
         {
-            komsu.foods[n_foods].x = lock_x[i];
-            komsu.foods[n_foods].y = lock_y[i];
-            komsu.n_foods++    
+            komsu.foods[komsu.n_foods].x = lock_x[i];
+            komsu.foods[komsu.n_foods].y = lock_y[i];
+            komsu.n_foods++;
             
         }
         if( lookCharAt( lock_x[i], lock_y[i]) == '-')
         {
-            komsu.dashes[n_dash].x = lock_x[i];
-            komsu.dashes[n_dash].y = lock_y[i];
-            komsu.n_dash++;    
+            komsu.dashes[komsu.n_dashes].x = lock_x[i];
+            komsu.dashes[komsu.n_dashes].y = lock_y[i];
+            komsu.n_dashes++;    
         }
     }
-    if( komsu.n_foods > 0 )
+    if( komsu.n_foods > 0 && Ant->state == '1' )
     {
-        int f = rand() % n_foods;
+        int f = rand() % komsu.n_foods;
         antMoves( Ant, komsu.foods[f].x, komsu.foods[f].y, 'P' );
     }
-    else if( komsu.n_dash > 0)
+    else if( komsu.n_dashes > 0) // Ant->state can be anything
     {
-        int f = rand() % n_dash;
+        int f = rand() % komsu.n_dashes;
         antMoves( Ant, komsu.dashes[f].x, komsu.dashes[f].y, '1' );
     }
+    unlock_all(lock_x, lock_y, counter);
     free(lock_x);
     free(lock_y);
-
 }
+
 void *Atom(void* y)
 {
     struct Ant* Ant = (struct Ant*) y;
@@ -320,11 +314,9 @@ void *Atom(void* y)
     while(1)
     {
         search(Ant);
-        
         pthread_mutex_lock( &delay_mut );
         delay = getDelay();
         pthread_mutex_unlock( &delay_mut );
-        
         usleep( delay * 1000 + (rand() % 5000));
         
         pthread_mutex_lock( &wakeup_mut );
@@ -341,11 +333,7 @@ void *Atom(void* y)
 
         }
         pthread_mutex_unlock( &wakeup_mut );
-        if( Ant->state == '1' || Ant->state == 'T' ) // WITHOUT FOOD 
-            safe_putCharTo( Ant->x, Ant->y, '1' );
-        else
-            safe_putCharTo( Ant->x, Ant->y, 'P' );                
-        
+
         pthread_mutex_lock( &end_mut );
         if( end_flag == 1)
         {
@@ -354,6 +342,11 @@ void *Atom(void* y)
         }
         pthread_mutex_unlock( &end_mut );
 
+        if( Ant->state == '1' || Ant->state == 'T' ) // WITHOUT FOOD 
+            safe_putCharTo( Ant->x, Ant->y, '1' );
+        else
+            safe_putCharTo( Ant->x, Ant->y, 'P' );                
+        
     }
     return NULL;
 }
@@ -385,7 +378,6 @@ int main(int argc, char *argv[]) {
     }
     char c;
     startCurses();
-
     for(i=0; i < n_ants; i++)
     {
         do {
@@ -399,19 +391,15 @@ int main(int argc, char *argv[]) {
         Ants[i].state = '1';
         pthread_create( &threads[i], NULL, Atom, (void *) &Ants[i] );
     }
-
     pthread_mutex_lock( &wakeup_mut );
     int sleepers = getSleeperN();
     pthread_mutex_unlock( &wakeup_mut );
-
 
     struct timespec start, stop, initial;
     clock_gettime(CLOCK_MONOTONIC, &start);
     clock_gettime(CLOCK_MONOTONIC, &initial);
     
     while (TRUE) {
-
-        // TIME TO KILL ANTS
         clock_gettime(CLOCK_MONOTONIC, &stop);
         if( (stop.tv_sec - initial.tv_sec ) == n_time ) 
         {
@@ -420,9 +408,6 @@ int main(int argc, char *argv[]) {
             pthread_mutex_unlock( &end_mut );
             break;
         }
-        // IT'S TIME TO CALL DRAW
-        //printf("%lf\n", (stop.tv_nsec - start.tv_nsec) / 1.0e3 );
-        //usleep(100000);
         if( (stop.tv_sec - start.tv_sec) * 1e6 + (stop.tv_nsec - start.tv_nsec) / 1.0e3  >= (DRAWDELAY) )
         {
             for(i=0; i < GRIDSIZE; i++)
@@ -464,10 +449,14 @@ int main(int argc, char *argv[]) {
             break;
         } 
         if (c == '+') {
+            pthread_mutex_lock( &delay_mut );
             setDelay(getDelay()+10);
+            pthread_mutex_unlock( &delay_mut );
         }
         if (c == '-') {
+            pthread_mutex_lock( &delay_mut );
             setDelay(getDelay()-10);
+            pthread_mutex_unlock( &delay_mut );
         }
         if (c == '*') {
             pthread_mutex_lock( &wakeup_mut );
@@ -479,10 +468,12 @@ int main(int argc, char *argv[]) {
             setSleeperN(getSleeperN()-1);
             pthread_mutex_unlock( &wakeup_mut );
         }
-        // each ant thread have to sleep with code similar to this
-        //usleep(getDelay() * 1000 + (rand() % 5000));
-    }
-
+    } // MAIN HAS FINISHED
+    // SIGNAL TO SLEEPING ANTS
+    pthread_mutex_lock( &wakeup_mut );
+    pthread_cond_broadcast( &wakeup_cond );
+    pthread_mutex_unlock( &wakeup_mut );
+    // SMASH THE ANTS
     for(i=0; i < n_ants; i++)
     {
         (void) pthread_join( threads[i],NULL );
