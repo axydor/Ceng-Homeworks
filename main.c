@@ -443,11 +443,15 @@ int main(int argc, char *argv[]) {
     
     while (TRUE) {
         clock_gettime(CLOCK_MONOTONIC, &stop);
-        if( (stop.tv_sec - initial.tv_sec ) == n_time ) 
+        if( (stop.tv_sec - initial.tv_sec ) >= n_time ) 
         {
             pthread_mutex_lock( &end_mut );
             end_flag = 1;
             pthread_mutex_unlock( &end_mut );
+            // Setting sleeper number to 0 so that those sleepy ones will release and exit
+            pthread_mutex_lock( &wakeup_mut );
+            setSleeperN(0);
+            pthread_mutex_unlock( &wakeup_mut );
             break;
         }
         if( (stop.tv_sec - start.tv_sec) * 1e6 + (stop.tv_nsec - start.tv_nsec) / 1.0e3 >= (DRAWDELAY) )
