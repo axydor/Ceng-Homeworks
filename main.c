@@ -9,10 +9,9 @@ static pthread_mutex_t delay_mut  = PTHREAD_MUTEX_INITIALIZER; // Mutex for Wake
 static pthread_mutex_t end_mut  = PTHREAD_MUTEX_INITIALIZER; // Mutex for WakeUp Condition variable
 int end_flag = 0; // Flag to check whether the simulation is ended
 
-
 static pthread_mutex_t reader_mut  = PTHREAD_MUTEX_INITIALIZER; // Mutex for n_readers race cond
 static pthread_mutex_t grid_empty  = PTHREAD_MUTEX_INITIALIZER; // Mutex for writers to enter
-static pthread_mutex_t turnstile  = PTHREAD_MUTEX_INITIALIZER; // Mutex for 
+static pthread_mutex_t turnstile  = PTHREAD_MUTEX_INITIALIZER;  // Mutex only allow one ant to pass 
 int n_readers = 0;
 
 struct coordinate{
@@ -81,7 +80,6 @@ void antMoves(void* Y, int a, int b, char dest)
     }
     Ant->x = a;
     Ant->y = b;
-
 }//   POS
 // |1 2 3|
 // |4 5 6|
@@ -279,6 +277,7 @@ void search( void* Y )
     struct Komsu komsu;
     komsu.n_foods = 0;
     komsu.n_dashes= 0;
+    // Gather information about neighbourhood
     for(int i=0; i < real_c; i++)
     {
         if( lookCharAt( lock_x[i], lock_y[i]) == 'o')
@@ -294,9 +293,10 @@ void search( void* Y )
             komsu.n_dashes++;    
         }
     }
+    int f;
     if( komsu.n_foods > 0 && Ant->state != 'T' )
     {
-        int f = rand() % komsu.n_foods;
+        f = rand() % komsu.n_foods;
         if( Ant->state == '1')
             antMoves( Ant, komsu.foods[f].x, komsu.foods[f].y, 'P' );
         else // Ant->state = 'P'
@@ -310,7 +310,7 @@ void search( void* Y )
     }
     else if( komsu.n_dashes > 0) // Ant->state can be anything
     {
-        int f = rand() % komsu.n_dashes;
+        f = rand() % komsu.n_dashes;
         if( Ant->state == 'P' )
             antMoves( Ant, komsu.dashes[f].x, komsu.dashes[f].y, 'P' );
         else
@@ -450,13 +450,13 @@ int main(int argc, char *argv[]) {
             pthread_mutex_unlock( &end_mut );
             break;
         }
-        if( (stop.tv_sec - start.tv_sec) * 1e6 + (stop.tv_nsec - start.tv_nsec) / 1.0e3  >= (DRAWDELAY) )
+        if( (stop.tv_sec - start.tv_sec) * 1e6 + (stop.tv_nsec - start.tv_nsec) / 1.0e3 >= (DRAWDELAY) )
         {
             pthread_mutex_lock( &turnstile );
             pthread_mutex_lock( &grid_empty );
 
-            drawWindow();
             clock_gettime(CLOCK_MONOTONIC, &start);
+            drawWindow();
             
             pthread_mutex_unlock( &turnstile );
             pthread_mutex_unlock( &grid_empty );
