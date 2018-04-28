@@ -49,7 +49,7 @@ void InitLCD(void)
     TRISF = 0;
     TRISG = 0;
 
-    TRISH = 0;
+    TRISH = 0b00010000; // MAKE RH4 AS INPUT
     TRISJ = 0;
     PORTA = 0;
     PORTC = 0;
