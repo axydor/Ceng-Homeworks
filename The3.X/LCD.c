@@ -45,13 +45,12 @@ void InitLCD(void)
 
     TRISA = 0;
     TRISC = 0;
-    TRISE = 0;
+    TRISE = 2; // Make RE1 as an input
     TRISF = 0;
     TRISG = 0;
 
     TRISH = 0;
     TRISJ = 0;
-
     PORTA = 0;
     PORTC = 0;
     PORTE = 0;
@@ -76,6 +75,7 @@ void InitLCD(void)
     TRISD7 = 0;   // Make Output
     LATB5  = 0;   // E  = 0
     LATB2  = 0;   // RS = 0
+
 
         ///////////////// Reset process from datasheet //////////////
   __delay_ms(15);
