@@ -12,6 +12,7 @@ int re1_pressed = 0, set_flag = 0;
 int a = 0; // dummy, but very dummy variable
 char no; // Each number of the password
 int temp; // dummy
+int x = 0;
 
 void updateLCD();
 void wait_RE1(); // Wait for RE1 button press and release
@@ -32,7 +33,11 @@ int result = 0; // The result of the A/D conversion
 int result1 = 0; // The result of the A/D conversion
 int result2 = 0;
 int blink_index = 0;
-int n_of_pins_setted = 0; // Counter up to 4
+int pins_setted = 0; // 
+int show_flag = 1;
+int show_c = 0;
+int show_three = 0;
+
 char pass[5] = "####"; // 
 char blink[5] = "1111"; // Whether we will blink the related blink_index or not
 char tempo[5];
@@ -42,6 +47,8 @@ void interrupt isr(void) {
         INTCONbits.TMR0IF = 0;
         counter++;
         blink_c++;
+        if(pins_setted == 1)
+            show_c++;
         if (counter == 20) { // 100 ms has passed
             counter = 0;
             ADCON0bits.GO = 1; // We start the A/D conversions
@@ -51,11 +58,18 @@ void interrupt isr(void) {
             blink_c = 0;
             blink_flag = blink_flag ^ 1;
         }
+        if (show_three < 6 && pins_setted == 1) {
+            if (show_c == 100) {
+                show_c = 0;
+                show_flag = show_flag ^ 1;
+                show_three++;
+            }
+        }
         TMR0L = 61;
     }
     if (PIR1bits.ADIF == 1) {
         PIR1bits.ADIF = 0;
-        
+
         result1 = ADRES;
         if (b == 0) {
             b = 1;
@@ -95,14 +109,14 @@ void interrupt isr(void) {
     if (INTCONbits.RBIF == 1) {
         // RB6 FOR CHANGING CURRENTLY ACTIVE DIGIT
         if (PORTBbits.RB6 == 0) { // IF RB6 IS RELEASED GET UNDER THIS
-                if (blink_index < 3) {
-                    blink_index = blink_index + 1;
-                } else {
-                    blink_index = 0;
-                }
+            if (blink_index < 3) {
+                blink_index = blink_index + 1;
+            } else {
+                blink_index = 0;
+            }
         } else { // RB7 FOR SETTING THE PIN
             if (PORTBbits.RB7 == 0) {
-                n_of_pins_setted++;
+                pins_setted++;
                 //write_message("RB7");
                 //delay_3();
                 //blink[blink_index] = '0'; // So it will not blink, It is set
@@ -114,13 +128,14 @@ void interrupt isr(void) {
         INTCONbits.RBIF = 0;
     }
 }
-void write_message(char* str)
-{
-        WriteCommandToLCD(0xC0); // Goto to the beginning of the second line
-        WriteStringToLCD("Entered ISR");
-                delay_3();
+
+void write_message(char* str) {
+    WriteCommandToLCD(0xC0); // Goto to the beginning of the second line
+    WriteStringToLCD("Entered ISR");
+    delay_3();
 
 }
+
 void main(void) {
     InitLCD(); // Initialize LCD in 4bit mode
     ClearLCDScreen(); // Clear LCD screen
@@ -131,32 +146,50 @@ void main(void) {
     WriteStringToLCD(" I DON'T THINK SO  ");
      */
     set_flag = 1;
+    set_pin();
     while (1) {
         //wait_RE1();
-        set_pin();
         show_passwd();
         updateLCD();
         //a = 1;
     }
 }
-void show_passwd()
-{
-    if(n_of_pins_setted == 4)
-    {
+
+void show_passwd() {
+    if(show_three >= 6){
         ClearLCDScreen();
-        WriteCommandToLCD(0x80);
-        WriteStringToLCD(pass);
-        delay_3();
+            WriteCommandToLCD(0x80);
+            WriteStringToLCD(" YIYIN EFENDILER ");
     }
-    if(n_of_pins_setted > 4)
-    {
+    if (pins_setted == 1) {
+        if (show_flag == 1) {
+            if(x == 0)
+            {
+            WriteCommandToLCD(0x80);
+            WriteStringToLCD(" The new pin is ");
+            WriteCommandToLCD(0xC3);
+            WriteStringToLCD("---");
+            WriteStringToLCD(pass);
+            WriteStringToLCD("---");
+            x = 1;
+            }
+            } else {
+            if( x == 1)
+            {
+                ClearLCDScreen();
+                x = 0;
+            }
+        }
+    }
+    if (pins_setted > 1) {
         ClearLCDScreen();
         WriteCommandToLCD(0x80);
         WriteStringToLCD("DANTEL");
         delay_3();
- 
+
     }
 }
+
 void set_pin() {
     if (set_flag == 1) {
         if (a == 0) {
@@ -232,7 +265,7 @@ void updateLCD() {
         delay_3();
         return;
     }
-    if (set_flag == 1 && (n_of_pins_setted < 4)) {
+    if (set_flag == 1 && (pins_setted < 1)) {
         INTCONbits.GIE = 0;
         switch (blink_index) {
             case 0:
