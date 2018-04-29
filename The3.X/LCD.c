@@ -49,7 +49,7 @@ void InitLCD(void)
     TRISF = 0;
     TRISG = 0;
 
-    TRISH = 0b00010000; // MAKE RH4 AS INPUT
+    
     TRISJ = 0;
     PORTA = 0;
     PORTC = 0;
@@ -78,8 +78,8 @@ void InitLCD(void)
 
 
         ///////////////// Reset process from datasheet //////////////
-  __delay_ms(15);
-__delay_ms(15);
+   __delay_ms(15);
+   __delay_ms(15);
 
 	PORTD &= 0x0F;			  // Make Data pins zero
 	PORTD |= 0x30;			  // Write 0x3 value on data bus

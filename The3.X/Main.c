@@ -11,6 +11,7 @@ int waited_3_sec = 0;
 int re1_pressed = 0, set_flag = 0;
 int a = 0; // dummy, but very dummy variable
 char no; // Each number of the password
+int temp;
 
 void updateLCD();
 void wait_RE1(); // Wait for RE1 button press and release
@@ -19,7 +20,7 @@ void delay_ms(int k); // It delays k milliseconds when it is called
 void set_pin();      // Starts the Initialization of Interrupts
 void wink(int i);      // Blink the i'th cell of the password
 void init_interrupts();
-void up_write(char* str); // Writes the given* String to the Upper Side of LCD. (*): ' Set a pin:####'
+void up_write(int i,char c); // Writes the given* String to the Upper Side of LCD. (*): ' Set a pin:####'
 
 int counter = 0; // Counter for counting 100 ms in the TIMER0
 int blink_c = 0; // Counter for setting blink_flag
@@ -31,6 +32,7 @@ int blink_index = 0;
 int n_of_pins_setted = 0; // Counter up to 4
 char pass[5] = "####"; // 
 char blink[5] = "1111"; // Whether we will blink the related blink_index or not
+char tempo[5];
 
 void interrupt isr(void) {
     if (INTCONbits.TMR0IF == 1) {
@@ -44,16 +46,15 @@ void interrupt isr(void) {
         if (blink_c == 50) // 250 ms has passed
         {
             blink_c = 0;
-            blink_flag = 1;
+            blink_flag = blink_flag ^ 1;
         }
         TMR0L = 61;
     }
     if (PIR1bits.ADIF == 1) {
         PIR1bits.ADIF = 0;
         result1 = ADRES;
-        if (result1 != result2) {
-            blink[blink_index] = '0'; // We will not blink that number
 
+        if ( ( (result1 + 5) <= result2 || (result2 + 5) <= result1) ) {
             result = result1;
             if ((0 <= result) && (result <= 99))
                 no = '0';
@@ -76,41 +77,43 @@ void interrupt isr(void) {
             else
                 no = '9';
 
-            pass[blink_index] = no;
-            blink[blink_index]= '0';
+            if( blink_index != -1) {
+                pass[blink_index] = no;
+                blink[blink_index]= '0';
+            }
         }
         result2 = result1;
     }
     // CHECK RB6 - RB7 pushes
     if (INTCONbits.RBIF == 1) {
-        // CLEAR THE FLAG
-        INTCONbits.RBIF = 0;
+
         // RB6 FOR CHANGING CURRENTLY ACTIVE DIGIT
-        if (PORTBbits.RB6 == 1) {
+        if (PORTBbits.RB6 == 0) {
              // BE SURE THAT IT WAS PRESSED 
-            delay_ms(20);
-            if (PORTBbits.RB6 == 1) {
-                if (blink_index < 4) {
-                    blink_index++;
-                } else {
+            if (PORTBbits.RB6 == 0) {
+                if (blink_index < 3) {
+                    blink_index = blink_index + 1;
+                } else {    
                     blink_index = 0;
                 }
             }
         } else { // RB7 FOR SETTING THE PIN
-            delay_ms(20);
-            if (PORTBbits.RB7 == 1) {
+            if (PORTBbits.RB7 == 0) {
                 // WHAT WILL HAPPEN IF USER PRESSED RB7 WITHOUT CHANGING POT
                 n_of_pins_setted++;
                 blink[blink_index] = '0'; // So it will not blink, It is set
             }
         }
+            temp = PORTB;
+            temp = 0;
+            PORTB = temp;
+            INTCONbits.RBIF = 0;
     }
 }
 
 void main(void) {
     InitLCD(); // Initialize LCD in 4bit mode
     ClearLCDScreen(); // Clear LCD screen
-    init_interrupts();
     /*
     WriteCommandToLCD(0x80);   // Goto to the beginning of the first line
     WriteStringToLCD(" $>Very Safe<$ ");	
@@ -119,7 +122,8 @@ void main(void) {
     */
     set_flag = 1;
     while (1) {
-        //set_pin();
+        //wait_RE1();
+        set_pin();
         //show_pass();
         updateLCD();
         //a = 1;
@@ -130,6 +134,10 @@ void set_pin() {
     if (set_flag == 1){
         if(a == 0) {
             init_interrupts();
+            ClearLCDScreen();
+            WriteCommandToLCD(0x80);
+            WriteStringToLCD(" Set a pin:");
+            WriteStringToLCD(pass);
             a = 1;            
         }
     }
@@ -165,27 +173,36 @@ void wait_RE1() {
     }
 }
 // Writes the String to the upper side of LCD
-void up_write(char* str) {
-    WriteCommandToLCD(0x80); // Goto to the beginning of the first line
-    WriteStringToLCD(" Set a pin:");
-    WriteStringToLCD(str);
-    WriteDataToLCD(' ');
+void up_write(int i, char c) {
+    temp = 8*16 + 11 + i;
+    WriteCommandToLCD(temp);
+    WriteDataToLCD(c);
 }
 
 // Blink The i'th cell
 void wink(int i) {
-    char temp[5];
+    INTCONbits.GIE = 0;
+    temp = 8*16 + 11 + i;
     if (blink[i] == '1') {
         if (blink_flag == 1) {
-            blink_flag = 0;
-            for (a = 0; a < 4; a++)
-                temp[a] = pass[a];
-            temp[i] = ' ';
-            up_write(temp);
+            WriteCommandToLCD(temp);
+            WriteDataToLCD(' ');
+            INTCONbits.GIE = 1;
+
             return;
         }
-    }    
-    up_write(pass);
+        WriteCommandToLCD(temp);
+        WriteDataToLCD(pass[i]);
+            INTCONbits.GIE = 1;
+
+        return;
+    }
+    else{
+        WriteCommandToLCD(temp);
+        WriteDataToLCD(pass[i]);
+    }
+        INTCONbits.GIE = 1;
+
 }
 
 void updateLCD() {
@@ -209,25 +226,43 @@ void updateLCD() {
             case 3:
                 wink(3);
                 break;
+            default:
+                ClearLCDScreen();
+                WriteCommandToLCD(0x80);
+                WriteStringToLCD("asdasdasdasd");
+                delay_3();
         }
-    } else {
-        WriteCommandToLCD(0xC0); // Goto to the beginning of the second line
-        WriteStringToLCD(" $$$$$$$$$$ ");
-    }
-    delay_ms(2);
+    }     
+    //delay_ms(2);
 }
 
 void init_interrupts() {
     ADCON1 = 0b00000000; // channel = 12 
-    ADCON0 = 0b00110001; // Go = 0, ADON is enabled, channel = 12
-    ADCON2 = 0b10001010; // Acquisition time = 2 Tad, Right Justified, A/D Clock conversion Fosc/32
-    PIR1bits.ADIF = 0;
-    PIE1bits.ADIE = 1;
-    INTCONbits.TMR0IF = 0;
-    T0CON = 0b11010111;
-    TMR0L = 61;
 
+    ADCON0 = 0b00110001; // Go = 0, ADON is enabled, channel = 12
+    ADCON2 = 0b10000010; // Acquisition time = 0 Tad, Right Justified, A/D Clock conversion Fosc/32
+    T0CON = 0b11010111; 
+    TMR0L = 61;         // Initial value is given to TIMER0 so we will be able to generate Interrupt at every 100ms
+    TRISHbits.RH4 = 1;
+    
+    TRISBbits.RB6 = 0;
+    TRISBbits.RB7 = 0;
+    
+    INTCON2bits.RBPU = 0;  // ENABLE PORTB pull-ups
+    TRISBbits.RB6 = 1;
+
+    temp = PORTB;
+    temp = 0;
+    PORTB = temp;
+    PORTB = 0;
+
+    INTCONbits.TMR0IF = 0; // CLEAR TIMER0 FLAG
+    PIR1bits.ADIF = 0;   // ENSURE YOUR WORK
+    INTCONbits.RBIF = 0;
     INTCONbits.RBIE = 1; // ENABLE PORTB INTERRUPTS
+    INTCONbits.PEIE = 1;   // PERIPHEREAL INTERRUPTS ENABLE
     INTCONbits.TMR0IE = 1; // ENABLE TIMER0 INTERRUPTS
-    INTCONbits.GIE = 1; // ENABLE GLOBAL INTERRUPTS
+    PIE1bits.ADIE = 1;   // A/D Converter Interrupt Enable
+    INTCONbits.GIE = 1;    // ENABLE GLOBAL INTERRUPTS
+    return;
 }
