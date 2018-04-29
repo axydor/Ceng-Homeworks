@@ -15,10 +15,11 @@ char no; // Each number of the password
 void updateLCD();
 void wait_RE1(); // Wait for RE1 button press and release
 void delay_3(); // It delays 3 seconds
-void delay_ms(int k); // It delays n miliseconds when it is called
-void set_pin();
+void delay_ms(int k); // It delays k milliseconds when it is called
+void set_pin();      // Starts the Initialization of Interrupts
 void wink(int i);      // Blink the i'th cell of the password
 void init_interrupts();
+void up_write(char* str); // Writes the given* String to the Upper Side of LCD. (*): ' Set a pin:####'
 
 int counter = 0; // Counter for counting 100 ms in the TIMER0
 int blink_c = 0; // Counter for setting blink_flag
@@ -163,9 +164,8 @@ void wait_RE1() {
         }
     }
 }
-// Clear the LCD and write the String
-void clear_and_write(char* str) {
-    //ClearLCDScreen(); // Clear LCD screen
+// Writes the String to the upper side of LCD
+void up_write(char* str) {
     WriteCommandToLCD(0x80); // Goto to the beginning of the first line
     WriteStringToLCD(" Set a pin:");
     WriteStringToLCD(str);
@@ -181,11 +181,11 @@ void wink(int i) {
             for (a = 0; a < 4; a++)
                 temp[a] = pass[a];
             temp[i] = ' ';
-            clear_and_write(temp);
+            up_write(temp);
             return;
         }
     }    
-    clear_and_write(pass);
+    up_write(pass);
 }
 
 void updateLCD() {
