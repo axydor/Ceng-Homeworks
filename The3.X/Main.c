@@ -19,12 +19,15 @@ void wait_RE1(); // Wait for RE1 button press and release
 void delay_3(); // It delays 3 seconds
 void delay_ms(int k); // It delays k milliseconds when it is called
 void set_pin(); // Starts the Initialization of Interrupts
-void wink(int i); // Blink the i'th cell of the password
+void wink(char* str, int i); // Blink the i'th cell of the password
 void init_interrupts();
 void up_write(int i, char c); // Writes the given* String to the Upper Side of LCD. (*): ' Set a pin:####'
 void show_passwd();
-void write_message(char* str);
+void write_message(char* str, int up);
+void entel_blink(int blink_index, char* str);
+void enter_pin();
 
+int attempts = 2; // No of attempts
 int b = 0;
 int counter = 0; // Counter for counting 100 ms in the TIMER0
 int blink_c = 0; // Counter for setting blink_flag
@@ -39,15 +42,15 @@ int show_c = 0;
 int show_three = 0;
 
 char pass[5] = "####"; // 
+char attempt[5] = "####";
 char blink[5] = "1111"; // Whether we will blink the related blink_index or not
-char tempo[5];
 
 void interrupt isr(void) {
     if (INTCONbits.TMR0IF == 1) {
         INTCONbits.TMR0IF = 0;
         counter++;
         blink_c++;
-        if(pins_setted == 1)
+        if (pins_setted == 1)
             show_c++;
         if (counter == 20) { // 100 ms has passed
             counter = 0;
@@ -99,7 +102,10 @@ void interrupt isr(void) {
                 no = '9';
 
             if (blink_index != -1) {
-                pass[blink_index] = no;
+                if(pins_setted == -1)
+                    attempt[blink_index] = no;
+                else
+                    pass[blink_index] = no;
                 blink[blink_index] = '0';
             }
         }
@@ -116,10 +122,22 @@ void interrupt isr(void) {
             }
         } else { // RB7 FOR SETTING THE PIN
             if (PORTBbits.RB7 == 0) {
-                pins_setted++;
-                //write_message("RB7");
-                //delay_3();
-                //blink[blink_index] = '0'; // So it will not blink, It is set
+                if (pins_setted != -1)
+                    pins_setted++;
+                else {
+                    if (attempts > 0) {
+                        for (int i = 0; i < 4; i++) {
+                            if (attempt[i] != pass[i]) {
+                                attempts--;
+                                break;
+                            }
+                        }
+                    }
+                }
+                for(int j=0; j < 4; j++)
+                	blink[j] = '1';
+                blink_index = 0;
+                b=0;
             }
         }
         temp = PORTB;
@@ -127,13 +145,6 @@ void interrupt isr(void) {
         PORTB = temp;
         INTCONbits.RBIF = 0;
     }
-}
-
-void write_message(char* str) {
-    WriteCommandToLCD(0xC0); // Goto to the beginning of the second line
-    WriteStringToLCD("Entered ISR");
-    delay_3();
-
 }
 
 void main(void) {
@@ -150,32 +161,60 @@ void main(void) {
     while (1) {
         //wait_RE1();
         show_passwd();
+        enter_pin();
         updateLCD();
         //a = 1;
     }
 }
 
+void enter_pin() {
+    if (pins_setted == -1) // pins_setted becomes -1 after showing the setted pin for 3 seconds
+    {
+        if (x == 0) {
+            ClearLCDScreen();
+            write_message(" Enter pin:", 1);
+            WriteStringToLCD(attempt);
+            write_message("  Attempts:", 0);
+            x = 1;
+        WriteCommandToLCD(0xCB);
+        if (attempts == 2)
+            WriteDataToLCD('2');
+        if (attempts == 1)
+            WriteDataToLCD('1');
+        if (attempts == 0)
+            WriteDataToLCD('0');
+        }
+    }
+
+}
+
+void write_message(char* str, int up) {
+    if (up) {
+        WriteCommandToLCD(0x80); // Goto to the beginning of the second line
+    } else
+        WriteCommandToLCD(0xC0); // Goto to the beginning of the second line
+    WriteStringToLCD(str);
+}
+
 void show_passwd() {
-    if(show_three >= 6){
-        ClearLCDScreen();
-            WriteCommandToLCD(0x80);
-            WriteStringToLCD(" YIYIN EFENDILER ");
+    if (show_three == 6) {
+        x = 0;
+        show_three = 7;
+        pins_setted = -1; // So it will not increment show_c counter anymore and employ enter_pin()
     }
     if (pins_setted == 1) {
         if (show_flag == 1) {
-            if(x == 0)
-            {
-            WriteCommandToLCD(0x80);
-            WriteStringToLCD(" The new pin is ");
-            WriteCommandToLCD(0xC3);
-            WriteStringToLCD("---");
-            WriteStringToLCD(pass);
-            WriteStringToLCD("---");
-            x = 1;
+            if (x == 0) {
+                WriteCommandToLCD(0x80);
+                WriteStringToLCD(" The new pin is ");
+                WriteCommandToLCD(0xC3);
+                WriteStringToLCD("---");
+                WriteStringToLCD(pass);
+                WriteStringToLCD("---");
+                x = 1;
             }
-            } else {
-            if( x == 1)
-            {
+        } else {
+            if (x == 1) {
                 ClearLCDScreen();
                 x = 0;
             }
@@ -186,7 +225,6 @@ void show_passwd() {
         WriteCommandToLCD(0x80);
         WriteStringToLCD("DANTEL");
         delay_3();
-
     }
 }
 
@@ -242,19 +280,37 @@ void up_write(int i, char c) {
 
 // Blink The i'th cell
 
-void wink(int i) {
-    temp = 8 * 16 + 11 + i;
+void wink(char* str, int i) {
     if (blink[i] == '1') {
         if (blink_flag == 1) {
-            WriteCommandToLCD(temp);
-            WriteDataToLCD(' ');
+            up_write(i, ' ');
             return;
         }
-        WriteCommandToLCD(temp);
-        WriteDataToLCD(pass[i]);
+        up_write(i, str[i]);
     } else {
-        WriteCommandToLCD(temp);
-        WriteDataToLCD(pass[i]);
+        up_write(i, str[i]);
+    }
+}
+
+void entel_blink(int blink_index, char* str) {
+    switch (blink_index) {
+        case 0:
+            wink(str, 0);
+            break;
+        case 1:
+            wink(str, 1);
+            break;
+        case 2:
+            wink(str, 2);
+            break;
+        case 3:
+            wink(str, 3);
+            break;
+        default:
+            ClearLCDScreen();
+            WriteCommandToLCD(0x80);
+            WriteStringToLCD("asdasdasdasd");
+            break;
     }
 }
 
@@ -265,27 +321,14 @@ void updateLCD() {
         delay_3();
         return;
     }
-    if (set_flag == 1 && (pins_setted < 1)) {
+    if (set_flag == 1 && (pins_setted < 1)) { // We are setting the password
         INTCONbits.GIE = 0;
-        switch (blink_index) {
-            case 0:
-                wink(0);
-                break;
-            case 1:
-                wink(1);
-                break;
-            case 2:
-                wink(2);
-                break;
-            case 3:
-                wink(3);
-                break;
-            default:
-                ClearLCDScreen();
-                WriteCommandToLCD(0x80);
-                WriteStringToLCD("asdasdasdasd");
-                break;
-        }
+        entel_blink(blink_index, pass);
+        INTCONbits.GIE = 1;
+    }
+    if (pins_setted == -1) {  // We are attempting the password
+        INTCONbits.GIE = 0;
+        entel_blink(blink_index, attempt);
         INTCONbits.GIE = 1;
 
     }
