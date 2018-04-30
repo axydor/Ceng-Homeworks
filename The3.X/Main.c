@@ -7,6 +7,18 @@
 #include "Includes.h"
 #include "LCD.h"
 
+// REPRESENTATION OF NUMBERS IN SEVEN SEGMENT DISPLAY
+#define ZERO	0b00111111
+#define ONE		0b00000110
+#define TWO		0b01011011
+#define THREE	0b01001111
+#define FOUR	0b01100110
+#define FIVE	0b01101101
+#define SIX 	0b01111101
+#define SEVEN	0b00000111
+#define EIGHT	0b01111111
+#define NINE	0b01100111
+
 int waited_3_sec = 0;
 int re1_pressed = 0, set_flag = 0;
 int a = 0; // dummy, but very dummy variable
@@ -27,6 +39,7 @@ void show_passwd();
 void write_message(char* str, int up);
 void entel_blink(int blink_index, char* str);
 void enter_pin();
+void seven_seg_display();
 
 int attempts = 2; // No of attempts
 int counter = 0; // Counter for counting 100 ms in the TIMER0
@@ -40,12 +53,38 @@ int pins_setted = 0; //
 int show_flag = 1;
 int show_c = 0;
 int show_three = 0;
+int second_c = 0; // It will count up to 200 to make one sound
+int second_flag = 0;
+int seconds = 120;
+int freeze = 0;
+int seg_ind = 0;
 
 char pass[5] = "####"; // 
 char attempt[5] = "####";
 char blink[5] = "1111"; // Whether we will blink the related blink_index or not
 
 void interrupt isr(void) {
+    // TIMER1 INTERRUPT
+    
+    if(PIR1bits.TMR1IF == 1)
+    {
+        // WE GET IN HERE EVERY 5 MILLISECONDS
+        //ClearLCDScreen();
+        //write_message("TIMER1 INT",1);
+        //delay_3();       
+        second_c++;
+        if(second_c == 200){
+            second_c = 0;
+            if(seconds>0)
+                seconds--;
+        }
+
+        PIR1bits.TMR1IF = 0;
+        TMR1L = 200;
+        TMR1H = 60;
+    }
+
+    // TIMER0 INTERRUPT
     if (INTCONbits.TMR0IF == 1) {
         INTCONbits.TMR0IF = 0;
         counter++;
@@ -187,11 +226,43 @@ void main(void) {
     set_pin();
     while (1) {
         //wait_RE1();
-        show_passwd();
-        enter_pin();
-        updateLCD();
+        //show_passwd();
+        //enter_pin();
+        seven_seg_display();
+        //updateLCD();
         //a = 1;
     }
+}
+
+void seven_seg_display()
+{
+
+        if(seg_ind == 0)
+        {
+                        PORTH = 0; 
+
+                PORTJ = 0b00111111;           
+
+        }
+
+        else if( seg_ind == 1)
+        {
+            PORTH = 2;
+                PORTJ = 0b00111111;           
+
+        }
+        else if( seg_ind == 2)
+            PORTH = 4;
+        else
+            PORTH = 8;
+
+        if(seg_ind < 3)
+            seg_ind++;
+        else
+            seg_ind = 0;
+        
+        
+    
 }
 
 void enter_pin() {
@@ -225,9 +296,20 @@ void write_message(char* str, int up) {
 
 void show_passwd() {
     if (show_three == 6) {
+        // WE HAVE SHOWNED THE SETTED PIN FOR 3 TIMES, FROM NOW ON USER WILL TRY TO ENTER AN ATTEMPT
         x = 0;
         show_three = 7;
         pins_setted = -1; // So it will not increment show_c counter anymore and employ enter_pin()
+        
+        // WE SET TIMER1 TO GENERATE INTERRUPT AT EVERY 5 MILLISECONDS SO THAT WE WILL SMOOTHLY SHOW 7-SEG-DISPLAY 
+        // WITH COUNTER_S UP TO 200 WE WILL MEASURE 1 SECOND 
+        
+        TMR1L = 200;
+        TMR1H = 150;
+        T1CON = 0b00000001; // 16-bit mode, 1:4 prescale, Enable
+        PIE1bits.TMR1IE = 1;
+        INTCONbits.PEIE = 1;
+    
     }
     if (pins_setted == 1) {
         if (show_flag == 1) {
@@ -367,7 +449,6 @@ void init_interrupts() {
     ADCON2 = 0b10000010; // Acquisition time = 0 Tad, Right Justified, A/D Clock conversion Fosc/32
     T0CON = 0b11010111;
     TMR0L = 61; // Initial value is given to TIMER0 so we will be able to generate Interrupt at every 100ms
-    TRISHbits.RH4 = 1;
 
     INTCON2bits.RBPU = 0; // ENABLE PORTB pull-ups
     TRISBbits.RB6 = 1;

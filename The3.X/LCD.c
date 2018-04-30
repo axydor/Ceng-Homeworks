@@ -51,6 +51,8 @@ void InitLCD(void)
 
     
     TRISJ = 0;
+    TRISH = 0b00010000;
+
     PORTA = 0;
     PORTC = 0;
     PORTE = 0;
