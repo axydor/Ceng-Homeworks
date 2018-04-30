@@ -321,7 +321,7 @@ void updateLCD() {
         delay_3();
         return;
     }
-    if (set_flag == 1 && (pins_setted < 1)) { // We are setting the password
+    if (set_flag == 1 && (pins_setted < 1) && pins_setted != -1) { // We are setting the password
         INTCONbits.GIE = 0;
         entel_blink(blink_index, pass);
         INTCONbits.GIE = 1;
@@ -330,9 +330,7 @@ void updateLCD() {
         INTCONbits.GIE = 0;
         entel_blink(blink_index, attempt);
         INTCONbits.GIE = 1;
-
     }
-    //delay_ms(2);
 }
 
 void init_interrupts() {
