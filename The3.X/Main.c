@@ -77,6 +77,8 @@ void interrupt isr(void) {
             second_c = 0;
             if(seconds>0)
                 seconds--;  // SECONDS IS DECREMENTD
+            else
+                RESET();
         }
         PIR1bits.TMR1IF = 0;
         TMR1L = 200;
@@ -188,16 +190,21 @@ void interrupt isr(void) {
                     if (attempts == 0)
                     {
                         INTCONbits.RBIE = 0; // ENABLE PORTB INTERRUPTS
-                        INTCONbits.PEIE = 0; // PERIPHEREAL INTERRUPTS ENABLE
                         INTCONbits.TMR0IE = 0; // ENABLE TIMER0 INTERRUPTS
                         PIE1bits.ADIE = 0; // A/D Converter Interrupt Enable
-                        INTCONbits.GIE = 0; // ENABLE GLOBAL INTERRUPTS
                         ClearLCDScreen();
                         write_message(" Enter pin:XXXX ", 1);
                         write_message("Try after 20 sec.", 0);
-                        for(int i=0; i < 20; i++)
-                            for(int j=0; j < 1000; j++)
+                        for(int i=0; i < 20; i++){
+                            for(int j=0; j < 1000; j++){
+                            	seven_seg_display();
                                 delay_ms(1);
+                            }
+                            if(seconds > 0)
+								seconds--;   
+                            else 
+                                RESET();
+                        }
                         init_interrupts();
                         attempts = 2;
                     } 
@@ -255,7 +262,6 @@ void seven_seg_display()
 {
     if(show_three == 7)
     {
-        
         if(seconds > 99)
         {
             if(seg_ind == 2)
@@ -290,9 +296,7 @@ void seven_seg_display()
             seg_ind++;
         else
             seg_ind = 0;
-        
-        for(int i=0; i < 1024; i++)
-            ;
+
     }
 }
 
@@ -483,13 +487,11 @@ void Pinit_interrupts(int i)
     if(i)
     {
         INTCONbits.RBIE = 1; // ENABLE PORTB INTERRUPTS
-        INTCONbits.PEIE = 1; // PERIPHEREAL INTERRUPTS ENABLE
         INTCONbits.TMR0IE = 1; // ENABLE TIMER0 INTERRUPTS
     }
     else
     {
         INTCONbits.RBIE = 0; // ENABLE PORTB INTERRUPTS
-        INTCONbits.PEIE = 0; // PERIPHEREAL INTERRUPTS ENABLE
         INTCONbits.TMR0IE = 0; // ENABLE TIMER0 INTERRUPTS
     }
 }
