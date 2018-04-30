@@ -64,8 +64,6 @@ void write_message(char* str, int up);  // Helper function for writing the given
 void blink_the_index(int blink_index, char* str); 
 void enter_pin();        //  This function sets up the environment for Attempting the pin. It's inside is only executed once.
 void seven_seg_display();  // Handles the 7-segment-display
-void Pinit_interrupts(int i); // It is for closing and reopening the interrupts
-
 
 /* Briefly, Program first starts to wait RE1 button press and release in the main loop
 *  After it happens, program waits 3 second and then executes set_pin() function only ONCE(inside of it)
@@ -86,7 +84,7 @@ void interrupt isr(void) {
     if (PIR1bits.TMR1IF == 1) {
         // WE GET IN HERE EVERY 5 MILLISECONDS
         second_c++;
-        if (second_c == 200) { // 5MS  * 200 = 1 SECOND 
+        if (second_c == 130) {
             second_c = 0;
             if (seconds > 0)
                 seconds--; // SECONDS IS DECREMENTD
@@ -490,23 +488,9 @@ void updateLCD() {
         INTCONbits.GIE = 1;
     }
     if (pins_setted == -1) { // We are attempting the password
-        //Pinit_interrupts(0); // ONLY TIMER1 IS WORKING 
         INTCONbits.GIE = 0;
-
         blink_the_index(blink_index, attempt);
         INTCONbits.GIE = 1;
-
-        //Pinit_interrupts(1);
-    }
-}
-
-void Pinit_interrupts(int i) {
-    if (i) {
-        INTCONbits.RBIE = 1; // ENABLE PORTB INTERRUPTS
-        INTCONbits.TMR0IE = 1; // ENABLE TIMER0 INTERRUPTS
-    } else {
-        INTCONbits.RBIE = 0; // ENABLE PORTB INTERRUPTS
-        INTCONbits.TMR0IE = 0; // ENABLE TIMER0 INTERRUPTS
     }
 }
 
