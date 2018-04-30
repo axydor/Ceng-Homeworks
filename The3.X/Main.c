@@ -132,6 +132,9 @@ void interrupt isr(void) {
                                 break;
                             }
                         }
+                    for(int i=0; i < 4; i++)
+                        attempt[i] = '#';
+                    x = 0;
                     }
                 }
                 for(int j=0; j < 4; j++)
@@ -171,18 +174,18 @@ void enter_pin() {
     if (pins_setted == -1) // pins_setted becomes -1 after showing the setted pin for 3 seconds
     {
         if (x == 0) {
+            x = 1;
             ClearLCDScreen();
             write_message(" Enter pin:", 1);
             WriteStringToLCD(attempt);
             write_message("  Attempts:", 0);
-            x = 1;
-        WriteCommandToLCD(0xCB);
-        if (attempts == 2)
-            WriteDataToLCD('2');
-        if (attempts == 1)
-            WriteDataToLCD('1');
-        if (attempts == 0)
-            WriteDataToLCD('0');
+            WriteCommandToLCD(0xCB);
+            if (attempts == 2)
+                WriteDataToLCD('2');
+            if (attempts == 1)
+                WriteDataToLCD('1');
+            if (attempts == 0)
+                WriteDataToLCD('0');
         }
     }
 
