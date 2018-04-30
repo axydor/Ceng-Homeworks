@@ -126,16 +126,40 @@ void interrupt isr(void) {
                     pins_setted++;
                 else {
                     if (attempts > 0) {
-                        for (int i = 0; i < 4; i++) {
+                        int i;
+                        for (i= 0; i < 4; i++) {
                             if (attempt[i] != pass[i]) {
                                 attempts--;
                                 break;
                             }
                         }
+                        if(i == 4)
+                        {
+                            ClearLCDScreen();
+                            write_message("Safe is opening!", 1);
+                            write_message("$$$$$$$$$$$$$$$$", 0);
+                            delay_3();
+                        }
                     for(int i=0; i < 4; i++)
                         attempt[i] = '#';
                     x = 0;
                     }
+                    if (attempts == 0)
+                    {
+                        INTCONbits.RBIE = 0; // ENABLE PORTB INTERRUPTS
+                        INTCONbits.PEIE = 0; // PERIPHEREAL INTERRUPTS ENABLE
+                        INTCONbits.TMR0IE = 0; // ENABLE TIMER0 INTERRUPTS
+                        PIE1bits.ADIE = 0; // A/D Converter Interrupt Enable
+                        INTCONbits.GIE = 0; // ENABLE GLOBAL INTERRUPTS
+                        ClearLCDScreen();
+                        write_message(" Enter pin:XXXX ", 1);
+                        write_message("Try after 20 sec.", 0);
+                        for(int i=0; i < 20; i++)
+                            for(int j=0; j < 1000; j++)
+                                delay_ms(1);
+                        init_interrupts();
+                        attempts = 2;
+                    } 
                 }
                 for(int j=0; j < 4; j++)
                 	blink[j] = '1';
