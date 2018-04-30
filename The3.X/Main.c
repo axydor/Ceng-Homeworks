@@ -12,7 +12,8 @@ int re1_pressed = 0, set_flag = 0;
 int a = 0; // dummy, but very dummy variable
 char no; // Each number of the password
 int temp; // dummy
-int x = 0;
+int x = 0; // dummy
+int b = 0; // dummy
 
 void updateLCD();
 void wait_RE1(); // Wait for RE1 button press and release
@@ -28,7 +29,6 @@ void entel_blink(int blink_index, char* str);
 void enter_pin();
 
 int attempts = 2; // No of attempts
-int b = 0;
 int counter = 0; // Counter for counting 100 ms in the TIMER0
 int blink_c = 0; // Counter for setting blink_flag
 int blink_flag = 0; // Flag to blink '#' at every 250 ms
