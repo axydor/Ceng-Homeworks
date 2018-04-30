@@ -19,13 +19,12 @@
 #define EIGHT	0b01111111
 #define NINE	0b01100111
 
-int waited_3_sec = 0;
+const int macro_array[10] = {ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE};
+int waited_3_sec = 0; // Flag Indicating whether we waited 3 seconds after showing RE1
 int re1_pressed = 0, set_flag = 0;
-int a = 0; // dummy, but very dummy variable
+int a = 0, temp=0; // dummy, but very dummy variable
 char no; // Each number of the password
-int temp; // dummy
-int x = 0; // dummy
-int b = 0; // dummy
+int x = 0, b = 0; // dummy
 
 void updateLCD();
 void wait_RE1(); // Wait for RE1 button press and release
@@ -40,6 +39,7 @@ void write_message(char* str, int up);
 void entel_blink(int blink_index, char* str);
 void enter_pin();
 void seven_seg_display();
+void Pinit_interrupts(int i);
 
 int attempts = 2; // No of attempts
 int counter = 0; // Counter for counting 100 ms in the TIMER0
@@ -58,6 +58,7 @@ int second_flag = 0;
 int seconds = 120;
 int freeze = 0;
 int seg_ind = 0;
+int temp_sec;
 
 char pass[5] = "####"; // 
 char attempt[5] = "####";
@@ -65,7 +66,6 @@ char blink[5] = "1111"; // Whether we will blink the related blink_index or not
 
 void interrupt isr(void) {
     // TIMER1 INTERRUPT
-    
     if(PIR1bits.TMR1IF == 1)
     {
         // WE GET IN HERE EVERY 5 MILLISECONDS
@@ -73,12 +73,11 @@ void interrupt isr(void) {
         //write_message("TIMER1 INT",1);
         //delay_3();       
         second_c++;
-        if(second_c == 200){
+        if(second_c == 200){  // 5MS  * 200 = 1 SECOND 
             second_c = 0;
             if(seconds>0)
-                seconds--;
+                seconds--;  // SECONDS IS DECREMENTD
         }
-
         PIR1bits.TMR1IF = 0;
         TMR1L = 200;
         TMR1H = 60;
@@ -111,7 +110,6 @@ void interrupt isr(void) {
     }
     if (PIR1bits.ADIF == 1) {
         PIR1bits.ADIF = 0;
-
         result1 = ADRES;
         if (b == 0) {
             b = 1;
@@ -145,9 +143,11 @@ void interrupt isr(void) {
                     attempt[blink_index] = no;
                 else
                     pass[blink_index] = no;
+                // After Showing the number, it will not blink
                 blink[blink_index] = '0';
             }
         }
+        // Each time we compare it with the previous result so that we can chage '#' to some number
         result2 = result1;
     }
     // CHECK RB6 - RB7 pushes
@@ -177,7 +177,9 @@ void interrupt isr(void) {
                             ClearLCDScreen();
                             write_message("Safe is opening!", 1);
                             write_message("$$$$$$$$$$$$$$$$", 0);
-                            delay_3();
+                            INTCONbits.GIE = 0;
+                            while(1)
+                                delay_3();
                         }
                     for(int i=0; i < 4; i++)
                         attempt[i] = '#';
@@ -226,43 +228,72 @@ void main(void) {
     set_pin();
     while (1) {
         //wait_RE1();
-        //show_passwd();
-        //enter_pin();
+        show_passwd();
+        enter_pin();
         seven_seg_display();
-        //updateLCD();
-        //a = 1;
+        updateLCD();
     }
 }
 
+int disp_macro(int i)
+{
+    return macro_array[i];
+}
+
+int onlar_basam(int i)
+{
+    int counter = 0;
+    int onlar = i;
+    onlar = onlar / 10;
+    if (onlar >= 10)
+    {
+        return disp_macro(onlar - 10);
+    }
+    return disp_macro(onlar);
+}
 void seven_seg_display()
 {
+    if(show_three == 7)
+    {
+        
+        if(seconds > 99)
+        {
+            if(seg_ind == 2)
+            {
+                PORTH = 2;
+                PORTJ = ONE;
+            }
+        }
+        else
+        {
+            PORTH = 2;
+            PORTJ = ZERO;
+        }
 
         if(seg_ind == 0)
         {
-                        PORTH = 0; 
-
-                PORTJ = 0b00111111;           
-
+            PORTH = 8; 
+            PORTJ = disp_macro(seconds%10);
         }
-
         else if( seg_ind == 1)
         {
-            PORTH = 2;
-                PORTJ = 0b00111111;           
-
-        }
-        else if( seg_ind == 2)
             PORTH = 4;
-        else
-            PORTH = 8;
+            PORTJ = onlar_basam(seconds);           
+        }
+        else if(seg_ind == 3)
+        {
+            PORTH = 1;
+            PORTJ = ZERO;
+        }
 
         if(seg_ind < 3)
             seg_ind++;
         else
             seg_ind = 0;
         
-        
-    
+        for(int i=0; i < 1024; i++)
+            ;
+    }
 }
 
 void enter_pin() {
@@ -305,13 +336,19 @@ void show_passwd() {
         // WITH COUNTER_S UP TO 200 WE WILL MEASURE 1 SECOND 
         
         TMR1L = 200;
-        TMR1H = 150;
+        TMR1H = 60;
         T1CON = 0b00000001; // 16-bit mode, 1:4 prescale, Enable
         PIE1bits.TMR1IE = 1;
         INTCONbits.PEIE = 1;
-    
+        INTCONbits.RBIE = 1; // ENABLE PORTB INTERRUPTS
+        TRISBbits.RB7 = 1;
+        TRISBbits.RB6 = 1;
+
+
     }
     if (pins_setted == 1) {
+        TRISBbits.RB7 = 0;
+        TRISBbits.RB6 = 0;
         if (show_flag == 1) {
             if (x == 0) {
                 WriteCommandToLCD(0x80);
@@ -436,9 +473,24 @@ void updateLCD() {
         INTCONbits.GIE = 1;
     }
     if (pins_setted == -1) {  // We are attempting the password
-        INTCONbits.GIE = 0;
+        Pinit_interrupts(0); // ONLY TIMER1 IS WORKING 
         entel_blink(blink_index, attempt);
-        INTCONbits.GIE = 1;
+        Pinit_interrupts(1);
+    }
+}
+void Pinit_interrupts(int i)
+{
+    if(i)
+    {
+        INTCONbits.RBIE = 1; // ENABLE PORTB INTERRUPTS
+        INTCONbits.PEIE = 1; // PERIPHEREAL INTERRUPTS ENABLE
+        INTCONbits.TMR0IE = 1; // ENABLE TIMER0 INTERRUPTS
+    }
+    else
+    {
+        INTCONbits.RBIE = 0; // ENABLE PORTB INTERRUPTS
+        INTCONbits.PEIE = 0; // PERIPHEREAL INTERRUPTS ENABLE
+        INTCONbits.TMR0IE = 0; // ENABLE TIMER0 INTERRUPTS
     }
 }
 
