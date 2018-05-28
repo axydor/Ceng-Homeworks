@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "ext2.h"
+#include <cstring>
 
 #define BASE_OFFSET 1024
 #define EXT2_BLOCK_SIZE 1024
