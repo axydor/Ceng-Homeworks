@@ -1,2 +1,2 @@
-all: hw3.c
-	gcc	-o	recover	hw3.c
+all: hw3.cpp
+	g++	-o	recover	hw3.cpp
