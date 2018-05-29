@@ -7,6 +7,9 @@
 #include <unistd.h>
 #include "ext2.h"
 #include <cstring>
+#include <vector>
+#include <string>
+#include <iostream>
 
 #define BASE_OFFSET 1024
 #define EXT2_BLOCK_SIZE 1024
