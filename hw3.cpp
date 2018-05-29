@@ -36,7 +36,7 @@ void set_bitmap(int fd, struct ext2_inode* inode, unsigned int block_size)
     read(fd, bitmap, block_size);
     std::vector<unsigned int> v;
     set_blocks(inode, v);
-    for (int i = 0; i < super.s_blocks_count; i++){
+    for (unsigned int i = 0; i < super.s_blocks_count; i++){
         if (BM_ISSET(i,bitmap)){
             ;
         }
@@ -94,45 +94,95 @@ void add_dir_entry(int fd, void* block, struct ext2_dir_entry* lost_dir, unsigne
     lost_dir->name_len = file.size();
     lost_dir->file_type = EXT2_FT_REG_FILE;
 }
-void add_lost(int fd, unsigned int s_blocks_count, unsigned bg_inode_table, struct ext2_inode * removed, unsigned int inode_no, unsigned int block_size, int f_count)
-{
-    int pre_rec_len;
-    struct ext2_inode* inode;
-    inode = (struct ext2_inode *)malloc(sizeof(struct ext2_inode));
-    //Read the lost+found inode
-    lseek(fd, BLOCK_OFFSET(bg_inode_table)+sizeof(struct ext2_inode)*10, SEEK_SET);
-    read(fd, inode, sizeof(struct ext2_inode));
-    
-    struct ext2_dir_entry* lost_dir;
-    struct ext2_dir_entry* removed_entry;
-    void* block;
-    block = (void* )malloc(EXT2_BLOCK_SIZE);
-    lseek(fd, BLOCK_OFFSET(inode->i_block[0]),SEEK_SET);
-    read(fd, block, EXT2_BLOCK_SIZE);
-    // Read First Directory Entry
-    directory_info(block);
 
-    add_dir_entry(fd, block, lost_dir, inode_no, block_size, f_count);
-    lseek(fd, BLOCK_OFFSET(inode->i_block[0]),SEEK_SET);
-    write(fd,block,EXT2_BLOCK_SIZE);
-    
-    // Change the Removed File's Imode via inode.
+
+void read_block(int fd, void* block, unsigned int block_no)
+{
+    lseek(fd, BLOCK_OFFSET(block_no), SEEK_SET);
+    read(fd, block, EXT2_BLOCK_SIZE);	
+}
+
+void read_inode(int fd, unsigned int bg_inode_table, struct ext2_inode* inode, int inode_no)
+{
     lseek(fd, BLOCK_OFFSET(bg_inode_table)+sizeof(struct ext2_inode)*inode_no, SEEK_SET);
     read(fd, inode, sizeof(struct ext2_inode));
+}
+
+void write_inode(int fd, unsigned int bg_inode_table, struct ext2_inode* inode, int inode_no)
+{
+    lseek(fd, BLOCK_OFFSET(bg_inode_table)+sizeof(struct ext2_inode)*inode_no, SEEK_SET);
+    write(fd, inode, sizeof(struct ext2_inode));	
+}
+
+
+void configure_file_settings(int fd, unsigned int bg_inode_table, int inode_no)
+{
+    struct ext2_inode* inode;
+    inode = (struct ext2_inode *)malloc(sizeof(struct ext2_inode));
+    read_inode(fd, bg_inode_table, inode, inode_no);
 
     inode->i_mode = (EXT2_S_IFREG | EXT2_S_IRUSR);
     inode->i_links_count = 1;
     inode->i_dtime = 0;
     inode->i_flags = 0;
-    lseek(fd, BLOCK_OFFSET(bg_inode_table)+sizeof(struct ext2_inode)*inode_no, SEEK_SET);
-    write(fd, inode, sizeof(struct ext2_inode));
+
+    write_inode(fd, bg_inode_table, inode, inode_no);
+    free(inode);
+}
+
+void add_lost(int fd, int inode_no, unsigned int block_size, int f_count)
+{
+    struct ext2_group_desc group;	
+    struct ext2_inode* inode;
+    struct ext2_dir_entry* lost_dir;
+    void* block;
+
+    block = (void* )malloc(EXT2_BLOCK_SIZE);
+    inode = (struct ext2_inode *)malloc(sizeof(struct ext2_inode));
+
+    lseek(fd, BASE_OFFSET + block_size, SEEK_SET);
+    read(fd, &group, sizeof(group));
+
+    //Read the lost+found inode
+    read_inode(fd, group.bg_inode_table, inode, 10);
+    
+    //Read the lost+found directory entry block
+    lseek(fd, BLOCK_OFFSET(inode->i_block[0]), SEEK_SET);
+    read(fd, block, EXT2_BLOCK_SIZE);	
+    //read_block(fd, block, inode->i_block[0]);
+    printf("I_blcock: %d\n", inode->i_block[0]);
+    //directory_info(block);
+    // Read First Directory Entry
+    add_dir_entry(fd, block, lost_dir, inode_no, block_size, f_count);
+    
+    lseek(fd, BLOCK_OFFSET(inode->i_block[0]),SEEK_SET);
+    write(fd,block,EXT2_BLOCK_SIZE);
+    
+    // Change the Removed File's Imode via inode.
+    configure_file_settings(fd, group.bg_inode_table, inode_no);
+
+    struct ext2_inode* removed;
+    read_inode(fd, group.bg_inode_table, removed, inode_no);
     set_bitmap(fd, removed, block_size);
 
+    free(removed);
     free(inode);
     free(block);
 }
-
-void traverse_inodes(int fd, unsigned int s_blocks_count, unsigned int bg_inode_table, int f_count)
+void check_modified(vector<int>& deleted_files)
+{
+	;		// TO BE IMPLEMENTED
+}
+void recover(int fd, vector<int>& deleted_files)
+{
+	check_modified(deleted_files);
+	for(unsigned int i=0; i < deleted_files.size(); i++)
+	{
+		printf("Deleted File %d: %d\n", i , deleted_files[i]);
+		add_lost(fd, deleted_files[i], block_size, i);
+	}
+}
+void traverse_inodes(int fd, unsigned int bg_inode_table)
 {
     for(int i = 0; i < 32; i++)
     {
@@ -141,20 +191,8 @@ void traverse_inodes(int fd, unsigned int s_blocks_count, unsigned int bg_inode_
         read(fd, &inode, sizeof(struct ext2_inode));
         if(inode.i_size)
         {
-        	//rintf("Our Value Imode : %d", inode.i_mode);
-        	//printf("Imode should be: %d", ((EXT2_S_IFREG | EXT2_S_IRUSR) ) );
-            printf("Reading %d'th inode\n"
-                   "Size     : %u bytes\n"
-                   "Blocks   : %u\n",
-                    i+1,
-                   inode.i_size,
-                   inode.i_blocks/2); // in number of sectors. A disk sector is 512 bytes.
-            printf("Delete time: %u\n", inode.i_dtime);
-            if(inode.i_dtime || i==11){
-                printf("Deleted inode index: %d\n", i);
-                add_lost(fd, s_blocks_count, bg_inode_table, &inode, i, block_size, f_count);
-                f_count++;
-            }
+            printf("Reading %d'th inode\n" "Size     : %u bytes\n" "Blocks   : %u\n", i+1, inode.i_size, inode.i_blocks/2); // in number of sectors. A disk sector is 512 bytes.
+            printf("Delete Time: %u\n", inode.i_dtime);
             for(int i=0; i < 15; i++){
                 if (i < 12)         // direct blocks
                     printf("Block %2u : %u\n", i, inode.i_block[i]);
@@ -164,6 +202,21 @@ void traverse_inodes(int fd, unsigned int s_blocks_count, unsigned int bg_inode_
                     printf("Double   : %u\n", inode.i_block[i]);
                 else if (i == 14)    // triple indirect block
                     printf("Triple   : %u\n", inode.i_block[i]);
+            }
+       }
+    } 	
+}
+void find_deleted_files(int fd, unsigned int bg_inode_table, vector<int>& deleted_files)
+{
+    for(int i = 0; i < 32; i++)
+    {
+        struct ext2_inode inode;
+        lseek(fd, BLOCK_OFFSET(bg_inode_table)+sizeof(struct ext2_inode)*i, SEEK_SET);
+        read(fd, &inode, sizeof(struct ext2_inode));
+        if(inode.i_size)
+        {
+            if(inode.i_dtime){
+            	deleted_files.push_back(i);
             }
        }
     } 
@@ -181,7 +234,6 @@ int main(void)
         perror(IMAGE);
         exit(1);
     }
-
     // read super-block
     lseek(fd, BASE_OFFSET, SEEK_SET);
     read(fd, &super, sizeof(super));
@@ -233,7 +285,12 @@ int main(void)
            "Non-Free block count    : %u\n"
            , fr, nfr);
     free(bitmap);
-    traverse_inodes(fd, super.s_blocks_count, group.bg_inode_table, f_count);
+
+    vector<int> deleted_files;   // Holds the inodes of the deleted files
+    //traverse_inodes(fd, group.bg_inode_table);
+    find_deleted_files(fd, group.bg_inode_table, deleted_files);
+    recover(fd, deleted_files);
+
     close(fd);
     return 0;
 }
