@@ -247,9 +247,9 @@ void configure_file_settings(int fd, ui bg_inode_table, int inode_no)
 }
 
 // Just prints the recovered files with their delete time and block numbers
-void print_filename(const string file_name, ui dtime, ui blocks_count)
+void print_filename(struct dell& deleted)
 {
-	cout << file_name << " " << dtime << " " << blocks_count << "\n";
+	cout << deleted.file_name << " " << deleted.dtime << " " << deleted.blocks_count << "\n";
 }
 
 // Clear the dtime of file, clear the flag and set the rights for the file, and also set the bitmap according to the file's blocks
@@ -259,7 +259,6 @@ void clean_mess_of_file(int fd, const string file_name, ui bg_inode_table, ui bl
     struct ext2_inode* deleted; 
     deleted = new ext2_inode();
     read_inode(fd, bg_inode_table, deleted, inode_no);
-    print_filename(file_name, deleted->i_dtime, deleted->i_blocks/(block_size/SECTOR_SIZE));
     // Change the Removed File's Imode via inode.
     configure_file_settings(fd, bg_inode_table, inode_no);
     delete deleted;
@@ -347,14 +346,23 @@ int modified(int fd, ui inode_no, vector<ui>& blocks, ui block_size) // inode_no
 
 // Finds the not modified files and recover them.
 // deleted_files holds the inode numbers
-void recover(int fd, vector<int>& deleted_files, ui block_size)
+void recover(int fd, vector<dell>& deleted_files, ui block_size)
 {
 	ui size = deleted_files.size();
 	for(ui i=0; i < size; i++)
 	{
+		print_filename(deleted_files[i]);
 		std::vector<ui> blocks;
-		if(!modified(fd, deleted_files[i], blocks, block_size))
-			add_lost(fd, deleted_files[i], blocks, block_size, i);
+		if(!modified(fd, deleted_files[i].inode_no, blocks, block_size))
+			add_lost(fd, deleted_files[i].inode_no, blocks, block_size, i);
+		else
+			deleted_files[i].file_name = "x";
+	}
+	cout << "###" << endl;
+	for(ui i=0; i < size; i++)
+	{
+		if(deleted_files[i].file_name != "x")
+			cout << deleted_files[i].file_name << endl;
 	}
 }
 void traverse_inodes(int fd, ui s_inodes_count, ui bg_inode_table)
@@ -382,7 +390,7 @@ void traverse_inodes(int fd, ui s_inodes_count, ui bg_inode_table)
        }
     } 	
 }
-void find_deleted_files(int fd, ui s_inodes_count, ui bg_inode_table, vector<int>& deleted_files)
+void find_deleted_files(int fd, ui s_inodes_count, ui bg_inode_table, vector<dell>& deleted_files)
 {
     for(int i = 11; i < s_inodes_count; i++)
     {
@@ -392,20 +400,26 @@ void find_deleted_files(int fd, ui s_inodes_count, ui bg_inode_table, vector<int
         if(inode.i_size)
         {
             if(inode.i_dtime){
-            	deleted_files.push_back(i);
+            	struct dell deleted_file;
+            	std::string no = to_string((i-11)/10) + to_string((i-11)%10);
+    			deleted_file.file_name = "file" + no;
+    			deleted_file.dtime = inode.i_dtime;
+    			deleted_file.blocks_count = inode.i_blocks / (block_size/SECTOR_SIZE);
+    			deleted_file.inode_no = i;
+            	deleted_files.push_back(deleted_file);
             }
        }
     } 
 }
 
-int main(void)
+int main(int argc, char* argv[])
 {
     //Counter for indexing the recovered files
     int f_count = 0;
     struct ext2_super_block super;
     struct ext2_group_desc group;
     int fd;
-    if ((fd = open(IMAGE, O_RDWR)) < 0) {
+    if ((fd = open(argv[1], O_RDWR)) < 0) {
         perror(IMAGE);
         exit(1);
     }
@@ -421,12 +435,13 @@ int main(void)
     lseek(fd, BASE_OFFSET + block_size, SEEK_SET);
     read(fd, &group, sizeof(group));
 
-    vector<int> deleted_files;   // Holds the inodes of the deleted files
+    vector<dell> deleted_files;   // Holds the inodes of the deleted files
     find_deleted_files(fd, super.s_inodes_count, group.bg_inode_table, deleted_files);
     recover(fd, deleted_files, block_size);
     //traverse_inodes(fd, super.s_inodes_count, group.bg_inode_table);
-	print_bitmap(fd, super, group);
+
     /*
+	print_bitmap(fd, super, group);
     vector<ui> v;
  	int modified;
     modified = handle_double(fd, 295, v, 1024);
