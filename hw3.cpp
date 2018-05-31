@@ -1,41 +1,124 @@
 #include "hw3.h"
-using namespace std;
 
-typedef unsigned int ui;
-
-// Finding the block numbers through the single indirect block
-// And putting them into the vector v 
-
-void handle_double(int fd, vector<ui>& single_blocks, int no_of_blocks_remained)
+void print_bitmap(int fd, struct ext2_super_block& super, struct ext2_group_desc& group)
 {
-	;
-}
-
-void handle_single(int fd, ui single_block, int no_of_blocks_remained, std::vector<ui>& v)
-{
-	lseek(fd, BLOCK_OFFSET(single_block), SEEK_SET);	
-	ui block_number;
-	for(int i=0; i < no_of_blocks_remained - 1; i++) // no_of_blocks - 1-> because 1 block is reserved for PointerBlock
-	{
-		read(fd, &block_number, sizeof(ui));
-		v.push_back(block_number);
-	}
-}
-
-// This function pushes the block_numbers of the file into the vector v.
-void set_blocks(int fd, struct ext2_inode* inode, std::vector<ui>& v)
-{
-	int i=0;
-	int no_of_blocks = inode->i_blocks/(block_size/SECTOR_SIZE);
-	while(inode->i_block[i])
-	{
-		// TO DO BLOCK POINTERSSSS 
-	    //printf("%d-",inode->i_block[i]);
-	    if(i == 12)
-	    	handle_single(fd, inode->i_block[i], no_of_blocks - 12, v);
-		v.push_back(inode->i_block[i]);
-        i++;
+    printf("Reading from image file " IMAGE ":\n"
+           "Blocks count            : %u\n"
+           "First non-reserved inode: %u\n"
+           "No of blocks per group  : %u\n"
+           "Size of block           : %u\n",
+           super.s_blocks_count,
+           super.s_first_ino,
+           super.s_blocks_per_group,
+           block_size);
+    printf("First data block: %u\n", super.s_first_data_block);
+    printf("Reserved blocks count: %u\n", super.s_r_blocks_count);
+    printf("Inodes count: %u\n", super.s_inodes_count);
+    printf("Group No: %u\n", super.s_block_group_nr);	
+    // read block bitmap
+    bmap *bitmap;
+    bitmap = (bmap *)malloc(block_size);
+    lseek(fd, BLOCK_OFFSET(group.bg_block_bitmap), SEEK_SET);
+    read(fd, bitmap, block_size);
+    int fr = 0;
+    int nfr = 0;
+    printf("Free block bitmap:\n");
+    for (int i = 0; i < super.s_blocks_count; i++){
+        if (BM_ISSET(i,bitmap)){
+            printf("+");    // in use
+            nfr++;
+        }
+        else{
+            printf("-");    // empty
+            fr++;
+        }
     }
+    printf("\n");
+    printf("Free blocks count       : %u\n"
+           "Non-Free block count    : %u\n"
+           , fr, nfr);
+    free(bitmap);
+
+}
+
+int handle_triple(int fd, ui triple_block, vector<ui>& blocks, ui block_size)
+{
+	int modified = 0;
+	int i=0;
+    lseek(fd, BLOCK_OFFSET(triple_block), SEEK_SET);
+    ui indirect_ptr_block_no;
+    vector<ui> indirects;                                            
+    while(1)
+    {
+        read(fd, &indirect_ptr_block_no, sizeof(ui));
+        // End of the pointers
+        if(indirect_ptr_block_no == 0)
+           break;
+        blocks.push_back(indirect_ptr_block_no);
+        // Data has been modified so cannot recover this file
+        if(handle_double(fd, indirect_ptr_block_no, blocks, block_size))
+        {
+        	modified = 1;
+        	break;
+        }
+    	i++;
+    }
+    return modified;
+}
+
+int handle_double(int fd, ui double_block, vector<ui>& blocks, ui block_size)
+{
+	int modified = 0;
+	int i=0;
+    lseek(fd, BLOCK_OFFSET(double_block), SEEK_SET);
+    ui indirect_ptr_block_no;
+    vector<ui> indirects;                                            
+    while(1)
+    {
+        read(fd, &indirect_ptr_block_no, sizeof(ui));
+        // End of the pointers
+        if(indirect_ptr_block_no == 0)
+           break;
+        blocks.push_back(indirect_ptr_block_no);
+        // Data has been modified so cannot recover this file
+        if(handle_single(fd, indirect_ptr_block_no, blocks, block_size))
+        {
+        	modified = 1;
+        	break;
+        }
+    	i++;
+    }
+    return modified;
+}
+// Finding the block numbers through the single indirect block number
+// And putting them into the vector v 
+int handle_single(int fd, ui single_block, std::vector<ui>& blocks, ui block_size)
+{
+	struct ext2_group_desc group;
+	lseek(fd, BASE_OFFSET + block_size, SEEK_SET);
+    read(fd, &group, sizeof(group));
+
+	int flag = 0;
+	bmap *bitmap;
+    bitmap = (bmap*) new char[block_size];//(bmap *)malloc(block_size);
+    read_block(fd, (char*)bitmap, group.bg_block_bitmap, block_size); 
+	
+	int modified=0;
+    lseek(fd, BLOCK_OFFSET(single_block), SEEK_SET);
+    ui block_number;
+    while(1) // no_of_blocks - 1-> because 1 block is reserved for PointerBlock
+    {
+        read(fd, &block_number, sizeof(ui));
+        if(block_number == 0)
+            break;
+        if (BM_ISSET(block_number-1,bitmap))
+        {
+            modified = 1;
+            break;
+        }
+        blocks.push_back(block_number);
+    }
+    return modified;
 }
 
 void write_block(int fd, char* block, ui block_no, ui block_size)
@@ -51,21 +134,29 @@ void read_block(int fd, char* block, ui block_no, ui block_size)
 }
 
 // Setting the bits of the blocks of the recovered file
-void set_bitmap(int fd, struct ext2_inode* inode, ui block_size)
+void set_bitmap(int fd, ui inode_no, vector<ui>& blocks, ui block_size)
 {     
     struct ext2_super_block super;
     struct ext2_group_desc group;
-    lseek(fd, BASE_OFFSET, SEEK_SET);
-    read(fd, &super, sizeof(super));
-
-    super.s_free_blocks_count -= (inode->i_blocks / (block_size/SECTOR_SIZE));
-    lseek(fd, BASE_OFFSET, SEEK_SET);
-    write(fd, &super, sizeof(ext2_super_block));
+    struct ext2_inode* inode;
+    ui blocks_count;
+    inode = new struct ext2_inode();
 
     lseek(fd, BASE_OFFSET + block_size, SEEK_SET);
     read(fd, &group, sizeof(group));
 
-    group.bg_free_blocks_count -= (inode->i_blocks / (block_size/SECTOR_SIZE));
+    read_inode(fd, group.bg_inode_table, inode, inode_no);
+    blocks_count = (inode->i_blocks / (block_size/SECTOR_SIZE));
+
+    lseek(fd, BASE_OFFSET, SEEK_SET);
+    read(fd, &super, sizeof(super));
+
+    super.s_free_blocks_count -= blocks_count;
+    lseek(fd, BASE_OFFSET, SEEK_SET);
+    write(fd, &super, sizeof(ext2_super_block));
+
+
+    group.bg_free_blocks_count -= blocks_count;
     lseek(fd, BASE_OFFSET + block_size, SEEK_SET);
     write(fd, &group, sizeof(ext2_group_desc));
 
@@ -73,22 +164,13 @@ void set_bitmap(int fd, struct ext2_inode* inode, ui block_size)
     bitmap = (bmap*) new char[block_size];//(bmap *)malloc(block_size);
     read_block(fd, (char*)bitmap, group.bg_block_bitmap, block_size); 
 
-    std::vector<ui> v;
-    set_blocks(fd, inode, v);
-    for (ui i = v.front()-1; i < v.front() + v.size() -1; i++)
+    ui size = blocks.size();
+    for (ui i = 0; i < size; i++)
     {
-        if (BM_ISSET(i,bitmap))
-            ;
-        else
-        {
-                //std::cout << *v.begin() << "-";
-        		v.erase(v.begin());
-        		BM_SET(i, bitmap);
-        		if(v.empty())
-        			break;
-        }
+		BM_SET(blocks[i]-1, bitmap);
     }    
     write_block(fd, (char*) bitmap, group.bg_block_bitmap, block_size);
+    delete inode;
     delete[] bitmap;
 }
 
@@ -136,7 +218,6 @@ const std::string add_dir_entry(int fd, char* block, struct ext2_dir_entry* lost
     return file;
 }
 
-
 void read_inode(int fd, ui bg_inode_table, struct ext2_inode* inode, int inode_no)
 {
     lseek(fd, BLOCK_OFFSET(bg_inode_table)+sizeof(struct ext2_inode)*inode_no, SEEK_SET);
@@ -178,7 +259,6 @@ void clean_mess_of_file(int fd, const string file_name, ui bg_inode_table, ui bl
     struct ext2_inode* deleted; 
     deleted = new ext2_inode();
     read_inode(fd, bg_inode_table, deleted, inode_no);
-    set_bitmap(fd, deleted, block_size);
     print_filename(file_name, deleted->i_dtime, deleted->i_blocks/(block_size/SECTOR_SIZE));
     // Change the Removed File's Imode via inode.
     configure_file_settings(fd, bg_inode_table, inode_no);
@@ -186,7 +266,7 @@ void clean_mess_of_file(int fd, const string file_name, ui bg_inode_table, ui bl
 }
 
 // Add the deleted file to the lost+found directory
-void add_lost(int fd, int inode_no, ui block_size, int f_count)
+void add_lost(int fd, int inode_no, vector<ui>& blocks, ui block_size, int f_count)
 {
     struct ext2_group_desc group;	
     struct ext2_inode* inode;
@@ -210,50 +290,71 @@ void add_lost(int fd, int inode_no, ui block_size, int f_count)
 
     // Refresh Start For a File
     clean_mess_of_file(fd, file_name, group.bg_inode_table, block_size, inode_no);
+    set_bitmap(fd, inode_no, blocks, block_size);
 
     delete inode;
     delete[] block;
 }
 
 // If any block of the file(which will be recovered) is modified, This function will return 1
-// -> Means it is modified -> Cannot be modified
-int modified(int fd, ui inode_no, ui block_size) // inode_no is the index number of the inode
+// -> Means it is modified -> Hence cannot be recovered 
+int modified(int fd, ui inode_no, vector<ui>& blocks, ui block_size) // inode_no is the index number of the inode
 {    
 	struct ext2_group_desc group;
 	lseek(fd, BASE_OFFSET + block_size, SEEK_SET);
     read(fd, &group, sizeof(group));
 
-	int flag = 0;
+	int modified = 0;
 	bmap *bitmap;
     bitmap = (bmap*) new char[block_size];//(bmap *)malloc(block_size);
     read_block(fd, (char*)bitmap, group.bg_block_bitmap, block_size); 
+
     struct ext2_inode* deleted;
     deleted = new struct ext2_inode();
-
     read_inode(fd, group.bg_inode_table, deleted, inode_no );
-    std::vector<ui> v;
-    set_blocks(fd, deleted, v);
-    for (ui i = v.front() - 1 ; i < v.front() + v.size() -1; i++)
+
+    int i=0;
+    while(deleted->i_block[i])
     {
-        if (BM_ISSET(i,bitmap))
+        if(BM_ISSET(deleted->i_block[i]-1, bitmap))
         {
-            flag = 1;
-            break;
+            modified = 1;
+            break;    
         }
-    }    
+        if(i < 12)
+        	blocks.push_back(deleted->i_block[i]);
+	    if(i == 12)
+	    {
+	    	blocks.push_back(deleted->i_block[i]);
+	    	modified = handle_single(fd, deleted->i_block[i], blocks, block_size);
+	    }
+        if(i == 13)
+    	{
+    		blocks.push_back(deleted->i_block[i]);
+    		handle_double(fd, deleted->i_block[i], blocks, block_size);
+    	}   
+    	if(i == 14)
+    	{
+    		blocks.push_back(deleted->i_block[i]);
+    		handle_triple(fd, deleted->i_block[i], blocks, block_size);
+    	}
+        i++;
+    }
     delete deleted;
     delete[] bitmap;
-	return flag;		// TO BE IMPLEMENTED
+	return modified;		// TO BE IMPLEMENTED
 }
 
 // Finds the not modified files and recover them.
+// deleted_files holds the inode numbers
 void recover(int fd, vector<int>& deleted_files, ui block_size)
 {
-	for(ui i=0; i < deleted_files.size(); i++)
+	ui size = deleted_files.size();
+	for(ui i=0; i < size; i++)
 	{
-		printf("Deleted File %d: %d\n", i , deleted_files[i]);
-		if(!modified(fd, deleted_files[i], block_size))
-			add_lost(fd, deleted_files[i], block_size, i);
+		std::vector<ui> blocks;
+		if(!modified(fd, deleted_files[i], blocks, block_size))
+			add_lost(fd, deleted_files[i], blocks, block_size, i);
 	}
 }
 void traverse_inodes(int fd, ui s_inodes_count, ui bg_inode_table)
@@ -304,7 +405,6 @@ int main(void)
     struct ext2_super_block super;
     struct ext2_group_desc group;
     int fd;
-
     if ((fd = open(IMAGE, O_RDWR)) < 0) {
         perror(IMAGE);
         exit(1);
@@ -317,64 +417,30 @@ int main(void)
         exit(1);
     }
     block_size = 1024 << super.s_log_block_size;
-
-    printf("Reading from image file " IMAGE ":\n"
-           "Blocks count            : %u\n"
-           "First non-reserved inode: %u\n"
-           "No of blocks per group  : %u\n"
-           "Size of block           : %u\n",
-           super.s_blocks_count,
-           super.s_first_ino,
-           super.s_blocks_per_group,
-           block_size);
-
-    printf("First data block: %u\n", super.s_first_data_block);
-    printf("Reserved blocks count: %u\n", super.s_r_blocks_count);
-    printf("Inodes count: %u\n", super.s_inodes_count);
-    printf("Group No: %u\n", super.s_block_group_nr);
-
     // read group descriptor
     lseek(fd, BASE_OFFSET + block_size, SEEK_SET);
     read(fd, &group, sizeof(group));
-    
-    // read block bitmap
-    bmap *bitmap;
-    bitmap = (bmap *)malloc(block_size);
-    lseek(fd, BLOCK_OFFSET(group.bg_block_bitmap), SEEK_SET);
-    read(fd, bitmap, block_size);
-    int fr = 0;
-    int nfr = 0;
-    printf("Free block bitmap:\n");
-    for (int i = 0; i < super.s_blocks_count; i++){
-        if (BM_ISSET(i,bitmap)){
-            printf("+");    // in use
-            nfr++;
-        }
-        else{
-            printf("-");    // empty
-            fr++;
-        }
-    }
-    printf("\n");
-    printf("Free blocks count       : %u\n"
-           "Non-Free block count    : %u\n"
-           , fr, nfr);
-    free(bitmap);
 
     vector<int> deleted_files;   // Holds the inodes of the deleted files
-    //find_deleted_files(fd, super.s_inodes_count, group.bg_inode_table, deleted_files);
-    //recover(fd, deleted_files, block_size);
+    find_deleted_files(fd, super.s_inodes_count, group.bg_inode_table, deleted_files);
+    recover(fd, deleted_files, block_size);
     //traverse_inodes(fd, super.s_inodes_count, group.bg_inode_table);
+	print_bitmap(fd, super, group);
+    /*
     vector<ui> v;
-    handle_single(fd, 35, 23 - 12, v);
-    int s = v.size();
-    for(int x=0; x < s; x++)
+ 	int modified;
+    modified = handle_double(fd, 295, v, 1024);
+    ui s = v.size();
+    cout << "modified: " << modified << endl;
+    for(ui x=0; x < s; x++)
     {
+    	if( !(x % 256))
+    		cout << endl;
     	cout << v.front() << " - " ;  
     	v.erase(v.begin());
     }
     cout << endl;
-    cout << "Size of unsigned int: " << sizeof(unsigned int) << endl;
+*/
     close(fd);
     return 0;
 }
