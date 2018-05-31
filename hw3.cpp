@@ -8,7 +8,7 @@ typedef unsigned int ui;
 
 void handle_double(int fd, vector<ui>& single_blocks, int no_of_blocks_remained)
 {
-	
+	;
 }
 
 void handle_single(int fd, ui single_block, int no_of_blocks_remained, std::vector<ui>& v)
@@ -374,6 +374,7 @@ int main(void)
     	v.erase(v.begin());
     }
     cout << endl;
+    cout << "Size of unsigned int: " << sizeof(unsigned int) << endl;
     close(fd);
     return 0;
 }
