@@ -14,6 +14,7 @@
 #define BASE_OFFSET 1024
 #define EXT2_BLOCK_SIZE 1024
 #define IMAGE "image.img"
+#define SECTOR_SIZE 512
 
 typedef unsigned char bmap;
 #define __NBITS (8 * (int) sizeof (bmap))
