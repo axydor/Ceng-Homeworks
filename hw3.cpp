@@ -414,18 +414,15 @@ void find_deleted_files(int fd, ui s_inodes_count, ui bg_inode_table, vector<del
         struct ext2_inode inode;
         lseek(fd, BLOCK_OFFSET(bg_inode_table)+sizeof(struct ext2_inode)*i, SEEK_SET);
         read(fd, &inode, sizeof(struct ext2_inode));
-        if(inode.i_size)
-        {
-            if(inode.i_dtime){
-            	struct dell deleted_file;
-            	std::string no = to_string((i-11)/10) + to_string((i-11)%10);
-    			deleted_file.file_name = "file" + no;
-    			deleted_file.dtime = inode.i_dtime;
-    			deleted_file.blocks_count = inode.i_blocks / (block_size/SECTOR_SIZE);
-    			deleted_file.inode_no = i;
-            	deleted_files.push_back(deleted_file);
-            }
-       }
+        if(inode.i_dtime){
+        	struct dell deleted_file;
+        	std::string no = to_string((i-11)/10) + to_string((i-11)%10);
+			deleted_file.file_name = "file" + no;
+			deleted_file.dtime = inode.i_dtime;
+			deleted_file.blocks_count = inode.i_blocks / (block_size/SECTOR_SIZE);
+			deleted_file.inode_no = i;
+        	deleted_files.push_back(deleted_file);
+        }
     } 
 }
 
@@ -453,7 +450,7 @@ int main(int argc, char* argv[])
     read(fd, &group, sizeof(group));
 
     vector<dell> deleted_files;   // Holds the inodes of the deleted files
-    find_deleted_files(fd, super.s_inodes_count, group.bg_inode_table, deleted_files);
+    find_deleted_files(fd, super.s_inodes_per_group, group.bg_inode_table, deleted_files);
     recover(fd, deleted_files, block_size);
     //traverse_inodes(fd, super.s_inodes_per_group, group.bg_inode_table);
     /*
