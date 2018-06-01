@@ -53,8 +53,10 @@ int handle_triple(int fd, ui triple_block, vector<ui>& blocks, ui block_size)
     vector<ui> indirects;                                            
     while(1)
     {
-        read(fd, &indirect_ptr_block_no, sizeof(ui));
         // End of the pointers
+		if(i == block_size/sizeof(ui))
+    		break;
+        read(fd, &indirect_ptr_block_no, sizeof(ui));
         if(indirect_ptr_block_no == 0)
            break;
         blocks.push_back(indirect_ptr_block_no);
@@ -78,6 +80,9 @@ int handle_double(int fd, ui double_block, vector<ui>& blocks, ui block_size)
     vector<ui> indirects;                                            
     while(1)
     {
+        // End of the pointers
+    	if(i == block_size/sizeof(ui))
+    		break;
         read(fd, &indirect_ptr_block_no, sizeof(ui));
         // End of the pointers
         if(indirect_ptr_block_no == 0)
@@ -101,6 +106,7 @@ int handle_single(int fd, ui single_block, std::vector<ui>& blocks, ui block_siz
 	lseek(fd, BASE_OFFSET + block_size, SEEK_SET);
     read(fd, &group, sizeof(group));
 
+    int i=0;
 	int flag = 0;
 	bmap *bitmap;
     bitmap = (bmap*) new char[block_size];//(bmap *)malloc(block_size);
@@ -111,6 +117,9 @@ int handle_single(int fd, ui single_block, std::vector<ui>& blocks, ui block_siz
     ui block_number;
     while(1) // no_of_blocks - 1-> because 1 block is reserved for PointerBlock
     {
+        // End of the blocks
+    	if(i == block_size/sizeof(ui))
+    		break;
         read(fd, &block_number, sizeof(ui));
         if(block_number == 0)
             break;
@@ -120,6 +129,7 @@ int handle_single(int fd, ui single_block, std::vector<ui>& blocks, ui block_siz
             break;
         }
         blocks.push_back(block_number);
+        i++;
     }
     delete[] bitmap;
     return modified;
@@ -339,6 +349,7 @@ int modified(int fd, ui inode_no, vector<ui>& blocks, ui block_size) // inode_no
     	{
     		blocks.push_back(deleted->i_block[i]);
     		handle_triple(fd, deleted->i_block[i], blocks, block_size);
+    		break;
     	}
         i++;
     }
