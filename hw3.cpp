@@ -38,7 +38,6 @@ void print_bitmap(int fd, struct ext2_super_block& super, struct ext2_group_desc
            "Non-Free block count    : %u\n"
            , fr, nfr);
     free(bitmap);
-
 }
 
 int handle_triple(int fd, ui triple_block, vector<ui>& blocks, ui block_size)
@@ -118,6 +117,7 @@ int handle_single(int fd, ui single_block, std::vector<ui>& blocks, ui block_siz
         }
         blocks.push_back(block_number);
     }
+    delete[] bitmap;
     return modified;
 }
 
@@ -190,8 +190,9 @@ void directory_info(char* block)
 }
 
 // Add the inode information to the lost+found directory entry
-const std::string add_dir_entry(int fd, char* block, struct ext2_dir_entry* lost_dir, ui inode_no, ui block_size, int f_count)
+const std::string add_dir_entry(int fd, char* block, ui inode_no, ui block_size, int f_count)
 {
+	struct ext2_dir_entry* lost_dir;
     lost_dir = (struct ext2_dir_entry *) ( (char*) block + 12);
     lost_dir->rec_len = 12;
     int pre_rec_len = 24;
@@ -269,7 +270,7 @@ void add_lost(int fd, int inode_no, vector<ui>& blocks, ui block_size, int f_cou
 {
     struct ext2_group_desc group;	
     struct ext2_inode* inode;
-    struct ext2_dir_entry* lost_dir;
+    //struct ext2_dir_entry* lost_dir;
     char* block;
 
     block =  new char[block_size];//(char* )malloc(EXT2_BLOCK_SIZE);
@@ -283,7 +284,7 @@ void add_lost(int fd, int inode_no, vector<ui>& blocks, ui block_size, int f_cou
     //Read the lost+found directory entry block
     read_block(fd, block, inode->i_block[0], block_size);
     // Adding the recovered file under lost+found directory
-    const std::string file_name = add_dir_entry(fd, block, lost_dir, inode_no, block_size, f_count);
+    const std::string file_name = add_dir_entry(fd, block, inode_no, block_size, f_count);
     // Write to make changes permanent
     write_block(fd, block, inode->i_block[0], block_size);
 

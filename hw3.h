@@ -44,7 +44,7 @@ void write_block(int fd, char* block, ui block_no, ui block_size);
 void read_block(int fd, char* block, ui block_no, ui block_size);
 void set_bitmap(int fd, ui inode_no, vector<ui>& blocks, ui block_size);
 void directory_info(char* block);
-const std::string add_dir_entry(int fd, char* block, struct ext2_dir_entry* lost_dir, ui inode_no, ui block_size, int f_count);
+const std::string add_dir_entry(int fd, char* block, ui inode_no, ui block_size, int f_count);
 void read_inode(int fd, ui bg_inode_table, struct ext2_inode* inode, int inode_no);
 void write_inode(int fd, ui bg_inode_table, struct ext2_inode* inode, int inode_no);
 void configure_file_settings(int fd, ui bg_inode_table, int inode_no);
