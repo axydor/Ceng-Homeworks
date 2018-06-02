@@ -15,10 +15,6 @@ void print_bitmap(int fd, struct ext2_super_block& super, struct ext2_group_desc
     printf("Reserved blocks count: %u\n", super.s_r_blocks_count);
     printf("Inodes count: %u\n", super.s_inodes_count);
     printf("Group No: %u\n", super.s_block_group_nr);	
-    printf("s_free_inodes_count;%u - --- -- - -" , super.s_free_inodes_count);
-    printf("s_inodes_count;%u \n", super.s_inodes_count);
-    cout << "s_blocks_per_group: " << super.s_blocks_per_group << endl;
-    cout << "s_inodes_per_group;: " << super.s_inodes_per_group << endl;
     // read block bitmap
     bmap *bitmap;
     bitmap = (bmap *)malloc(block_size);
@@ -220,8 +216,12 @@ const std::string add_dir_entry(int fd, char* block, ui inode_no, ui block_size,
 		lost_dir = (struct ext2_dir_entry *) ( (char*) block + 24 + 16 * (f_count - 1));
 		lost_dir->rec_len = 16;
 	}
-	lost_dir = (struct ext2_dir_entry *) ( (char*) block + 24 + 16 * (f_count));
-	const std::string no = to_string(f_count/10) + to_string(f_count%10);
+    if(f_count < 62)
+	    lost_dir = (struct ext2_dir_entry *) ( (char*) block + 24 + 16 * (f_count));
+	else
+	    lost_dir = (struct ext2_dir_entry *) ( (char*) block + 16 * (f_count - 62));
+
+    const std::string no = to_string(f_count/100) + to_string(f_count/10) + to_string(f_count%10);
 	const std::string file = "file" + no;
 	sprintf(lost_dir->name, "%s", file.c_str()); 
 	lost_dir->rec_len = remaining_bytes - (16*f_count);
@@ -302,6 +302,7 @@ void add_lost(int fd, int inode_no, vector<ui>& blocks, ui block_size, int f_cou
 
     // Refresh Start For a File
     clean_mess_of_file(fd, file_name, group.bg_inode_table, block_size, inode_no);
+    // We set the reovered file's blocks
     set_bitmap(fd, inode_no, blocks, block_size);
 
     delete inode;
@@ -372,7 +373,7 @@ void recover(int fd, vector<dell>& deleted_files, ui block_size)
 			add_lost(fd, deleted_files[i].inode_no, blocks, block_size, file_no);
 			file_no++;
 		}
-		else
+		else // I will Just print the recovered files below 
 			deleted_files[i].file_name = "x";
 	}
 	cout << "###" << endl;
@@ -453,28 +454,7 @@ int main(int argc, char* argv[])
     find_deleted_files(fd, super.s_inodes_per_group, group.bg_inode_table, deleted_files);
     recover(fd, deleted_files, block_size);
     //traverse_inodes(fd, super.s_inodes_per_group, group.bg_inode_table);
-    /*
-	print_bitmap(fd, super, group);
-    vector<ui> v;
- 	int modified;
-    modified = handle_double(fd, 295, v, 1024);
-    ui s = v.size();
-    cout << "modified: " << modified << endl;
-    for(ui x=0; x < s; x++)
-    {
-    	if( !(x % 256))
-    		cout << endl;
-    	cout << v.front() << " - " ;  
-    	v.erase(v.begin());
-    }
-    cout << endl;
-    printf("Inodes count: %u\n", super.s_inodes_count);
-    printf("s_free_inodes_count;%u - --- -- - -" , super.s_free_inodes_count);
-    printf("s_inodes_count;%u \n", super.s_inodes_count);
-    cout << "s_inodes_per_group;: " << super.s_inodes_per_group << endl;
-    printf("Group No: %u\n", super.s_blocks_count);	
-    cout << "s_blocks_per_group: " << super.s_blocks_per_group << endl;
-    */
+	//print_bitmap(fd, super, group);
     close(fd);
     return 0;
 }
