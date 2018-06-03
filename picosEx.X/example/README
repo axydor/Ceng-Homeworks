@@ -1,0 +1,2 @@
+This example non-stop prints "60" on the screen (on serial communication terminal) until a '$' character is sent by the user.
+Here, 60's are the transmitted data and '$' is the received data.

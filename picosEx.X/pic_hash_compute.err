@@ -1,0 +1,4 @@
+Warning[2054] pic_hash_compute.c 37 : suspicious pointer conversion
+Warning[2066] pic_hash_compute.c 37 : type qualifier mismatch in assignment
+Warning[2054] pic_hash_compute.c 50 : suspicious pointer conversion
+Warning[2054] pic_hash_compute.c 50 : suspicious pointer conversion
