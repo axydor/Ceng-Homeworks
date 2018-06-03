@@ -88,7 +88,7 @@ void parse_command()
         if(locx[1] != ',')
             count++;
         locy = receiveBuffer[count++];
-        count++;
+        count++;  // get over the comma ','
         orient[0] = receiveBuffer[count++];  //
         orient[1] = receiveBuffer[count++];
         if(orient[1] != ',')
@@ -97,9 +97,13 @@ void parse_command()
         komsu[1]  = receiveBuffer[count++];
         komsu[2]  = receiveBuffer[count++];
         komsu[3]  = receiveBuffer[count++];
-        if(!gotKey){
+        if(gotKey){ // So we got the key.
             key[0] = 'N';
             key[1] = 'E'; // Go to the DOOR
+        }
+        else{
+        	key[0] = receiveBuffer[count++];
+        	key[1] = receiveBuffer[count++];
         }
     }
     if(receiveBuffer[1] == 'A')
@@ -136,6 +140,57 @@ void pick_key()
     toSend = 3;
     TXSTA1bits.TXEN = 1;// disable transmitter, will be enabled again in 250 msecs
 }
+// It tries to go to East If not ıt changes ıt states and move along y-axis
+void go_to_east()
+{
+	if(komsu[EAST] == '0' || komsu[EAST] == '2')
+		moveForward();
+	else
+	{
+		turn_right();
+		state = 'E'; // MOVE IN THE Y AXIS UNTIL IT FINDS A TURN TO EAST
+	}
+}
+
+void go_to_west()
+{
+	if(komsu[WEST] == '0' || komsu[WEST] == '2')
+		moveForward();
+	else
+	{
+		turn_left();
+		state = 'W'; // MOVE IN THE Y AXIS UNTIL IT FINDS A TURN TO EAST
+	}
+}
+// It rotates until it is looking to the east
+// and then goes to the west if possible
+void just_east()
+{
+	if(orient[0] != '3' && orient[1] != '0' )
+    {
+    	if(orient[0] == '0') // If it is upward
+    	   	turn_right();
+    	else
+    		turn_left();
+    }
+    else // Rotated so go to the east
+    	go_to_east();
+}
+// It rotates until it is looking to the west
+// and then goes to the east if possible
+void just_west()
+{
+	if(orient[0] != '1' && orient[1] != '0' )
+	{
+		if(orient[0] == '0') // It is upward
+			turn_left();
+		else
+			turn_right();
+	}
+	else
+		go_to_west();
+}
+
 void move_it()
 {
     if(state == '0')
@@ -149,84 +204,145 @@ void move_it()
         else if(key[0] == 'N')
         {
             if(key[1] == 'E')
-            {
-                LATEbits.LATE2 = 1;
+            {// JUST TRY TO MOVE ALONG THE EAST
+            	just_east();
             }
             else if(key[1] == 'W')
-            {
-                LATEbits.LATE2 = 1;
+            {// JUST TRY TO MOVE ALONG THE EAST
+            	just_west();
             }
             else if(key[1] == ',')
             {
-                LATEbits.LATE2 = 1;
+            	if(orient[0] != '0')
+            		turn_left();
+            	else
+            	{
+                    if(komsu[NORTH] == '0' || komsu[NORTH] == '2' )
+                        moveForward();
+                    else
+                    {
+                    	turn_right();
+                    	state = 'S';
+                    }            		
+            	}
             }
         }
+        // SOUTH
         else if(key[0] == 'S')
         {
             LATEbits.LATE0 = 1;
             if(key[1] == 'E')
-            {// MOVE ALONG THE EAST
-                if(orient[0] != '3' && orient[1] != '0' )
-                    turn_left();
-                else{
-                    if(komsu[EAST] == '0' || komsu[EAST] == '2')
-                    {
-                        moveForward();
-                    }
-                    else
-                    {
-                        turn_right();
-                        state = 'E'; // MOVE UNTIL IT TURNS TO EAST
-                    }
-                }
+            {// JUST TRY TO MOVE ALONG THE EAST
+            	just_east();
             }
             else if(key[1] == 'W')
             {
-                if(orient[0] != '1' && orient[1] != '0' )
-                    turn_left();
-                else
-                {
-                    if(komsu[WEST] == '0' || komsu[WEST] == '2')
-                    {
-                        moveForward();
-                    }
-                }
+            	just_west();
             }
             else if(key[1] == ',')
             {
-                if(orient[0] != '2' && orient[1] != '0' )
+                if(orient[0] != '2' && orient[1] != '0' ) // Rotate 
                     turn_right();
                 else
                 {
                     if(komsu[SOUTH] == '0' || komsu[SOUTH] == '2' )
-                    {
                         moveForward();
+                    else
+                    {
+                    	turn_right();
+                    	state = 'S';
                     }
                 }
             }
         }
         else if(key[0] == 'E')
         {
-            LATEbits.LATE1 = 1;
-            if(orient[0] == '3' && orient[1] == '0')
-            {
-                moveForward();
-
-            }
-            else
-                turn_left();
+        	just_east();
         }
         else if(key[0] == 'W')
         {
             LATEbits.LATE0 = 1;
         }
     }
+    // IT MOVES ALONG UP OR DOWN UNTIL IT FINDS A TURN TO THE EAST
     if(state == 'E')
     {
         if(komsu[EAST] == '0' || komsu[EAST] == '2' )
-            turn_left();
+        {
+        	if(orient[0] == '0')// It is moving upward
+            	turn_right();
+            else
+            	turn_left();
+            // So we have found the turn we can go to east
+            state = '0';
+        }
         else
-            moveForward();
+        {  	// IF IT HITS THE BORDERS
+        	if( (locy == '0' && orient[0] != '2') || (locy == '4' && orient[0] != '0') ) //
+        		turn_right();
+        	else
+            	moveForward();
+        }
+    }
+    // IT MOVES ALONG UP OR DOWN UNTIL IT FINDS A TURN TO THE WEST
+    if(state == 'W')
+    {
+        if(komsu[WEST] == '0' || komsu[WEST] == '2' )
+        {
+        	if(orient[0] == '0')// It is moving upward
+            	turn_left();
+            else
+            	turn_right();
+            // So we have found the turn we can go to east
+            state = '0';
+        }
+        else
+        {  	// IF IT HITS THE BORDERS
+        	if( (locy == '0' && orient[0] != '3') || (locy == '4' && orient[0] != [0]))
+        		turn_right();
+        	else
+            	moveForward();
+        }
+    }
+    // IT MOVES ALONG X-AXIS UNTIL IT FINDS A TURN TO THE SOUTH
+    if(state == 'S')
+    {
+        if(komsu[SOUTH] == '0' || komsu[SOUTH] == '2' )
+        {
+        	if(orient[0] == '3')// It is moving east
+            	turn_right();
+            else
+            	turn_left();
+            // So we have found the turn we can go to east
+            state = '0';
+        }    
+        else
+        {
+        	if( (locx[0] == '0' && orient[0] != '3') || ( (locx[0] == '1' && locx[1] == '5') ))
+        			turn_right();
+        	else
+        		moveForward();
+        }
+    }
+    // IT MOVES ALONG X-AXIS UNTIL IT FINDS A TURN TO THE NORTH
+    else if(state == 'N')
+    {
+        if(komsu[NORTH] == '0' || komsu[NORTH] == '2' )
+        {
+        	if(orient[0] == '3')// It is moving east
+            	turn_left();
+            else
+            	turn_right();
+            // So we have found the turn we can go to east
+            state = '0';
+        }    
+        else
+        {
+        	if( (locx[0] == '0' && orient[0] != '3') || ( (locx[0] == '1' && locx[1] == '5') ))
+        			turn_right();
+        	else
+        		moveForward();
+        }    	
     }
 
 }
@@ -255,7 +371,6 @@ TASK(TASK0)
                     if(move){
                         if(GetResource(0) == E_OK){
                             move_it();
-                            //LATDbits.LATD0 = 1;
                             move = 0;
                             ReleaseResource(0);
                         }
