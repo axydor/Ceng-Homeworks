@@ -6,6 +6,7 @@
 extern char receiveBuffer[64];
 extern char systemState;
 extern char transmitBuffer[64];
+extern char hashbuf[64];
 extern char received;
 extern char toSend;
 extern char Go;
@@ -19,6 +20,7 @@ extern char key[2];
 extern char state;
 extern char direction;
 extern char gotKey;
+extern char no_of_alarms;
 
 /**********************************************************************
  * ----------------------- LOCAL FUNCTIONS ----------------------------
@@ -26,7 +28,7 @@ extern char gotKey;
 /* A silly function for TASK0 */
 void foo0()
 {
-        //PIE1bits.RC1IE = 1;
+    //PIE1bits.RC1IE = 1;
 	unsigned int n = 30;
 	char i;
 	for (i = 1; i >= 0; i--) {
@@ -108,7 +110,29 @@ void parse_command()
     }
     if(receiveBuffer[1] == 'A')
     {
-        LATEbits.LATE6 = 1;
+    	if(no_of_alarms > 3)
+    	{
+    		return; // DO NOT SOLVE MORE THAN 3 QUESTIONS
+    	}
+    	count = 4;
+    	hashbuf[0] = '$';
+    	hashbuf[1] = 'C';
+    	hashbuf[2] = no_of_alarms;
+    	hashbuf[3] = ',';
+    	while(1)
+    	{
+    		if(receiveBuffer[count] == ':')
+    			break;
+    		hashbuf[count] = receiveBuffer[count++];
+    	}
+    	hashbuf[count] = '\0';
+    	/*
+    	GetResource(0);
+    	compute_hash(hashbuf,transmitBuffer);
+    	ReleaseResource(0);
+    	TXSTA1bits.TXEN = 1;
+    	*/
+    	no_of_alarms++;
     }
 }
 void turn_left()
@@ -193,6 +217,7 @@ void just_west()
 
 void move_it()
 {
+	// STATE '0' MEANS IT NORMALLY TRIES TO FIND 
     if(state == '0')
     {
         if(key[0] == 'K')
@@ -344,7 +369,6 @@ void move_it()
         		moveForward();
         }    	
     }
-
 }
 
 /**********************************************************************
@@ -375,7 +399,6 @@ TASK(TASK0)
                             ReleaseResource(0);
                         }
                     }
-
                 }
             }
 	}

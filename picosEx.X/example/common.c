@@ -23,6 +23,8 @@ char senseSended;  // flag that to check sense respond is send to simulation
 char state = '0';
 char direction = '0';
 char gotKey; // FLAG whether we got the key
+char gotKey = 0;
+char no_of_alarms = 0;
 
 
 /**********************************************************************
