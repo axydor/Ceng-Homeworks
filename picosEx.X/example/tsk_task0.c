@@ -11,10 +11,14 @@ extern char toSend;
 extern char Go;
 extern char transmitCount;
 extern char move;
-extern char loc[3];
-extern char komsu[4];
+extern char locx[2];
+extern char locy;
+extern char komsu[4]; // a, b, c, d // up , right, down, left
 extern char orient[2];
 extern char key[2];
+extern char state;
+extern char direction;
+extern char gotKey;
 
 /**********************************************************************
  * ----------------------- LOCAL FUNCTIONS ----------------------------
@@ -71,6 +75,7 @@ void End()
 
 void parse_command()
 {
+    unsigned char count = 2;
     if(receiveBuffer[1] == 'G')
     {
         systemState = _RUNNING;
@@ -78,18 +83,24 @@ void parse_command()
     }
     if(receiveBuffer[1] == 'D')
     {
-        LATEbits.LATE5 = 1;
-        loc[0] = receiveBuffer[2];  // x coordinate
-        loc[1] = receiveBuffer[3];  // x coordianate
-        loc[2] = receiveBuffer[4];  // y coordinate
-        orient[0] = receiveBuffer[6];  //
-        orient[1] = receiveBuffer[7];
-        komsu[0]  = receiveBuffer[8];
-        komsu[1]  = receiveBuffer[9];
-        komsu[2]  = receiveBuffer[10];
-        komsu[3]  = receiveBuffer[11];
-        key[0] = receiveBuffer[12];
-        key[1] = receiveBuffer[13];
+        locx[0] = receiveBuffer[count++];  // x coordinate
+        locx[1] = receiveBuffer[count++];  // x coordianate
+        if(locx[1] != ',')
+            count++;
+        locy = receiveBuffer[count++];
+        count++;
+        orient[0] = receiveBuffer[count++];  //
+        orient[1] = receiveBuffer[count++];
+        if(orient[1] != ',')
+            count++;
+        komsu[0]  = receiveBuffer[count++];
+        komsu[1]  = receiveBuffer[count++];
+        komsu[2]  = receiveBuffer[count++];
+        komsu[3]  = receiveBuffer[count++];
+        if(!gotKey){
+            key[0] = 'N';
+            key[1] = 'E'; // Go to the DOOR
+        }
     }
     if(receiveBuffer[1] == 'A')
     {
@@ -98,57 +109,125 @@ void parse_command()
 }
 void turn_left()
 {
+    unsigned char count;
     transmitBuffer[0] = '$';
     transmitBuffer[1] = 'L';
+    transmitBuffer[2] = ':';
+    toSend = 3;
+    for(count = 0; count < 10; count ++)
+        TXSTA1bits.TXEN = 1;// disable transmitter, will be enabled again in 250 msecs
+}
+void turn_right()
+{
+    unsigned char count;
+    transmitBuffer[0] = '$';
+    transmitBuffer[1] = 'R';
+    transmitBuffer[2] = ':';
+    toSend = 3;
+    for(count = 0; count < 10; count ++)
+        TXSTA1bits.TXEN = 1;// disable transmitter, will be enabled again in 250 msecs
+}
+void pick_key()
+{
+    unsigned char count;
+    transmitBuffer[0] = '$';
+    transmitBuffer[1] = 'R';
     transmitBuffer[2] = ':';
     toSend = 3;
     TXSTA1bits.TXEN = 1;// disable transmitter, will be enabled again in 250 msecs
 }
 void move_it()
 {
-    if(key[0] == 'K')
+    if(state == '0')
     {
-        LATEbits.LATE7 = 1;
-    }
-    else if(key[0] == 'N')
-    {
-        if(key[1] == 'E')
+        if(key[0] == 'K')
         {
-            LATEbits.LATE2 = 1;
+            LATEbits.LATE7 = 1;
+            gotKey = 1;
+            pick_key();
         }
-        else if(key[1] == 'W')
+        else if(key[0] == 'N')
         {
-            LATEbits.LATE2 = 1;
+            if(key[1] == 'E')
+            {
+                LATEbits.LATE2 = 1;
+            }
+            else if(key[1] == 'W')
+            {
+                LATEbits.LATE2 = 1;
+            }
+            else if(key[1] == ',')
+            {
+                LATEbits.LATE2 = 1;
+            }
         }
-        else if(key[1] == ',')
+        else if(key[0] == 'S')
         {
-            LATEbits.LATE2 = 1;
+            LATEbits.LATE0 = 1;
+            if(key[1] == 'E')
+            {// MOVE ALONG THE EAST
+                if(orient[0] != '3' && orient[1] != '0' )
+                    turn_left();
+                else{
+                    if(komsu[EAST] == '0' || komsu[EAST] == '2')
+                    {
+                        moveForward();
+                    }
+                    else
+                    {
+                        turn_right();
+                        state = 'E'; // MOVE UNTIL IT TURNS TO EAST
+                    }
+                }
+            }
+            else if(key[1] == 'W')
+            {
+                if(orient[0] != '1' && orient[1] != '0' )
+                    turn_left();
+                else
+                {
+                    if(komsu[WEST] == '0' || komsu[WEST] == '2')
+                    {
+                        moveForward();
+                    }
+                }
+            }
+            else if(key[1] == ',')
+            {
+                if(orient[0] != '2' && orient[1] != '0' )
+                    turn_right();
+                else
+                {
+                    if(komsu[SOUTH] == '0' || komsu[SOUTH] == '2' )
+                    {
+                        moveForward();
+                    }
+                }
+            }
         }
-    }
-    else if(key[0] == 'S')
-    {
-        if(key[1] == 'E')
+        else if(key[0] == 'E')
         {
-            LATEbits.LATE3 = 1;
-        }
-        else if(key[1] == 'W')
-        {
-            LATEbits.LATE3 = 1;
-        }
-        else if(key[1] == ',')
-        {
-            LATEbits.LATE3 = 1;
-        }
-    }
-    else if(key[0] == 'E')
-    {
-        LATEbits.LATE1 = 1;
-    }
-    else if(key[0] == 'W')
-    {
-        LATEbits.LATE0 = 1;
-    }
+            LATEbits.LATE1 = 1;
+            if(orient[0] == '3' && orient[1] == '0')
+            {
+                moveForward();
 
+            }
+            else
+                turn_left();
+        }
+        else if(key[0] == 'W')
+        {
+            LATEbits.LATE0 = 1;
+        }
+    }
+    if(state == 'E')
+    {
+        if(komsu[EAST] == '0' || komsu[EAST] == '2' )
+            turn_left();
+        else
+            moveForward();
+    }
 
 }
 
@@ -175,9 +254,8 @@ TASK(TASK0)
                 {
                     if(move){
                         if(GetResource(0) == E_OK){
-                            for(count = 0; count < 10; count ++)
-                                turn_left();
-                            LATDbits.LATD0 = 1;
+                            move_it();
+                            //LATDbits.LATD0 = 1;
                             move = 0;
                             ReleaseResource(0);
                         }

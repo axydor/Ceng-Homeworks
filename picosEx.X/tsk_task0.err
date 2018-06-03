@@ -1,2 +1,13 @@
-Warning[2058] example/tsk_task0.c 168 : call of function without prototype
-Warning[2058] example/tsk_task0.c 179 : call of function without prototype
+Warning[2058] example/tsk_task0.c 162 : call of function without prototype
+Warning[2058] example/tsk_task0.c 166 : call of function without prototype
+Warning[2058] example/tsk_task0.c 170 : call of function without prototype
+Warning[2058] example/tsk_task0.c 178 : call of function without prototype
+Warning[2058] example/tsk_task0.c 183 : call of function without prototype
+Warning[2058] example/tsk_task0.c 190 : call of function without prototype
+Warning[2058] example/tsk_task0.c 195 : call of function without prototype
+Warning[2058] example/tsk_task0.c 205 : call of function without prototype
+Warning[2058] example/tsk_task0.c 209 : call of function without prototype
+Warning[2058] example/tsk_task0.c 220 : call of function without prototype
+Warning[2058] example/tsk_task0.c 222 : call of function without prototype
+Warning[2058] example/tsk_task0.c 240 : call of function without prototype
+Warning[2058] example/tsk_task0.c 250 : call of function without prototype

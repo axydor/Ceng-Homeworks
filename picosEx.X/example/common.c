@@ -8,15 +8,22 @@ char systemState = _IDLE;    // state of the system; _WAITING or _OPERATING
 char transmitBuffer[64];         // holds the bytes to be transmitted
 char receiveBuffer[64];         // holds the bytes to be transmitted
 unsigned char Go, received;
-char transmitCount;             // index to the transmitBuffer array
-char receiveCount;
-char toSend;
-char move;
-char loc[3];
-char komsu[4];
-char orient[2];
-char key[2];
-char senseSended;
+char transmitCount;// index to the transmitBuffer array
+char receiveCount; // Length of the string to be receive over receiveBuf
+char toSend;       // Length of the string to be send over transmitBuffer
+char move;         // flag whether we make a movement according to coming respo
+/// Below value got from the Sense Respond send by the simulation
+char locx[2];      // x-axis of robot
+char locy;         // location y-axis of robot
+char komsu[4];     // neighbour information
+char orient[2];    // Orienteiton of the robot
+char key[2];       // direction of the key wrt to robot
+///////////////////////////////////
+char senseSended;  // flag that to check sense respond is send to simulation
+char state = '0';
+char direction = '0';
+char gotKey; // FLAG whether we got the key
+
 
 /**********************************************************************
  * ----------------------- GLOBAL FUNCTIONS ---------------------------
@@ -31,12 +38,6 @@ void transmitData()
 	else {                  // all the bytes have been sent
 		TXSTA1bits.TXEN = 0;// disable transmitter, will be enabled again in 250 msecs
                 transmitCount = 0;
-/*
-                if(senseSended){
-                    SetEvent(TASK1_ID,TRANS_MITTED);
-                    senseSended = 0;
-                }
-  */
         }
 }
 
