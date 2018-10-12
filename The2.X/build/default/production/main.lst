@@ -1,0 +1,2346 @@
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 #include "p18f8722.inc"
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ; Build date : Nov 22 2017
+                      00005 ;  MPASM PIC18F8722 processor include
+                      00006 ; 
+                      00007 ;  (c) Copyright 1999-2017 Microchip Technology, All rights reserved
+                      00008 ;==========================================================================
+                      00009 
+                      02557         LIST
+Warning[205]: Found directive in column 1. (config)
+                      00002 config OSC = HSPLL, FCMEN = OFF, IESO = OFF, PWRT = OFF, BOREN = OFF, WDT = OFF, MCLRE = ON, LPT1OSC = O
+                            FF, LVP = OFF, XINST = OFF, DEBUG = OFF
+                      00003 
+                      00004 ; TODO INSERT ISR HERE
+Warning[205]: Found directive in column 1. (UDATA_ACS)
+                      00005 UDATA_ACS   
+000000                00006 s_1_up res 1              ; button_state_for_player_1 up
+000001                00007 s_1_down res 1            ; button_state_for_player_1 down
+000002                00008 s_2_up res 1              ; button_state_for_player_2 up
+000003                00009 s_2_down res 1            ; button_state_for_player_2 down
+000004                00010 move_up_1 res 1           ; Toggle flag to move the paddle1 up
+000005                00011 move_down_1 res 1         ; Toggle flag to move the paddle1 down
+000006                00012 move_up_2 res 1           ; Toggle flag to move the paddle2 up
+000007                00013 move_down_2 res 1         ; Toggle flag to move the paddle2 down
+000008                00014 counter res 1;            ; Counter for 300 ms (It will count up to 46)
+000009                00015 Yok_olan46 res 1          ; Constant which is 46
+00000A                00016 move_ball_flag res 1      ; We should wait 300ms to raise this flag so that we can move the ball
+00000B                00017 direction res 1           ; IN WHICH DIRECTION THE BALL IS MOVING LEFT=1, RIGHT=0
+00000C                00018 column_ball res 1         ; the column of the ball,COLUMN=0-> PORTA, COLUMN=1 -> PORTB...
+00000D                00019 row res 1                 ; the row of the ball
+00000E                00020 left_score res 1          ; Holds the score of the left one
+00000F                00021 left_score_flag res 1     ;
+000010                00022 right_score res 1         ; Holds the score of the right one
+000011                00023 right_score_flag res 1
+000012                00024 table_wreg res 1
+000013                00025 t1 res 1
+                      00026  
+                      00027 RES_VECT  CODE    0x0000            ; processor reset vector
+000000 EF?? F???      00028     GOTO    START                   ; go to beginning of program
+                      00029 
+Warning[205]: Found directive in column 1. (ORG)
+                      00030 ORG 0X0008
+000008 EF?? F???      00031     GOTO HIGH_ISR
+                      00032 
+Warning[205]: Found directive in column 1. (ORG)
+                      00033 ORG 0X0018
+000018 0000           00034     nop
+00001A 0010           00035     retfie
+                      00036 
+00001C                00037 TABLE
+00001C 52F9           00038     MOVF    PCL, F  ; A simple read of PCL will update PCLATH, PCLATU
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00001E 44E8           00039     RLNCF   WREG, W ; multiply index X2
+000020 26F9           00040     ADDWF   PCL, F  ; modify program counter
+000022 0C3F           00041     RETLW b'00111111' ;0 representation in 7-seg. disp. portJ
+000024 0C06           00042     RETLW b'00000110' ;1 representation in 7-seg. disp. portJ
+000026 0C5B           00043     RETLW b'01011011' ;2 representation in 7-seg. disp. portJ
+000028 0C4F           00044     RETLW b'01001111' ;3 representation in 7-seg. disp. portJ
+00002A 0C66           00045     RETLW b'01100110' ;4 representation in 7-seg. disp. portJ
+00002C 0C6D           00046     RETLW b'01101101' ;5 representation in 7-seg. disp. portJ
+00002E 0C7D           00047     RETLW b'01111101' ;6 representation in 7-seg. disp. portJ
+000030 0C07           00048     RETLW b'00000111' ;7 representation in 7-seg. disp. portJ
+000032 0C7F           00049     RETLW b'01111111' ;8 representation in 7-seg. disp. portJ
+000034 0C67           00050     RETLW b'01100111' ;9 representation in 7-seg. disp. portJ
+                      00051 
+000036                00052 HIGH_ISR:
+000036 94F2           00053     bcf    INTCON, 2   ; CLEAR INTERRUPT FLAG
+000038 6E??           00054     movwf  table_wreg  ; SAVING THE CONTENT OF THE WREG
+00003A 2A??           00055     incf   counter
+00003C 50??           00056     movf   counter,w
+00003E 62??           00057     cpfseq Yok_olan46
+000040 D???           00058     bra    high_end
+000042 6A??           00059     clrf   counter
+000044 80??           00060     bsf    move_ball_flag, 0
+                      00061     
+Warning[207]: Found label after column 1. (high_end)
+000046                00062     high_end:
+000046 50??           00063         movf  table_wreg, w
+000048 0010           00064         retfie
+                      00065     
+00004A                00066 START
+00004A EC?? F???      00067     call INIT
+                      00068 
+00004E                00069 main:
+00004E EC?? F???      00070     call paddle_1
+000052 EC?? F???      00071     call paddle_2
+000056 EC?? F???      00072     call move_ball
+00005A EC?? F???      00073     call display
+00005E EF?? F???      00074     goto main
+                      00075     
+000062                00076 move_ball: 
+000062 A0??           00077     btfss move_ball_flag, 0 ; CHECK WHETHER IT IS GOOD TIME TO ROCKET THE BALL
+000064 0012           00078     return
+000066 6A??           00079     clrf  move_ball_flag   ; CLEAR FLAG SO THAT BALL GET INTO THIS FUNCTION ONLY AFTER 300MS
+000068 A0??           00080     btfss direction, 0     ; "DON'T STOP ME NOW"
+00006A EF?? F???      00081     goto  moving_to_right
+                      00082 
+Warning[207]: Found label after column 1. (moving_to_left)
+00006E                00083     moving_to_left:  ;  SWITCH CASES TO CHOOSE WHERE ARE WE NOW?
+00006E 50??           00084         movf  column_ball, w
+000070 0A01           00085         xorlw 1 ;       BALL IS AT PORTB, MOVING TO THE PORT A
+000072 B4D8           00086         btfsc STATUS, Z
+000074 EF?? F???      00087         goto  left_a  ; IF(COLUMN==1) BALL MOVES FROM PORTB TO PORTA
+000078 0A03           00088         xorlw 2^1 
+00007A B4D8           00089         btfsc STATUS, 2
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00007C EF?? F???      00090         goto  left_b  ; IF(COLUMN==2) BALL MOVES FROM PORTC TO PORTB
+000080 0A01           00091         xorlw 3^2
+000082 B4D8           00092         btfsc STATUS, 2
+000084 EF?? F???      00093         goto  left_c  ; BALL MOVES FROM PORTD TO PORTC
+000088 0A07           00094         xorlw 4^3 
+00008A B4D8           00095         btfsc STATUS, 2
+00008C EF?? F???      00096         goto  left_d  ; BALL MOVES FROM PORTE TO PORTD
+000090 0A01           00097         xorlw 5^4  
+000092 B4D8           00098         btfsc STATUS, 2
+000094 EF?? F???      00099         goto  left_e  ; BALL MOVES FROM PORTF TO PORTE
+                      00100 
+Warning[207]: Found label after column 1. (left_a)
+000098                00101         left_a: ;  BALL MOVES FROM PORTB TO PORTA
+000098 6A??           00102             clrf   column_ball
+00009A 6A81           00103             clrf   PORTB
+00009C A0CE           00104             btfss  TMR1L, 0
+00009E EF?? F???      00105             goto   a_first_bit_0
+0000A2 A2CE           00106             btfss  TMR1L, 1
+0000A4 EF?? F???      00107             goto   a_bit_01
+0000A8 EF?? F???      00108             goto   a_bit_00_11
+                      00109 
+Warning[207]: Found label after column 1. (a_first_bit_0)
+0000AC                00110             a_first_bit_0:
+0000AC A2CE           00111                 btfss TMR1L, 1
+0000AE EF?? F???      00112                 goto a_bit_00_11
+0000B2 EF?? F???      00113                 goto a_bit_10
+                      00114 
+Warning[207]: Found label after column 1. (a_bit_00_11)
+0000B6                00115             a_bit_00_11: ; MOVE AT THE SAME LINE
+0000B6 50??           00116                 movf  row, w
+0000B8 1480           00117                 andwf PORTA, w
+0000BA B4D8           00118                 btfsc STATUS, 2
+0000BC EF?? F???      00119                 goto  right_scored    ; RIGHT ONE SCORED
+0000C0 70??           00120                 btg   direction, 0    ; RIGHT ONE COULD NOT SCORED
+0000C2 EF?? F???      00121                 goto  right_b         ; BALL HITS THE PEDAL AND CHANGES DIRECTION
+                      00122 
+Warning[207]: Found label after column 1. (a_bit_01)
+0000C6                00123             a_bit_01: ; MOVE UP
+0000C6 A0??           00124                 btfss  row, 0 ; IF ROW==1; ELSE ROTATE RIGHT 
+0000C8 42??           00125                 rrncf  row
+0000CA 50??           00126                 movf   row,w
+0000CC 1480           00127                 andwf  PORTA, w
+0000CE B4D8           00128                 btfsc  STATUS, 2
+0000D0 EF?? F???      00129                 goto   right_scored    
+0000D4 70??           00130                 btg    direction,0
+0000D6 EF?? F???      00131                 goto   right_b  ;      BALL HITS THE PEDAL AND MOVES
+                      00132 
+Warning[207]: Found label after column 1. (a_bit_10)
+0000DA                00133             a_bit_10: ; MOVE DOWN
+0000DA AA??           00134                 btfss  row, 5   ; IF BALL GOES OUT OF BORDER MAKE IT IN BORDER
+0000DC 46??           00135                 rlncf  row
+0000DE 50??           00136                 movf   row, w   ;
+0000E0 1480           00137                 andwf  PORTA, w ;
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0000E2 B4D8           00138                 btfsc  STATUS, 2;
+0000E4 EF?? F???      00139                 goto   right_scored
+0000E8 70??           00140                 btg    direction, 0
+0000EA EF?? F???      00141                 goto   right_b  ;      BALL HITS THE PEDAL AND CHANGES DIRECTION
+                      00142 
+Warning[207]: Found label after column 1. (left_b)
+0000EE                00143         left_b:
+0000EE 0E01           00144             movlw  d'1'       ; WE WILL GO TO THE PORT B SO SET COLUMN=1 -> PORTB
+0000F0 6E??           00145             movwf  column_ball
+0000F2 6A82           00146             clrf   PORTC
+0000F4 A0CE           00147             btfss  TMR1L, 0
+0000F6 EF?? F???      00148             goto   b_first_bit_0
+0000FA A2CE           00149             btfss  TMR1L, 1
+0000FC EF?? F???      00150             goto   b_bit_01
+000100 EF?? F???      00151             goto   b_bit_00_11
+                      00152 
+Warning[207]: Found label after column 1. (b_first_bit_0)
+000104                00153             b_first_bit_0:
+000104 A2CE           00154                 btfss TMR1L, 1
+000106 EF?? F???      00155                 goto b_bit_00_11
+00010A EF?? F???      00156                 goto b_bit_10
+                      00157 
+Warning[207]: Found label after column 1. (b_bit_00_11)
+00010E                00158             b_bit_00_11: ; MOVE AT THE SAME LINE
+00010E C??? FF81      00159                 movff row, PORTB
+000112 EF?? F???      00160                 goto  _end
+                      00161 
+Warning[207]: Found label after column 1. (b_bit_01)
+000116                00162             b_bit_01: ; MOVE UP
+000116 A0??           00163                 btfss  row, 0
+000118 42??           00164                 rrncf  row
+00011A C??? FF81      00165                 movff  row, PORTB
+00011E EF?? F???      00166                 goto  _end
+                      00167 
+Warning[207]: Found label after column 1. (b_bit_10)
+000122                00168             b_bit_10: ; MOVE DOWN
+000122 AA??           00169                 btfss  row, 5   ; IF BALL GOES OUT OF BORDER MAKE IT IN BORDER
+000124 46??           00170                 rlncf  row
+000126 C??? FF81      00171                 movff  row, PORTB
+00012A EF?? F???      00172                 goto  _end
+                      00173 
+Warning[207]: Found label after column 1. (left_c)
+00012E                00174         left_c:
+00012E 0E02           00175             movlw  d'2'       ; WE WILL GO TO THE PORTC SO SET COLUMN=2 -> PORTC
+000130 6E??           00176             movwf  column_ball
+000132 6A83           00177             clrf   PORTD
+000134 A0CE           00178             btfss  TMR1L, 0
+000136 EF?? F???      00179             goto   c_first_bit_0
+00013A A2CE           00180             btfss  TMR1L, 1
+00013C EF?? F???      00181             goto   c_bit_01
+000140 EF?? F???      00182             goto   c_bit_00_11
+                      00183 
+Warning[207]: Found label after column 1. (c_first_bit_0)
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000144                00184             c_first_bit_0:
+000144 A2CE           00185                 btfss TMR1L, 1
+000146 EF?? F???      00186                 goto c_bit_00_11
+00014A EF?? F???      00187                 goto c_bit_10
+                      00188 
+Warning[207]: Found label after column 1. (c_bit_00_11)
+00014E                00189             c_bit_00_11:
+00014E C??? FF82      00190                 movff row, PORTC
+000152 EF?? F???      00191                 goto  _end
+                      00192 
+Warning[207]: Found label after column 1. (c_bit_01)
+000156                00193             c_bit_01: ; MOVE UP
+000156 A0??           00194                 btfss  row, 0
+000158 42??           00195                 rrncf  row
+00015A C??? FF82      00196                 movff  row, PORTC
+00015E EF?? F???      00197                 goto   _end
+                      00198 
+Warning[207]: Found label after column 1. (c_bit_10)
+000162                00199             c_bit_10: ; MOVE DOWN
+000162 AA??           00200                 btfss  row, 5   ; IF BALL GOES OUT OF BORDER MAKE IT IN BORDER
+000164 46??           00201                 rlncf  row
+000166 C??? FF82      00202                 movff  row, PORTC
+00016A EF?? F???      00203                 goto   _end
+                      00204 
+Warning[207]: Found label after column 1. (left_d)
+00016E                00205         left_d:
+00016E 0E03           00206             movlw  d'3'
+000170 6E??           00207             movwf  column_ball
+000172 6A84           00208             clrf   PORTE
+000174 A0CE           00209             btfss  TMR1L, 0
+000176 EF?? F???      00210             goto   d_first_bit_0
+00017A A2CE           00211             btfss  TMR1L, 1
+00017C EF?? F???      00212             goto   d_bit_01
+000180 EF?? F???      00213             goto   d_bit_00_11
+                      00214 
+Warning[207]: Found label after column 1. (d_first_bit_0)
+000184                00215             d_first_bit_0:
+000184 A2CE           00216                 btfss TMR1L, 1
+000186 EF?? F???      00217                 goto  d_bit_00_11
+00018A EF?? F???      00218                 goto  d_bit_10
+                      00219 
+Warning[207]: Found label after column 1. (d_bit_00_11)
+00018E                00220             d_bit_00_11:
+00018E C??? FF83      00221                 movff row, PORTD
+000192 EF?? F???      00222                         goto  _end
+                      00223 
+Warning[207]: Found label after column 1. (d_bit_01)
+000196                00224             d_bit_01: ; MOVE UP
+000196 A0??           00225                 btfss  row, 0
+000198 42??           00226                 rrncf  row
+00019A C??? FF83      00227                 movff  row, PORTD
+00019E EF?? F???      00228                 goto  _end
+                      00229 
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[207]: Found label after column 1. (d_bit_10)
+0001A2                00230             d_bit_10: ; MOVE DOWN
+0001A2 AA??           00231                 btfss  row, 5   ; IF BALL GOES OUT OF BORDER MAKE IT IN BORDER
+0001A4 46??           00232                 rlncf  row
+0001A6 C??? FF83      00233                 movff row, PORTD
+0001AA EF?? F???      00234                 goto  _end
+                      00235 
+Warning[207]: Found label after column 1. (left_e)
+0001AE                00236         left_e:  ; WE ALREADY CHANGE THE PATH IN RIGHT_F SO HERE JUST MOVE LEFT
+0001AE 0E04           00237             movlw  d'4'
+0001B0 6E??           00238             movwf  column_ball
+0001B2 C??? FF84      00239             movff  row, PORTE
+0001B6 EF?? F???      00240             goto   _end
+                      00241 
+Warning[207]: Found label after column 1. (moving_to_right)
+0001BA                00242     moving_to_right:
+0001BA 50??           00243         movf  column_ball, w
+0001BC 0A00           00244         xorlw 0 ; BALL AT PORT A
+0001BE B4D8           00245         btfsc STATUS, 2
+0001C0 EF?? F???      00246         goto  right_b ; IF(COLUMN==0) BALL MOVES FROM PORTA TO PORTB
+0001C4 0A01           00247         xorlw 1^0 
+0001C6 B4D8           00248         btfsc STATUS, 2 
+0001C8 EF?? F???      00249         goto  right_c ; IF(COLUMN==1) BALL MOVES FROM PORTB TO PORTC
+0001CC 0A03           00250         xorlw 2^1 ;   
+0001CE B4D8           00251         btfsc STATUS, 2
+0001D0 EF?? F???      00252         goto  right_d ; IF(COLUMN==2) BALL MOVES FROM PORTC TO PORTD
+0001D4 0A01           00253         xorlw 3^2     ;
+0001D6 B4D8           00254         btfsc STATUS, 2
+0001D8 EF?? F???      00255         goto  right_e ; IF(COLUMN==3) BALL MOVES FROM PORTD TO PORTE
+0001DC 0A07           00256         xorlw 4^3     ;
+0001DE B4D8           00257         btfsc STATUS, 2
+0001E0 EF?? F???      00258         goto  right_f ; BALL MOVES FROM PORTE TO PORTF
+                      00259 
+Warning[207]: Found label after column 1. (right_b)
+0001E4                00260         right_b:      ; BALL MOVES FROM PORTA TO PORTB
+0001E4 0E01           00261             movlw  d'1'  ; WE WILL GO TO THE PORTB SO SET COLUMN=1 -> PORTB
+0001E6 6E??           00262             movwf  column_ball
+0001E8 C??? FF81      00263             movff row, PORTB   ;  WE DONT CHANGE PATH IT WAS ALREADY CHANGED
+0001EC EF?? F???      00264             goto  _end
+                      00265 
+Warning[207]: Found label after column 1. (right_c)
+0001F0                00266         right_c:      ; BALL MOVES FROM PORTB TO PORTC
+0001F0 6A81           00267             clrf   PORTB
+0001F2 0E02           00268             movlw  d'2'
+0001F4 6E??           00269             movwf  column_ball
+0001F6 A0CE           00270             btfss  TMR1L, 0
+0001F8 EF?? F???      00271             goto   rc_first_bit_0
+0001FC A2CE           00272             btfss  TMR1L, 1
+0001FE EF?? F???      00273             goto   rc_bit_01
+000202 EF?? F???      00274             goto   rc_bit_00_11
+                      00275 
+Warning[207]: Found label after column 1. (rc_first_bit_0)
+000206                00276             rc_first_bit_0:
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000206 A2CE           00277                 btfss TMR1L, 1
+000208 EF?? F???      00278                 goto  rc_bit_00_11
+00020C EF?? F???      00279                 goto  rc_bit_10
+                      00280 
+Warning[207]: Found label after column 1. (rc_bit_00_11)
+000210                00281             rc_bit_00_11:
+000210 C??? FF82      00282                 movff row, PORTC
+000214 EF?? F???      00283                 goto  _end
+                      00284 
+Warning[207]: Found label after column 1. (rc_bit_01)
+000218                00285             rc_bit_01: ; MOVE UP
+000218 A0??           00286                 btfss  row, 0 ; IF (ROW!=1) ROTATE RIGHT
+00021A 42??           00287                 rrncf  row
+00021C C??? FF82      00288                 movff  row, PORTC
+000220 EF?? F???      00289                 goto  _end
+                      00290 
+Warning[207]: Found label after column 1. (rc_bit_10)
+000224                00291             rc_bit_10: ; MOVE DOWN
+000224 AA??           00292                 btfss  row, 5   ; IF BALL GOES OUT OF BORDER MAKE IT IN BORDER
+000226 46??           00293                 rlncf  row
+000228 C??? FF82      00294                 movff  row, PORTC
+00022C EF?? F???      00295                 goto  _end
+                      00296 
+Warning[207]: Found label after column 1. (right_d)
+000230                00297         right_d:      ; BALL MOVES FROM PORTC TO PORTD
+000230 6A82           00298             clrf   PORTC
+000232 0E03           00299             movlw  d'3'
+000234 6E??           00300             movwf  column_ball
+000236 A0CE           00301             btfss  TMR1L, 0
+000238 EF?? F???      00302             goto   rd_first_bit_0
+00023C A2CE           00303             btfss  TMR1L, 1
+00023E EF?? F???      00304             goto   rd_bit_01
+000242 EF?? F???      00305             goto   rd_bit_00_11
+                      00306 
+Warning[207]: Found label after column 1. (rd_first_bit_0)
+000246                00307             rd_first_bit_0:
+000246 A2CE           00308                 btfss TMR1L, 1
+000248 EF?? F???      00309                 goto  rd_bit_00_11
+00024C EF?? F???      00310                 goto  rd_bit_10
+                      00311 
+Warning[207]: Found label after column 1. (rd_bit_00_11)
+000250                00312             rd_bit_00_11:
+000250 C??? FF83      00313                 movff row, PORTD
+000254 EF?? F???      00314                 goto  _end
+                      00315 
+Warning[207]: Found label after column 1. (rd_bit_01)
+000258                00316             rd_bit_01: ; MOVE UP
+000258 A0??           00317                 btfss  row, 0 ; IF (ROW!=1) ROTATE RIGHT
+00025A 42??           00318                 rrncf  row
+00025C C??? FF83      00319                 movff  row, PORTD
+000260 EF?? F???      00320                 goto  _end
+                      00321                 
+Warning[207]: Found label after column 1. (rd_bit_10)
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000264                00322             rd_bit_10: ; MOVE DOWN
+000264 AA??           00323                 btfss  row, 5   ; IF BALL GOES OUT OF BORDER MAKE IT IN BORDER
+000266 46??           00324                 rlncf  row
+000268 C??? FF83      00325                 movff  row, PORTD
+00026C EF?? F???      00326                 goto  _end
+                      00327 
+Warning[207]: Found label after column 1. (right_e)
+000270                00328         right_e:      ; BALL MOVES FROM PORTD TO PORTE
+000270 6A83           00329             clrf   PORTD
+000272 0E04           00330             movlw  d'4'
+000274 6E??           00331             movwf  column_ball
+000276 A0CE           00332             btfss  TMR1L, 0
+000278 EF?? F???      00333             goto   re_first_bit_0
+00027C A2CE           00334             btfss  TMR1L, 1
+00027E EF?? F???      00335             goto   re_bit_01
+000282 EF?? F???      00336             goto   re_bit_00_11
+                      00337 
+Warning[207]: Found label after column 1. (re_first_bit_0)
+000286                00338             re_first_bit_0:
+000286 A2CE           00339                 btfss TMR1L, 1
+000288 EF?? F???      00340                 goto  re_bit_00_11
+00028C EF?? F???      00341                 goto  re_bit_10
+                      00342 
+Warning[207]: Found label after column 1. (re_bit_00_11)
+000290                00343             re_bit_00_11:  ; this path was choosen this
+000290 C??? FF84      00344                 movff row, PORTE
+000294 EF?? F???      00345                 goto  _end
+                      00346 
+Warning[207]: Found label after column 1. (re_bit_01)
+000298                00347             re_bit_01:   ; BALL MOVES  UPWARD
+000298 A0??           00348                 btfss  row, 0 ; IF (ROW!=1) ROTATE RIGHT
+00029A 42??           00349                 rrncf  row
+00029C C??? FF84      00350                 movff  row, PORTE
+0002A0 EF?? F???      00351                 goto  _end
+                      00352 
+Warning[207]: Found label after column 1. (re_bit_10)
+0002A4                00353             re_bit_10:   ; MOVE DOWN
+0002A4 AA??           00354                 btfss  row, 5   ; IF BALL GOES OUT OF BORDER MAKE IT IN BORDER
+0002A6 46??           00355                 rlncf  row
+0002A8 C??? FF84      00356                 movff  row, PORTE
+0002AC EF?? F???      00357                 goto  _end
+                      00358 
+Warning[207]: Found label after column 1. (right_f)
+0002B0                00359         right_f:         ; BALL MOVES FROM PORTE TO PORTF
+0002B0 6A84           00360             clrf   PORTE
+0002B2 0E04           00361             movlw  d'4'
+0002B4 6E??           00362             movwf  column_ball  
+0002B6 A0CE           00363             btfss  TMR1L, 0        ; WE TEST ACCORDING TO THE PDF BUT WITH TIMER1
+0002B8 EF?? F???      00364             goto   rf_first_bit_0  
+0002BC A2CE           00365             btfss  TMR1L, 1
+0002BE EF?? F???      00366             goto   rf_bit_01
+0002C2 EF?? F???      00367             goto   rf_bit_00_11
+                      00368 
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[207]: Found label after column 1. (rf_first_bit_0)
+0002C6                00369             rf_first_bit_0:
+0002C6 A2CE           00370                 btfss TMR1L, 1
+0002C8 EF?? F???      00371                 goto  rf_bit_00_11
+0002CC EF?? F???      00372                 goto  rf_bit_10
+                      00373 
+Warning[207]: Found label after column 1. (rf_bit_00_11)
+0002D0                00374             rf_bit_00_11:  ;this path was choosen MOVES ON SAME LINE
+0002D0 50??           00375                 movf   row, w
+0002D2 1485           00376                 andwf  PORTF, w
+0002D4 B4D8           00377                 btfsc  STATUS, 2
+0002D6 EF?? F???      00378                 goto   left_scored
+0002DA 70??           00379                 btg    direction,0
+0002DC EF?? F???      00380                 goto   left_e
+                      00381 
+Warning[207]: Found label after column 1. (rf_bit_01)
+0002E0                00382             rf_bit_01:   ; BALL MOVES UPWARD
+0002E0 A0??           00383                 btfss  row, 0
+0002E2 42??           00384                 rrncf  row
+0002E4 50??           00385                 movf   row, w
+0002E6 1485           00386                 andwf  PORTF, w  ; CHECK THE GOAL STATUS
+0002E8 B4D8           00387                 btfsc  STATUS, 2
+0002EA EF?? F???      00388                 goto   left_scored
+0002EE 70??           00389                 btg    direction, 0 ; GOAL KEEPER SAVED
+0002F0 EF?? F???      00390                 goto   left_e
+                      00391 
+Warning[207]: Found label after column 1. (rf_bit_10)
+0002F4                00392             rf_bit_10:   ; BALL MOVES DOWNWARD
+0002F4 AA??           00393                 btfss  row, 5   ; IF BALL GOES OUT OF BORDER MAKE IT IN BORDER
+0002F6 46??           00394                 rlncf  row
+0002F8 50??           00395                 movf   row, w
+0002FA 1485           00396                 andwf  PORTF, w  ; CHECK THE GOAL STATUS
+0002FC B4D8           00397                 btfsc  STATUS, 2
+0002FE EF?? F???      00398                 goto   left_scored
+000302 70??           00399                 btg    direction, 0 ; GOAL KEEPER SAVED
+000304 EF?? F???      00400                 goto   left_e
+Warning[207]: Found label after column 1. (_end)
+000308                00401     _end:
+000308 0012           00402         return   ; return of the move_ball
+                      00403 ; CHECK WHETHER THE BUTTONS RG1 AND RG0 IS PRESSED    
+00030A                00404 paddle_1:;;CHECK RG1 IS PRESSED
+00030A B0??           00405     btfsc s_1_up,0
+00030C D???           00406     bra RG1_pressed
+Warning[207]: Found label after column 1. (RG1_released)
+00030E                00407     RG1_released: ; IT WAS NOT PRESSED
+00030E A286           00408         btfss PORTG,1 ; IT IS NOW PRESSED ?
+000310 D???           00409         bra RG1_end
+000312 80??           00410         bsf move_up_1,0
+000314 80??           00411         bsf s_1_up,0
+000316 D???           00412         bra RG1_end
+                      00413     
+Warning[207]: Found label after column 1. (RG1_pressed)
+000318                00414     RG1_pressed: ; IT WAS PRESSED
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000318 B286           00415         btfsc PORTG,1 ; IT IS NOW RELEASED ?
+00031A D???           00416         bra RG1_end
+00031C 90??           00417         bcf s_1_up,0
+                      00418         
+Warning[207]: Found label after column 1. (RG1_end)
+00031E                00419     RG1_end:;;CHECK RG0 IS PRESSED
+00031E B0??           00420         btfsc s_1_down,0
+000320 D???           00421         bra RG0_pressed
+                      00422     
+Warning[207]: Found label after column 1. (RG0_released)
+000322                00423     RG0_released: ; IN THE PREVIOUS STATE RG0 IS NOT PRESSED
+000322 A086           00424         btfss PORTG,0
+000324 D???           00425         bra RGA_end
+000326 80??           00426         bsf move_down_1,0
+000328 80??           00427         bsf s_1_down,0
+00032A D???           00428         bra RGA_end
+                      00429     
+Warning[207]: Found label after column 1. (RG0_pressed)
+00032C                00430     RG0_pressed:  ; IN THE PREVIOUS STATE RG0 IS  PRESSED
+00032C B086           00431         btfsc PORTG,0
+00032E D???           00432         bra RGA_end
+000330 90??           00433         bcf s_1_down,0
+                      00434         
+Warning[207]: Found label after column 1. (RGA_end)
+000332                00435     RGA_end:
+000332 EC?? F???      00436         call paddle_1_led_task ; MOVE THE PADDLE UP OR DOWN
+000336 0012           00437     return 
+                      00438 
+Warning[207]: Found label after column 1. (paddle_1_led_task)
+000338                00439     paddle_1_led_task:            ;MOVE THE PADDLE1 ACCORDING TO THE FLAGS
+000338 A0??           00440         btfss move_up_1, 0
+00033A EF?? F???      00441         goto  move_paddle1_down   ; MOVE UP FLAG IS NOT SET CHECK THE DOWN
+Warning[207]: Found label after column 1. (move_paddle1_up)
+00033E                00442         move_paddle1_up:
+00033E B085           00443             btfsc PORTF, 0
+000340 EF?? F???      00444             goto  move_paddle1_end; PADDLE CANNOT MOVE UP FURTHER
+000344 4285           00445             rrncf PORTF           ; MOVE THE PADDLE UP
+000346 EF?? F???      00446             goto  move_paddle1_end
+                      00447             
+Warning[207]: Found label after column 1. (move_paddle1_down)
+00034A                00448         move_paddle1_down:
+00034A A0??           00449             btfss move_down_1,0  ; CHECK WHETHER THE DOWN FLAG IS SET
+00034C EF?? F???      00450             goto  move_paddle1_end
+000350 BA85           00451             btfsc PORTF, 5       ; PADDLE1 CANNOT MOVE DOWN FURTHER
+000352 EF?? F???      00452             goto  move_paddle1_end
+000356 4685           00453             rlncf PORTF          ; MOVE THE PADDLE DOWN
+                      00454 
+Warning[207]: Found label after column 1. (move_paddle1_end)
+000358                00455         move_paddle1_end:
+000358 90??           00456             bcf   move_down_1, 0 ; WE CLEAR UP_DOWN FLAGS SO THAT WE WILL WAIT ANOTHER PRESS TO MOVE UP 
+                            OR DOWN
+00035A 90??           00457             bcf   move_up_1, 0   ; WE WILL IGNORE THE PREVIOUS RG1(UP) PRESS
+00035C 0012           00458             return
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00459 ; CHECK WHETHER THE BUTTONS RG3 AND RG2 IS PRESSED      
+00035E                00460 paddle_2:
+                      00461     ;CHECK RG3 IS PRESSED
+00035E B0??           00462     btfsc s_2_up,0
+000360 D???           00463     bra RG3_pressed
+Warning[207]: Found label after column 1. (RG3_released)
+000362                00464     RG3_released:
+000362 A686           00465         btfss PORTG,3
+000364 D???           00466         bra RG3_end
+000366 80??           00467         bsf move_up_2,0
+000368 80??           00468         bsf s_2_up,0
+00036A D???           00469         bra RG3_end
+                      00470     
+Warning[207]: Found label after column 1. (RG3_pressed)
+00036C                00471     RG3_pressed:
+00036C B686           00472         btfsc PORTG,3
+00036E D???           00473         bra RG3_end
+000370 90??           00474         bcf s_2_up,0 ; RG3 IS RELEASED SO STATE FOR RG3 = 0
+                      00475         
+Warning[207]: Found label after column 1. (RG3_end)
+000372                00476     RG3_end:        ;   CHECK RG2 IS PRESSED
+000372 B0??           00477         btfsc s_2_down,0
+000374 D???           00478         bra RG2_pressed
+                      00479     
+Warning[207]: Found label after column 1. (RG2_released)
+000376                00480     RG2_released: ; IN THE PREVIOUS STATE RG2 IS NOT PRESSED
+000376 A486           00481         btfss PORTG,2
+000378 D???           00482         bra RGF_end
+00037A 80??           00483         bsf move_down_2,0
+00037C 80??           00484         bsf s_2_down,0
+00037E D???           00485         bra RGF_end
+                      00486     
+Warning[207]: Found label after column 1. (RG2_pressed)
+000380                00487     RG2_pressed:  ; IN THE PREVIOUS STATE RG2 IS  PRESSED
+000380 B486           00488         btfsc PORTG,2
+000382 D???           00489         bra RGF_end
+000384 90??           00490         bcf s_2_down,0 ; RG2 IS RELEASED SO STATE=0
+                      00491         
+Warning[207]: Found label after column 1. (RGF_end)
+000386                00492     RGF_end:
+000386 EC?? F???      00493         call paddle_2_led_task ; MOVE THE PADDLE UP OR DOWN
+00038A 0012           00494     return 
+                      00495 
+Warning[207]: Found label after column 1. (paddle_2_led_task)
+00038C                00496     paddle_2_led_task: ;MOVE THE PADDLE2 ACCORDING TO THE FLAGS
+00038C A0??           00497         btfss move_up_2, 0
+00038E EF?? F???      00498         goto  move_paddle2_down ; MOVE UP FLAG IS NOT SET, CHECK THE DOWN
+                      00499 
+Warning[207]: Found label after column 1. (move_paddle2_up)
+000392                00500         move_paddle2_up:
+000392 B080           00501             btfsc PORTA, 0
+000394 EF?? F???      00502             goto  move_paddle2_end;  PADDLE CANNOT MOVE UP FURTHER
+000398 4280           00503             rrncf PORTA ; MOVE THE PADDLE UP
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00039A EF?? F???      00504             goto  move_paddle2_end
+                      00505             
+Warning[207]: Found label after column 1. (move_paddle2_down)
+00039E                00506         move_paddle2_down:
+00039E A0??           00507             btfss move_down_2,0 ; CHECK WHETHER THE DOWN FLAG IS SET
+0003A0 EF?? F???      00508             goto  move_paddle2_end
+0003A4 BA80           00509             btfsc PORTA, 5       ; PADDLE CANNOT MOVE DOWN FURTHER
+0003A6 EF?? F???      00510             goto  move_paddle2_end
+0003AA 4680           00511             rlncf PORTA         ; MOVE THE PADDLE DOWN
+                      00512             
+Warning[207]: Found label after column 1. (move_paddle2_end)
+0003AC                00513         move_paddle2_end:
+0003AC 90??           00514             bcf   move_up_2, 0   ; WE CLEAR UP_DOWN FLAGS SO THAT WE WILL WAIT ANOTHER PRESS TO MOVE UP 
+                            OR DOWN
+0003AE 90??           00515             bcf   move_down_2, 0 ; WE WILL IGNORE THE PREVIOUS RG2 PRESS
+0003B0 0012           00516        return
+                      00517 
+0003B2                00518 right_scored:
+0003B2 2A??           00519     incf   right_score
+0003B4 0E05           00520     movlw  d'5'
+0003B6 60??           00521     cpfslt right_score
+0003B8 EF?? F???      00522     goto   game_over
+0003BC EC?? F???      00523     call   display
+0003C0 EF?? F???      00524     goto   after_goal
+                      00525     
+0003C4                00526 left_scored:
+0003C4 2A??           00527     incf   left_score
+0003C6 0E05           00528     movlw  d'5'
+0003C8 60??           00529     cpfslt left_score
+0003CA EF?? F???      00530     goto   game_over    
+0003CE EC?? F???      00531     call   display
+0003D2 EF?? F???      00532     goto   after_goal
+                      00533     
+0003D6                00534 after_goal:
+0003D6 0E01           00535     movlw   d'1'
+0003D8 6E??           00536     movwf   direction
+0003DA 0E1C           00537     MOVLW   b'00011100' ; MAKE THE PADDLES IN INITIAL CONDITION
+0003DC 6E80           00538     MOVWF   PORTA
+0003DE 6E85           00539     MOVWF   PORTF
+0003E0 0E08           00540     MOVLW   b'00001000' ; TURN ON THE BALL
+0003E2 6E83           00541     MOVWF   PORTD
+0003E4 6E??           00542     MOVWF   row
+0003E6 0E03           00543     MOVLW   d'3'
+0003E8 6E??           00544     MOVWF   column_ball    
+0003EA EF?? F???      00545     goto    main
+                      00546 
+0003EE                00547 display:
+Warning[207]: Found label after column 1. (right_goals)
+0003EE                00548     right_goals:
+0003EE 6A87           00549         clrf   PORTH              ; BELOW PART IS FOR SETTING THE LEDS
+0003F0 8687           00550         bsf    PORTH, 3
+0003F2 50??           00551         movf   right_score, w
+0003F4 EC?? F???      00552         call   TABLE
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0003F8 6E88           00553         movwf  PORTJ
+0003FA EC?? F???      00554         call   DELAY
+                      00555         
+Warning[207]: Found label after column 1. (left_goals)
+0003FE                00556     left_goals:
+0003FE 6A87           00557         clrf   PORTH
+000400 8287           00558         bsf    PORTH, 1
+000402 50??           00559         movf   left_score, w
+000404 EC?? F???      00560         call   TABLE
+000408 6E88           00561         movwf  PORTJ
+00040A EC?? F???      00562         call   DELAY
+                      00563 
+Warning[207]: Found label after column 1. (display_end)
+00040E                00564    display_end:
+00040E 0012           00565         return 
+                      00566         
+000410                00567 game_over:
+000410 6A90           00568     clrf  LATH
+000412 8690           00569     bsf   LATH,3  
+000414 50??           00570     movf  right_score, w
+000416 EC?? F???      00571     call  TABLE
+00041A 6E91           00572     movwf LATJ
+00041C EC?? F???      00573     call  DELAY
+000420 6A90           00574     clrf  LATH
+000422 8290           00575     bsf   LATH,1
+000424 50??           00576     movf  left_score, w
+000426 EC?? F???      00577     call  TABLE
+00042A 6E91           00578     movwf LATJ
+00042C EC?? F???      00579     call  DELAY
+000430 EF?? F???      00580     goto  game_over
+                      00581     
+000434                00582 DELAY   ; DELAY FOR MAKING 7-SEG DISPLAY LOOKING GOOD
+000434 0EFF           00583     movlw  0xff
+000436 6E??           00584     movwf  t1
+Warning[207]: Found label after column 1. (loop)
+000438                00585     loop:
+000438 2E??           00586     decfsz t1,F 
+00043A EF?? F???      00587         GOTO   loop
+00043E 0012           00588         return
+                      00589         
+000440                00590 INIT
+000440 0E0F           00591     MOVLW   b'00001111'
+000442 6E98           00592     MOVWF   TRISG  ; MAKE RG0-RG1-RG2-RG3 PORTS(PINS) INPUT
+000444 0E0F           00593     MOVLW   0X0F
+000446 6EC1           00594     MOVWF   ADCON1 ; MAKE PORTA DIGITAL OUTPUT
+                      00595     
+000448 6A80           00596     CLRF    PORTA
+00044A 6A81           00597     CLRF    PORTB
+00044C 6A82           00598     CLRF    PORTC
+00044E 6A83           00599     CLRF    PORTD
+000450 6A84           00600     CLRF    PORTE
+000452 6A85           00601     CLRF    PORTF
+000454 6A87           00602     CLRF    PORTH
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000456 6A88           00603     CLRF    PORTJ
+                      00604     
+000458 6A92           00605     CLRF    TRISA  ; MAKE PORTA AS OUTPUT
+00045A 6A93           00606     CLRF    TRISB  ; MAKE PORTB AS OUTPUT
+00045C 6A94           00607     CLRF    TRISC  ; MAKE PORTC AS OUTPUT
+00045E 6A95           00608     CLRF    TRISD  ; MAKE PORTD AS OUTPUT
+000460 6A96           00609     CLRF    TRISE  ; MAKE PORTE AS OUTPUT
+000462 6A97           00610     CLRF    TRISF  ; MAKE PORTF AS OUTPUT
+000464 6A99           00611     CLRF    TRISH
+000466 6A9A           00612     CLRF    TRISJ
+                      00613 
+000468 0E1C           00614     MOVLW   b'00011100' ; TURN ON THE FIRST LEDS
+00046A 6E80           00615     MOVWF   PORTA
+00046C 6E85           00616     MOVWF   PORTF
+                      00617     
+00046E 0E08           00618     MOVLW   b'00001000' ; TURN ON THE BALL
+000470 6E83           00619     MOVWF   PORTD
+000472 6E??           00620     MOVWF   row
+000474 0E03           00621     MOVLW   d'3'
+000476 6E??           00622     MOVWF   column_ball
+000478 6A??           00623     CLRF    counter
+00047A 6A??           00624     CLRF    move_ball_flag
+00047C 6A??           00625     CLRF    s_1_up
+00047E 6A??           00626     CLRF    s_2_up   
+000480 6A??           00627     CLRF    s_1_down 
+000482 6A??           00628     CLRF    s_2_down
+000484 6A??           00629     CLRF    move_up_1
+000486 6A??           00630     CLRF    move_down_1
+000488 6A??           00631     CLRF    move_up_2
+00048A 6A??           00632     CLRF    move_down_2
+00048C 6A??           00633     CLRF    left_score
+00048E 6A??           00634     CLRF    right_score
+000490 6A??           00635     CLRF    left_score_flag
+000492 6A??           00636     CLRF    right_score_flag
+000494 6A??           00637     CLRF    table_wreg,
+                      00638 
+000496 0E01           00639     MOVLW    d'1'    
+000498 6E??           00640     MOVWF    direction   ; INITIALLY BALL MOVES LEFT
+                      00641     ;CLRF    PIE1 ; DONT USE TIMER1 AS AN INTERRUPT SOURCE
+                      00642     ;CLRF    PIE1
+00049A 0E2E           00643     MOVLW   d'46'
+00049C 6E??           00644     MOVWF   Yok_olan46
+                      00645     
+00049E 6AF2           00646     CLRF    INTCON ;
+0004A0 0EC7           00647     MOVLW   b'11000111'
+0004A2 6ED5           00648     MOVWF   T0CON
+0004A4 0E81           00649     MOVLW   b'10000001' ; T1 ENABLE
+0004A6 6ECD           00650     MOVWF   T1CON
+                      00651 
+0004A8 8AF2           00652     BSF     INTCON, 5
+0004AA 8EF2           00653     BSF     INTCON, 7; ENABLE INTERRUPTS
+0004AC 0012           00654     return
+                      00655 
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[205]: Found directive in column 1. (END)
+                      00656 END
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 16
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+A                                 00000000
+A16                               00000000
+A17                               00000001
+A18                               00000002
+A19                               00000003
+ABDEN                             00000000
+ABDEN1                            00000000
+ABDEN2                            00000000
+ABDOVF                            00000007
+ABDOVF1                           00000007
+ABDOVF2                           00000007
+ACCESS                            00000000
+ACKDT                             00000005
+ACKDT2                            00000005
+ACKEN                             00000004
+ACKEN2                            00000004
+ACKSTAT                           00000006
+ACKSTAT2                          00000006
+ACQT0                             00000003
+ACQT1                             00000004
+ACQT2                             00000005
+AD0                               00000000
+AD1                               00000001
+AD10                              00000002
+AD11                              00000003
+AD12                              00000004
+AD13                              00000005
+AD14                              00000006
+AD15                              00000007
+AD2                               00000002
+AD3                               00000003
+AD4                               00000004
+AD5                               00000005
+AD6                               00000006
+AD7                               00000007
+AD8                               00000000
+AD9                               00000001
+ADCON0                            00000FC2
+ADCON1                            00000FC1
+ADCON2                            00000FC0
+ADCS0                             00000000
+ADCS1                             00000001
+ADCS2                             00000002
+ADDEN                             00000003
+ADDEN1                            00000003
+ADDEN2                            00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADIP                              00000006
+ADON                              00000000
+ADRES                             00000FC3
+ADRESH                            00000FC4
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 17
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ADRESL                            00000FC3
+ALE                               00000000
+AN0                               00000000
+AN1                               00000001
+AN10                              00000005
+AN11                              00000006
+AN12                              00000004
+AN13                              00000005
+AN14                              00000006
+AN15                              00000007
+AN2                               00000002
+AN3                               00000003
+AN4                               00000005
+AN5                               00000000
+AN6                               00000001
+AN7                               00000002
+AN8                               00000003
+AN9                               00000004
+BA0                               00000004
+BANKED                            00000001
+BAUDCON                           00000F7E
+BAUDCON1                          00000F7E
+BAUDCON2                          00000F7C
+BCL1IE                            00000003
+BCL1IF                            00000003
+BCL1IP                            00000003
+BCL2IE                            00000006
+BCL2IF                            00000006
+BCL2IP                            00000006
+BCLIE                             00000003
+BCLIF                             00000003
+BCLIP                             00000003
+BF                                00000000
+BF2                               00000000
+BGST                              00000005
+BOR                               00000000
+BRG16                             00000003
+BRG161                            00000003
+BRG162                            00000003
+BRGH                              00000002
+BRGH1                             00000002
+BRGH2                             00000002
+BSR                               00000FE0
+C                                 00000000
+C1INV                             00000004
+C1OUT_CMCON                       00000006
+C1OUT_PORTF                       00000002
+C2INV                             00000005
+C2OUT_CMCON                       00000007
+C2OUT_PORTF                       00000001
+CCP1                              00000002
+CCP1CON                           00000FBD
+CCP1IE                            00000002
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 18
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CCP1IF                            00000002
+CCP1IP                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           00000FBA
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2IP                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCP2_PORTB                        00000003
+CCP2_PORTC                        00000001
+CCP2_PORTE                        00000007
+CCP3                              00000000
+CCP3CON                           00000FB7
+CCP3IE                            00000000
+CCP3IF                            00000000
+CCP3IP                            00000000
+CCP3M0                            00000000
+CCP3M1                            00000001
+CCP3M2                            00000002
+CCP3M3                            00000003
+CCP3X                             00000005
+CCP3Y                             00000004
+CCP4                              00000003
+CCP4CON                           00000F73
+CCP4IE                            00000001
+CCP4IF                            00000001
+CCP4IP                            00000001
+CCP4M0                            00000000
+CCP4M1                            00000001
+CCP4M2                            00000002
+CCP4M3                            00000003
+CCP5                              00000004
+CCP5CON                           00000F70
+CCP5IE                            00000002
+CCP5IF                            00000002
+CCP5IP                            00000002
+CCP5M0                            00000000
+CCP5M1                            00000001
+CCP5M2                            00000002
+CCP5M3                            00000003
+CCPR1                             00000FBE
+CCPR1H                            00000FBF
+CCPR1L                            00000FBE
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 19
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CCPR2                             00000FBB
+CCPR2H                            00000FBC
+CCPR2L                            00000FBB
+CCPR3                             00000FB8
+CCPR3H                            00000FB9
+CCPR3L                            00000FB8
+CCPR4                             00000F74
+CCPR4H                            00000F75
+CCPR4L                            00000F74
+CCPR5                             00000F71
+CCPR5H                            00000F72
+CCPR5L                            00000F71
+CE                                00000005
+CFGS                              00000006
+CHS0                              00000002
+CHS1                              00000003
+CHS2                              00000004
+CHS3                              00000005
+CIS                               00000003
+CK                                00000006
+CK1                               00000006
+CK2                               00000001
+CKE                               00000006
+CKE2                              00000006
+CKP                               00000004
+CKP2                              00000004
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             00000FB4
+CMIE                              00000006
+CMIF                              00000006
+CMIP                              00000006
+CREN                              00000004
+CREN1                             00000004
+CREN2                             00000004
+CS                                00000002
+CSRC                              00000007
+CSRC1                             00000007
+CSRC2                             00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            00000FB5
+CVREF                             00000005
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+CVRSS                             00000004
+D                                 00000005
+DA2                               00000005
+DATA_ADDRESS                      00000005
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 20
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+DC                                00000001
+DC1B0                             00000004
+DC1B1                             00000005
+DC2B0                             00000004
+DC2B1                             00000005
+DC3B0                             00000004
+DC3B1                             00000005
+DC4B0                             00000004
+DC4B1                             00000005
+DC5B0                             00000004
+DC5B1                             00000005
+DCCP4X                            00000005
+DCCP4Y                            00000004
+DCCP5X                            00000005
+DCCP5Y                            00000004
+DDRA                              TRISA
+DDRB                              TRISB
+DDRC                              TRISC
+DDRD                              TRISD
+DDRE                              TRISE
+DDRF                              00000F97
+DDRG                              00000F98
+DDRH                              00000F99
+DDRJ                              00000F9A
+DELAY                             00000434
+DONE                              00000001
+DT1                               00000007
+DT2                               00000002
+D_A                               00000005
+D_NOT_A                           00000005
+EBDIS                             00000007
+ECCP1                             00000002
+ECCP1AS                           00000FB6
+ECCP1AS0                          00000004
+ECCP1AS1                          00000005
+ECCP1AS2                          00000006
+ECCP1ASE                          00000007
+ECCP1CON                          00000FBD
+ECCP1DEL                          00000F79
+ECCP2AS                           00000F68
+ECCP2AS0                          00000004
+ECCP2AS1                          00000005
+ECCP2AS2                          00000006
+ECCP2ASE                          00000007
+ECCP2CON                          00000FBA
+ECCP2DEL                          00000F67
+ECCP2_PORTB                       00000003
+ECCP2_PORTC                       00000001
+ECCP2_PORTE                       00000007
+ECCP3                             00000000
+ECCP3AS                           00000F6A
+ECCP3AS0                          00000004
+ECCP3AS1                          00000005
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 21
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ECCP3AS2                          00000006
+ECCP3ASE                          00000007
+ECCP3CON                          00000FB7
+ECCP3DEL                          00000F69
+ECCPAS0                           00000004
+ECCPAS1                           00000005
+ECCPAS2                           00000006
+ECCPASE                           00000007
+EEADR                             00000FA9
+EEADRH                            00000FAA
+EECON1                            00000FA6
+EECON2                            00000FA7
+EEDATA                            00000FA8
+EEIE                              00000004
+EEIF                              00000004
+EEIP                              00000004
+EEPGD                             00000007
+FAST                              00000001
+FERR                              00000002
+FERR1                             00000002
+FERR2                             00000002
+FLT0                              00000000
+FLTS                              00000002
+FREE                              00000004
+FSR0                              00000000
+FSR0H                             00000FEA
+FSR0L                             00000FE9
+FSR1                              00000001
+FSR1H                             00000FE2
+FSR1L                             00000FE1
+FSR2                              00000002
+FSR2H                             00000FDA
+FSR2L                             00000FD9
+GCEN                              00000007
+GCEN2                             00000007
+GIE                               00000007
+GIEH                              00000007
+GIEL                              00000006
+GIE_GIEH                          00000007
+GO                                00000001
+GO_DONE                           00000001
+GO_NOT_DONE                       00000001
+HIGH_ISR                          00000036
+HLVDCON                           00000FD2
+HLVDEN                            00000004
+HLVDIE                            00000002
+HLVDIF                            00000002
+HLVDIN                            00000005
+HLVDIP                            00000002
+HLVDL0                            00000000
+HLVDL1                            00000001
+HLVDL2                            00000002
+HLVDL3                            00000003
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 22
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+I2C_DAT                           00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+IDLEN                             00000007
+INDF0                             00000FEF
+INDF1                             00000FE7
+INDF2                             00000FDF
+INIT                              00000440
+INT0                              00000000
+INT0E                             00000004
+INT0F                             00000001
+INT0IE                            00000004
+INT0IF                            00000001
+INT1                              00000001
+INT1E                             00000003
+INT1F                             00000000
+INT1IE                            00000003
+INT1IF                            00000000
+INT1IP                            00000006
+INT1P                             00000006
+INT2                              00000002
+INT2E                             00000004
+INT2F                             00000001
+INT2IE                            00000004
+INT2IF                            00000001
+INT2IP                            00000007
+INT2P                             00000007
+INT3                              00000003
+INT3E                             00000005
+INT3F                             00000002
+INT3IE                            00000005
+INT3IF                            00000002
+INT3IP                            00000001
+INT3P                             00000001
+INTCON                            00000FF2
+INTCON2                           00000FF1
+INTCON3                           00000FF0
+INTEDG0                           00000006
+INTEDG1                           00000005
+INTEDG2                           00000004
+INTEDG3                           00000003
+INTSRC                            00000007
+IOFS                              00000002
+IPEN                              00000007
+IPR1                              00000F9F
+IPR2                              00000FA2
+IPR3                              00000FA5
+IRCF0                             00000004
+IRCF1                             00000005
+IRCF2                             00000006
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 23
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+IRVST                             00000005
+IVRST                             00000005
+KBI0                              00000004
+KBI1                              00000005
+KBI2                              00000006
+KBI3                              00000007
+LATA                              00000F89
+LATA0                             00000000
+LATA1                             00000001
+LATA2                             00000002
+LATA3                             00000003
+LATA4                             00000004
+LATA5                             00000005
+LATA6                             00000006
+LATA7                             00000007
+LATB                              00000F8A
+LATB0                             00000000
+LATB1                             00000001
+LATB2                             00000002
+LATB3                             00000003
+LATB4                             00000004
+LATB5                             00000005
+LATB6                             00000006
+LATB7                             00000007
+LATC                              00000F8B
+LATC0                             00000000
+LATC1                             00000001
+LATC2                             00000002
+LATC3                             00000003
+LATC4                             00000004
+LATC5                             00000005
+LATC6                             00000006
+LATC7                             00000007
+LATD                              00000F8C
+LATD0                             00000000
+LATD1                             00000001
+LATD2                             00000002
+LATD3                             00000003
+LATD4                             00000004
+LATD5                             00000005
+LATD6                             00000006
+LATD7                             00000007
+LATE                              00000F8D
+LATE0                             00000000
+LATE1                             00000001
+LATE2                             00000002
+LATE3                             00000003
+LATE4                             00000004
+LATE5                             00000005
+LATE6                             00000006
+LATE7                             00000007
+LATF                              00000F8E
+LATF0                             00000000
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 24
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+LATF1                             00000001
+LATF2                             00000002
+LATF3                             00000003
+LATF4                             00000004
+LATF5                             00000005
+LATF6                             00000006
+LATF7                             00000007
+LATG                              00000F8F
+LATG0                             00000000
+LATG1                             00000001
+LATG2                             00000002
+LATG3                             00000003
+LATG4                             00000004
+LATG5                             00000005
+LATH                              00000F90
+LATH0                             00000000
+LATH1                             00000001
+LATH2                             00000002
+LATH3                             00000003
+LATH4                             00000004
+LATH5                             00000005
+LATH6                             00000006
+LATH7                             00000007
+LATJ                              00000F91
+LATJ0                             00000000
+LATJ1                             00000001
+LATJ2                             00000002
+LATJ3                             00000003
+LATJ4                             00000004
+LATJ5                             00000005
+LATJ6                             00000006
+LATJ7                             00000007
+LB                                00000006
+LVDCON                            00000FD2
+LVDEN                             00000004
+LVDIE                             00000002
+LVDIF                             00000002
+LVDIN                             00000005
+LVDIP                             00000002
+LVDL0                             00000000
+LVDL1                             00000001
+LVDL2                             00000002
+LVDL3                             00000003
+LVV0                              00000000
+LVV1                              00000001
+LVV2                              00000002
+LVV3                              00000003
+MCLR                              00000005
+MEMCON                            00000F9C
+N                                 00000004
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BOR                           00000000
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 25
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+NOT_CE                            00000005
+NOT_CS                            00000002
+NOT_DONE                          00000001
+NOT_LB                            00000006
+NOT_MCLR                          00000005
+NOT_OE                            00000001
+NOT_PD                            00000002
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_RD                            00000000
+NOT_RI                            00000004
+NOT_SS1                           00000007
+NOT_SS2                           00000007
+NOT_T1SYNC                        00000002
+NOT_T3SYNC                        00000002
+NOT_TO                            00000003
+NOT_TX8                           00000006
+NOT_UB                            00000007
+NOT_W                             00000002
+NOT_WR                            00000001
+NOT_WRH                           00000003
+NOT_WRITE                         00000002
+NOT_WRL                           00000002
+OBF                               00000006
+OE                                00000001
+OERR                              00000001
+OERR1                             00000001
+OERR2                             00000001
+OSCCON                            00000FD3
+OSCFIE                            00000007
+OSCFIF                            00000007
+OSCFIP                            00000007
+OSCTUNE                           00000F9B
+OSTS                              00000003
+OV                                00000003
+P                                 00000004
+P1A                               00000002
+P1B_PORTE                         00000006
+P1B_PORTH                         00000007
+P1C_PORTE                         00000005
+P1C_PORTH                         00000006
+P1D                               00000004
+P1DC0                             00000000
+P1DC1                             00000001
+P1DC2                             00000002
+P1DC3                             00000003
+P1DC4                             00000004
+P1DC5                             00000005
+P1DC6                             00000006
+P1M0                              00000006
+P1M1                              00000007
+P1RSEN                            00000007
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 26
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+P2A_PORTB                         00000003
+P2A_PORTC                         00000001
+P2A_PORTE                         00000007
+P2B                               00000002
+P2C                               00000001
+P2D                               00000000
+P2DC0                             00000000
+P2DC1                             00000001
+P2DC2                             00000002
+P2DC3                             00000003
+P2DC4                             00000004
+P2DC5                             00000005
+P2DC6                             00000006
+P2M0                              00000006
+P2M1                              00000007
+P2RSEN                            00000007
+P3A                               00000000
+P3B_PORTE                         00000004
+P3B_PORTH                         00000005
+P3C_PORTE                         00000003
+P3C_PORTH                         00000004
+P3D                               00000003
+P3DC0                             00000000
+P3DC1                             00000001
+P3DC2                             00000002
+P3DC3                             00000003
+P3DC4                             00000004
+P3DC5                             00000005
+P3DC6                             00000006
+P3M0                              00000006
+P3M1                              00000007
+P3RSEN                            00000007
+PC                                00000FF9
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000FF9
+PCLATH                            00000FFA
+PCLATU                            00000FFB
+PD                                00000002
+PDC0                              00000000
+PDC1                              00000001
+PDC2                              00000002
+PDC3                              00000003
+PDC4                              00000004
+PDC5                              00000005
+PDC6                              00000006
+PEIE                              00000006
+PEIE_GIEL                         00000006
+PEN                               00000002
+PEN2                              00000002
+PIE1                              00000F9D
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 27
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+PIE2                              00000FA0
+PIE3                              00000FA3
+PIR1                              00000F9E
+PIR2                              00000FA1
+PIR3                              00000FA4
+PLLEN                             00000006
+PLUSW0                            00000FEB
+PLUSW1                            00000FE3
+PLUSW2                            00000FDB
+POR                               00000001
+PORTA                             00000F80
+PORTB                             00000F81
+PORTC                             00000F82
+PORTD                             00000F83
+PORTE                             00000F84
+PORTF                             00000F85
+PORTG                             00000F86
+PORTH                             00000F87
+PORTJ                             00000F88
+POSTDEC0                          00000FED
+POSTDEC1                          00000FE5
+POSTDEC2                          00000FDD
+POSTINC0                          00000FEE
+POSTINC1                          00000FE6
+POSTINC2                          00000FDE
+PR2                               00000FCB
+PR4                               00000F77
+PREINC0                           00000FEC
+PREINC1                           00000FE4
+PREINC2                           00000FDC
+PROD                              00000FF3
+PRODH                             00000FF4
+PRODL                             00000FF3
+PRSEN                             00000007
+PSA                               00000003
+PSP0                              00000000
+PSP1                              00000001
+PSP2                              00000002
+PSP3                              00000003
+PSP4                              00000004
+PSP5                              00000005
+PSP6                              00000006
+PSP7                              00000007
+PSPCON                            00000FB0
+PSPIE                             00000007
+PSPIF                             00000007
+PSPIP                             00000007
+PSPMODE                           00000004
+PSS1AC0                           00000002
+PSS1AC1                           00000003
+PSS1BD0                           00000000
+PSS1BD1                           00000001
+PSS2AC0                           00000002
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 28
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+PSS2AC1                           00000003
+PSS2BD0                           00000000
+PSS2BD1                           00000001
+PSS3AC0                           00000002
+PSS3AC1                           00000003
+PSS3BD0                           00000000
+PSS3BD1                           00000001
+PSSAC0                            00000002
+PSSAC1                            00000003
+PSSBD0                            00000000
+PSSBD1                            00000001
+R                                 00000002
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RA6                               00000006
+RA7                               00000007
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RBIP                              00000000
+RBPU                              00000007
+RC0                               00000000
+RC1                               00000001
+RC1IE                             00000005
+RC1IF                             00000005
+RC1IP                             00000005
+RC2                               00000002
+RC2IE                             00000005
+RC2IF                             00000005
+RC2IP                             00000005
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCEN2                             00000003
+RCIDL                             00000006
+RCIDL1                            00000006
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 29
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RCIDL2                            00000006
+RCIE                              00000005
+RCIF                              00000005
+RCIP                              00000005
+RCMT                              00000006
+RCON                              00000FD0
+RCREG                             00000FAE
+RCREG1                            00000FAE
+RCREG2                            00000F6E
+RCSTA                             00000FAB
+RCSTA1                            00000FAB
+RCSTA2                            00000F6B
+RD                                00000000
+RD0                               00000000
+RD1                               00000001
+RD16                              00000007
+RD2                               00000002
+RD3                               00000003
+RD4                               00000004
+RD5                               00000005
+RD6                               00000006
+RD7                               00000007
+RE0                               00000000
+RE1                               00000001
+RE2                               00000002
+RE3                               00000003
+RE4                               00000004
+RE5                               00000005
+RE6                               00000006
+RE7                               00000007
+READ_WRITE                        00000002
+RF0                               00000000
+RF1                               00000001
+RF2                               00000002
+RF3                               00000003
+RF4                               00000004
+RF5                               00000005
+RF6                               00000006
+RF7                               00000007
+RG0                               00000000
+RG0_pressed                       0000032C
+RG0_released                      00000322
+RG1                               00000001
+RG1_end                           0000031E
+RG1_pressed                       00000318
+RG1_released                      0000030E
+RG2                               00000002
+RG2_pressed                       00000380
+RG2_released                      00000376
+RG3                               00000003
+RG3_end                           00000372
+RG3_pressed                       0000036C
+RG3_released                      00000362
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 30
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RG4                               00000004
+RG5                               00000005
+RGA_end                           00000332
+RGF_end                           00000386
+RH0                               00000000
+RH1                               00000001
+RH2                               00000002
+RH3                               00000003
+RH4                               00000004
+RH5                               00000005
+RH6                               00000006
+RH7                               00000007
+RI                                00000004
+RJ0                               00000000
+RJ1                               00000001
+RJ2                               00000002
+RJ3                               00000003
+RJ4                               00000004
+RJ5                               00000005
+RJ6                               00000006
+RJ7                               00000007
+RSEN                              00000001
+RSEN2                             00000001
+RW2                               00000002
+RX                                00000007
+RX1                               00000007
+RX2                               00000002
+RX9                               00000006
+RX91                              00000006
+RX92                              00000006
+RX9D                              00000000
+RX9D1                             00000000
+RX9D2                             00000000
+R_NOT_W                           00000002
+R_W                               00000002
+S                                 00000003
+SBOREN                            00000006
+SCK                               00000003
+SCK1                              00000003
+SCK2                              00000006
+SCKP                              00000004
+SCKP1                             00000004
+SCKP2                             00000004
+SCL                               00000003
+SCL1                              00000003
+SCL2                              00000006
+SCS0                              00000000
+SCS1                              00000001
+SDA                               00000004
+SDA1                              00000004
+SDA2                              00000005
+SDI                               00000004
+SDI1                              00000004
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 31
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SDI2                              00000005
+SDO                               00000005
+SDO1                              00000005
+SDO2                              00000004
+SEN                               00000000
+SEN2                              00000000
+SENDB                             00000003
+SENDB1                            00000003
+SENDB2                            00000003
+SMP                               00000007
+SMP2                              00000007
+SP0                               00000000
+SP1                               00000001
+SP2                               00000002
+SP3                               00000003
+SP4                               00000004
+SPBRG                             00000FAF
+SPBRG1                            00000FAF
+SPBRG2                            00000F6F
+SPBRGH                            00000F7F
+SPBRGH1                           00000F7F
+SPBRGH2                           00000F7D
+SPEN                              00000007
+SPEN1                             00000007
+SPEN2                             00000007
+SREN                              00000005
+SREN1                             00000005
+SREN2                             00000005
+SS1                               00000007
+SS2                               00000007
+SSP1ADD                           00000FC8
+SSP1BUF                           00000FC9
+SSP1CON1                          00000FC6
+SSP1CON2                          00000FC5
+SSP1IE                            00000003
+SSP1IF                            00000003
+SSP1IP                            00000003
+SSP1STAT                          00000FC7
+SSP2ADD                           00000F65
+SSP2BUF                           00000F66
+SSP2CON1                          00000F63
+SSP2CON2                          00000F62
+SSP2IE                            00000007
+SSP2IF                            00000007
+SSP2IP                            00000007
+SSP2STAT                          00000F64
+SSPADD                            00000FC8
+SSPBUF                            00000FC9
+SSPCON1                           00000FC6
+SSPCON2                           00000FC5
+SSPEN                             00000005
+SSPEN2                            00000005
+SSPIE                             00000003
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 32
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SSPIF                             00000003
+SSPIP                             00000003
+SSPM0                             00000000
+SSPM02                            00000000
+SSPM1                             00000001
+SSPM12                            00000001
+SSPM2                             00000002
+SSPM22                            00000002
+SSPM3                             00000003
+SSPM32                            00000003
+SSPOV                             00000006
+SSPOV2                            00000006
+SSPSTAT                           00000FC7
+START                             0000004A
+START2                            00000003
+STATUS                            00000FD8
+STKFUL                            00000007
+STKOVF                            00000007
+STKPTR                            00000FFC
+STKPTR0                           00000000
+STKPTR1                           00000001
+STKPTR2                           00000002
+STKPTR3                           00000003
+STKPTR4                           00000004
+STKUNF                            00000006
+STOP2                             00000004
+SWDTE                             00000000
+SWDTEN                            00000000
+SYNC                              00000004
+SYNC1                             00000004
+SYNC2                             00000004
+T08BIT                            00000006
+T0CKI                             00000004
+T0CON                             00000FD5
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0IP                              00000002
+T0PS0                             00000000
+T0PS1                             00000001
+T0PS2                             00000002
+T0PS3                             00000003
+T0SE                              00000004
+T13CKI                            00000000
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000FCD
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1OSI                             00000001
+T1OSO                             00000000
+T1RUN                             00000006
+T1SYNC                            00000002
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 33
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000FCA
+T2OUTPS0                          00000003
+T2OUTPS1                          00000004
+T2OUTPS2                          00000005
+T2OUTPS3                          00000006
+T3CCP1                            00000003
+T3CCP2                            00000006
+T3CKPS0                           00000004
+T3CKPS1                           00000005
+T3CON                             00000FB1
+T3INSYNC                          00000002
+T3SYNC                            00000002
+T4CKPS0                           00000000
+T4CKPS1                           00000001
+T4CON                             00000F76
+T4OUTPS0                          00000003
+T4OUTPS1                          00000004
+T4OUTPS2                          00000005
+T4OUTPS3                          00000006
+TABLAT                            00000FF5
+TABLE                             0000001C
+TBLPTR                            00000FF6
+TBLPTRH                           00000FF7
+TBLPTRL                           00000FF6
+TBLPTRU                           00000FF8
+TMR0                              00000FD6
+TMR0H                             00000FD7
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR0IP                            00000002
+TMR0L                             00000FD6
+TMR0ON                            00000007
+TMR1                              00000FCE
+TMR1CS                            00000001
+TMR1H                             00000FCF
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1IP                            00000000
+TMR1L                             00000FCE
+TMR1ON                            00000000
+TMR2                              00000FCC
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2IP                            00000001
+TMR2ON                            00000002
+TMR3                              00000FB2
+TMR3CS                            00000001
+TMR3H                             00000FB3
+TMR3IE                            00000001
+TMR3IF                            00000001
+TMR3IP                            00000001
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 34
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TMR3L                             00000FB2
+TMR3ON                            00000000
+TMR4                              00000F78
+TMR4IE                            00000003
+TMR4IF                            00000003
+TMR4IP                            00000003
+TMR4ON                            00000002
+TO                                00000003
+TOS                               00000FFD
+TOSH                              00000FFE
+TOSL                              00000FFD
+TOSU                              00000FFF
+TRISA                             00000F92
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+TRISA6                            00000006
+TRISA7                            00000007
+TRISB                             00000F93
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+TRISC                             00000F94
+TRISC0                            00000000
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+TRISD                             00000F95
+TRISD0                            00000000
+TRISD1                            00000001
+TRISD2                            00000002
+TRISD3                            00000003
+TRISD4                            00000004
+TRISD5                            00000005
+TRISD6                            00000006
+TRISD7                            00000007
+TRISE                             00000F96
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRISE3                            00000003
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 35
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TRISE4                            00000004
+TRISE5                            00000005
+TRISE6                            00000006
+TRISE7                            00000007
+TRISF                             00000F97
+TRISF0                            00000000
+TRISF1                            00000001
+TRISF2                            00000002
+TRISF3                            00000003
+TRISF4                            00000004
+TRISF5                            00000005
+TRISF6                            00000006
+TRISF7                            00000007
+TRISG                             00000F98
+TRISG0                            00000000
+TRISG1                            00000001
+TRISG2                            00000002
+TRISG3                            00000003
+TRISG4                            00000004
+TRISH                             00000F99
+TRISH0                            00000000
+TRISH1                            00000001
+TRISH2                            00000002
+TRISH3                            00000003
+TRISH4                            00000004
+TRISH5                            00000005
+TRISH6                            00000006
+TRISH7                            00000007
+TRISJ                             00000F9A
+TRISJ0                            00000000
+TRISJ1                            00000001
+TRISJ2                            00000002
+TRISJ3                            00000003
+TRISJ4                            00000004
+TRISJ5                            00000005
+TRISJ6                            00000006
+TRISJ7                            00000007
+TRMT                              00000001
+TRMT1                             00000001
+TRMT2                             00000001
+TUN0                              00000000
+TUN1                              00000001
+TUN2                              00000002
+TUN3                              00000003
+TUN4                              00000004
+TX                                00000006
+TX1                               00000006
+TX1IE                             00000004
+TX1IF                             00000004
+TX1IP                             00000004
+TX2                               00000001
+TX2IE                             00000004
+TX2IF                             00000004
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 36
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TX2IP                             00000004
+TX8_9                             00000006
+TX9                               00000006
+TX91                              00000006
+TX92                              00000006
+TX9D                              00000000
+TX9D1                             00000000
+TX9D2                             00000000
+TXD8                              00000000
+TXEN                              00000005
+TXEN1                             00000005
+TXEN2                             00000005
+TXIE                              00000004
+TXIF                              00000004
+TXIP                              00000004
+TXREG                             00000FAD
+TXREG1                            00000FAD
+TXREG2                            00000F6D
+TXSTA                             00000FAC
+TXSTA1                            00000FAC
+TXSTA2                            00000F6C
+UA                                00000001
+UA2                               00000001
+UB                                00000007
+VCFG0                             00000004
+VCFG1                             00000005
+VDIRMAG                           00000007
+VREFM                             00000002
+VREFP                             00000003
+W                                 00000000
+WAIT0                             00000004
+WAIT1                             00000005
+WCOL                              00000007
+WCOL2                             00000007
+WDTCON                            00000FD1
+WM0                               00000000
+WM1                               00000001
+WR                                00000001
+WREG                              00000FE8
+WREN                              00000002
+WRERR                             00000003
+WRH                               00000003
+WRL                               00000002
+WUE                               00000001
+WUE1                              00000001
+WUE2                              00000001
+Yok_olan46                        00000009
+Z                                 00000002
+_ADDRBW_ADDR12BIT_3L              000000DF
+_ADDRBW_ADDR16BIT_3L              000000EF
+_ADDRBW_ADDR20BIT_3L              000000FF
+_ADDRBW_ADDR8BIT_3L               000000CF
+_BBSIZ_BB2K_4L                    000000CF
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 37
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_BBSIZ_BB4K_4L                    000000DF
+_BBSIZ_BB8K_4L                    000000EF
+_BOREN_NOSLP_2L                   000000FD
+_BOREN_OFF_2L                     000000F9
+_BOREN_ON_2L                      000000FB
+_BOREN_SBORDIS_2L                 000000FF
+_BORV_0_2L                        000000E7
+_BORV_1_2L                        000000EF
+_BORV_2_2L                        000000F7
+_BORV_3_2L                        000000FF
+_CCP2MX_PORTBE_3H                 000000FE
+_CCP2MX_PORTC_3H                  000000FF
+_CONFIG1H                         00300001
+_CONFIG2H                         00300003
+_CONFIG2L                         00300002
+_CONFIG3H                         00300005
+_CONFIG3L                         00300004
+_CONFIG4L                         00300006
+_CONFIG5H                         00300009
+_CONFIG5L                         00300008
+_CONFIG6H                         0030000B
+_CONFIG6L                         0030000A
+_CONFIG7H                         0030000D
+_CONFIG7L                         0030000C
+_CP0_OFF_5L                       000000FF
+_CP0_ON_5L                        000000FE
+_CP1_OFF_5L                       000000FF
+_CP1_ON_5L                        000000FD
+_CP2_OFF_5L                       000000FF
+_CP2_ON_5L                        000000FB
+_CP3_OFF_5L                       000000FF
+_CP3_ON_5L                        000000F7
+_CP4_OFF_5L                       000000FF
+_CP4_ON_5L                        000000EF
+_CP5_OFF_5L                       000000FF
+_CP5_ON_5L                        000000DF
+_CP6_OFF_5L                       000000FF
+_CP6_ON_5L                        000000BF
+_CP7_OFF_5L                       000000FF
+_CP7_ON_5L                        0000007F
+_CPB_OFF_5H                       000000FF
+_CPB_ON_5H                        000000BF
+_CPD_OFF_5H                       000000FF
+_CPD_ON_5H                        0000007F
+_DATABW_DATA16BIT_3L              000000FF
+_DATABW_DATA8BIT_3L               000000BF
+_DEBUG_OFF_4L                     000000FF
+_DEBUG_ON_4L                      0000007F
+_DEVID1                           003FFFFE
+_DEVID2                           003FFFFF
+_EBTR0_OFF_7L                     000000FF
+_EBTR0_ON_7L                      000000FE
+_EBTR1_OFF_7L                     000000FF
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 38
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_EBTR1_ON_7L                      000000FD
+_EBTR2_OFF_7L                     000000FF
+_EBTR2_ON_7L                      000000FB
+_EBTR3_OFF_7L                     000000FF
+_EBTR3_ON_7L                      000000F7
+_EBTR4_OFF_7L                     000000FF
+_EBTR4_ON_7L                      000000EF
+_EBTR5_OFF_7L                     000000FF
+_EBTR5_ON_7L                      000000DF
+_EBTR6_OFF_7L                     000000FF
+_EBTR6_ON_7L                      000000BF
+_EBTR7_OFF_7L                     000000FF
+_EBTR7_ON_7L                      0000007F
+_EBTRB_OFF_7H                     000000FF
+_EBTRB_ON_7H                      000000BF
+_ECCPMX_PORTE_3H                  000000FF
+_ECCPMX_PORTH_3H                  000000FD
+_FCMEN_OFF_1H                     000000BF
+_FCMEN_ON_1H                      000000FF
+_IDLOC0                           00200000
+_IDLOC1                           00200001
+_IDLOC2                           00200002
+_IDLOC3                           00200003
+_IDLOC4                           00200004
+_IDLOC5                           00200005
+_IDLOC6                           00200006
+_IDLOC7                           00200007
+_IESO_OFF_1H                      0000007F
+_IESO_ON_1H                       000000FF
+_LPT1OSC_OFF_3H                   000000FB
+_LPT1OSC_ON_3H                    000000FF
+_LVP_OFF_4L                       000000FB
+_LVP_ON_4L                        000000FF
+_MCLRE_OFF_3H                     0000007F
+_MCLRE_ON_3H                      000000FF
+_MODE_EM_3L                       000000FC
+_MODE_MC_3L                       000000FF
+_MODE_MPB_3L                      000000FD
+_MODE_MP_3L                       000000FE
+_OSC_ECIO6_1H                     000000F5
+_OSC_EC_1H                        000000F4
+_OSC_HSPLL_1H                     000000F6
+_OSC_HS_1H                        000000F2
+_OSC_INTIO67_1H                   000000F8
+_OSC_INTIO7_1H                    000000F9
+_OSC_LP_1H                        000000F0
+_OSC_RCIO6_1H                     000000F7
+_OSC_RC_1H                        000000F3
+_OSC_XT_1H                        000000F1
+_PWRT_OFF_2L                      000000FF
+_PWRT_ON_2L                       000000FE
+_STVREN_OFF_4L                    000000FE
+_STVREN_ON_4L                     000000FF
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 39
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_WAIT_OFF_3L                      000000FF
+_WAIT_ON_3L                       0000007F
+_WDTPS_1024_2H                    000000F5
+_WDTPS_128_2H                     000000EF
+_WDTPS_16384_2H                   000000FD
+_WDTPS_16_2H                      000000E9
+_WDTPS_1_2H                       000000E1
+_WDTPS_2048_2H                    000000F7
+_WDTPS_256_2H                     000000F1
+_WDTPS_2_2H                       000000E3
+_WDTPS_32768_2H                   000000FF
+_WDTPS_32_2H                      000000EB
+_WDTPS_4096_2H                    000000F9
+_WDTPS_4_2H                       000000E5
+_WDTPS_512_2H                     000000F3
+_WDTPS_64_2H                      000000ED
+_WDTPS_8192_2H                    000000FB
+_WDTPS_8_2H                       000000E7
+_WDT_OFF_2H                       000000FE
+_WDT_ON_2H                        000000FF
+_WRT0_OFF_6L                      000000FF
+_WRT0_ON_6L                       000000FE
+_WRT1_OFF_6L                      000000FF
+_WRT1_ON_6L                       000000FD
+_WRT2_OFF_6L                      000000FF
+_WRT2_ON_6L                       000000FB
+_WRT3_OFF_6L                      000000FF
+_WRT3_ON_6L                       000000F7
+_WRT4_OFF_6L                      000000FF
+_WRT4_ON_6L                       000000EF
+_WRT5_OFF_6L                      000000FF
+_WRT5_ON_6L                       000000DF
+_WRT6_OFF_6L                      000000FF
+_WRT6_ON_6L                       000000BF
+_WRT7_OFF_6L                      000000FF
+_WRT7_ON_6L                       0000007F
+_WRTB_OFF_6H                      000000FF
+_WRTB_ON_6H                       000000BF
+_WRTC_OFF_6H                      000000FF
+_WRTC_ON_6H                       000000DF
+_WRTD_OFF_6H                      000000FF
+_WRTD_ON_6H                       0000007F
+_XINST_OFF_4L                     000000BF
+_XINST_ON_4L                      000000FF
+__18F8722                         00000001
+_end                              00000308
+a_bit_00_11                       000000B6
+a_bit_01                          000000C6
+a_bit_10                          000000DA
+a_first_bit_0                     000000AC
+after_goal                        000003D6
+b_bit_00_11                       0000010E
+b_bit_01                          00000116
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 40
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+b_bit_10                          00000122
+b_first_bit_0                     00000104
+c_bit_00_11                       0000014E
+c_bit_01                          00000156
+c_bit_10                          00000162
+c_first_bit_0                     00000144
+column_ball                       0000000C
+counter                           00000008
+d_bit_00_11                       0000018E
+d_bit_01                          00000196
+d_bit_10                          000001A2
+d_first_bit_0                     00000184
+direction                         0000000B
+display                           000003EE
+display_end                       0000040E
+game_over                         00000410
+high_end                          00000046
+left_a                            00000098
+left_b                            000000EE
+left_c                            0000012E
+left_d                            0000016E
+left_e                            000001AE
+left_goals                        000003FE
+left_score                        0000000E
+left_score_flag                   0000000F
+left_scored                       000003C4
+loop                              00000438
+main                              0000004E
+move_ball                         00000062
+move_ball_flag                    0000000A
+move_down_1                       00000005
+move_down_2                       00000007
+move_paddle1_down                 0000034A
+move_paddle1_end                  00000358
+move_paddle1_up                   0000033E
+move_paddle2_down                 0000039E
+move_paddle2_end                  000003AC
+move_paddle2_up                   00000392
+move_up_1                         00000004
+move_up_2                         00000006
+moving_to_left                    0000006E
+moving_to_right                   000001BA
+paddle_1                          0000030A
+paddle_1_led_task                 00000338
+paddle_2                          0000035E
+paddle_2_led_task                 0000038C
+rc_bit_00_11                      00000210
+rc_bit_01                         00000218
+rc_bit_10                         00000224
+rc_first_bit_0                    00000206
+rd_bit_00_11                      00000250
+rd_bit_01                         00000258
+rd_bit_10                         00000264
+MPASM 5.77  /HOME/EGEMEN/MPLABXPROJECTS/THE2   4-8-2018  20:04:41         PAGE 41
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+rd_first_bit_0                    00000246
+re_bit_00_11                      00000290
+re_bit_01                         00000298
+re_bit_10                         000002A4
+re_first_bit_0                    00000286
+rf_bit_00_11                      000002D0
+rf_bit_01                         000002E0
+rf_bit_10                         000002F4
+rf_first_bit_0                    000002C6
+right_b                           000001E4
+right_c                           000001F0
+right_d                           00000230
+right_e                           00000270
+right_f                           000002B0
+right_goals                       000003EE
+right_score                       00000010
+right_score_flag                  00000011
+right_scored                      000003B2
+row                               0000000D
+s_1_down                          00000001
+s_1_up                            00000000
+s_2_down                          00000003
+s_2_up                            00000002
+t1                                00000013
+table_wreg                        00000012
+
+Errors   :     0
+Warnings :    75 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+
