@@ -1,0 +1,5 @@
+host=localhost
+schema=ceng351_pa1
+username=root
+password=24241254
+port=3306
