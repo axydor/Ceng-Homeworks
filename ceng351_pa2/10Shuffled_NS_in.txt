@@ -1,0 +1,13 @@
+add|0|Ethereum|543|€
+add|6|Tether|104|₺
+add|1|Asch|236|$
+add|4|IOTA|657|$
+add|8|Dragonchain|938|$
+add|5|Ethereum Classic|987|$
+add|7|Einsteinium|242|$
+add|2|Stratis|511|₺
+add|9|Populous|797|₺
+print
+add|3|Dash|823|€
+print
+quit

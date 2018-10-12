@@ -1,0 +1,27 @@
+HashMod:16
+BucketSize:3
+add|0|Ripple|764|₺
+add|1|DigiByte|223|₺
+add|2|Bitcoin Cash|955|€
+add|3|NEO|982|₺
+add|4|BitcoinDark|143|$
+add|5|Qtum|356|$
+add|6|BitBay|556|₺
+search|6
+add|7|VeChain|803|$
+add|8|Lisk|887|$
+add|9|Zcash|699|₺
+add|10|Agoras Token|147|₺
+add|11|Ark|798|$
+add|12|Dogecoin|822|€
+add|13|Cardano|18|€
+add|14|Kyber Network|190|€
+add|15|Dragonchain|668|$
+add|16|PayPie|261|€
+add|17|Waves|262|€
+add|18|Cardano|265|$
+add|19|OmiseGO|851|₺
+print
+search|0
+search|21
+quit

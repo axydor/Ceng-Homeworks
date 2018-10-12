@@ -1,0 +1,25 @@
+HashMod:16
+BucketSize:3
+add|0|Einsteinium|772|€
+add|1|ZCoin|549|€
+add|2|Request Network|360|$
+add|3|Iconomi|645|$
+add|4|RChain|360|₺
+add|5|Ripple|91|₺
+add|6|SALT|675|$
+add|7|TRON|34|€
+add|8|Ardor|994|€
+add|9|BitcoinDark|611|$
+print
+add|10|MaidSafeCoin|632|$
+add|11|Time New Bank|693|₺
+add|12|Monaco|763|€
+add|13|Ripple|205|₺
+add|14|Ethos|410|€
+add|15|Tether|28|₺
+add|16|Monaco|831|$
+add|17|Substratum|269|$
+add|18|Bitcoin|877|€
+add|19|Syscoin|431|€
+print
+quit
