@@ -1,0 +1,6 @@
+Source: 10.10.1.1 | port:30166
+Broker: 10.10.2.1 | port:30162
+Broker_Source: 10.10.1.2 | port:30162
+R1: 10.10.2.2 | port:30164
+R2: 10.10.5.1 | port: 30165
+Destination: 10.10.5.2 | port:30163
